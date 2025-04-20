@@ -34,6 +34,7 @@
 
   <script>
     let isPlaying = false;
+    let clickCount = 0;
     
     // Lottie animáció inicializálása, autoplay kikapcsolva
     const animacio = lottie.loadAnimation({
@@ -49,7 +50,8 @@
   });
 
   document.getElementById('beefalo').addEventListener('click', function (event) {
-    if (isPlaying) return; // ha már megy, ne induljon újra
+    clickCount ++;
+    if (isPlaying && clickCount >= 20) return; // ha már megy ÉS 20-nál többet kattintottak, ne induljon újra
 
     const container = document.getElementById('lottie-container');
 
