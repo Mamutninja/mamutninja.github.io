@@ -12,9 +12,9 @@
       margin: 0 auto;
     }
     #lottie-container {
-      width: 50px;
-      height: 50px;
-      margin: 5px auto;
+      width: 100px;
+      height: 100px;
+      margin: 10px auto;
       position: absolute;
       pointer-events: none;
       display: none; /* kezdetben el van rejtve */
@@ -48,8 +48,8 @@
     const x = event.clientX;
     const y = event.clientY;
 
-    container.style.left = `${x - 25}px`;
-    container.style.top = `${y - 50}px`;
+    container.style.left = `${x - 50}px`;
+    container.style.top = `${y - 100}px`;
     container.style.display = 'block';
 
     animacio.goToAndPlay(0, true);
