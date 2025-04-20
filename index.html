@@ -62,10 +62,10 @@
 
     beefaloImg.addEventListener('click', function (event) {
       const rect = beefaloImg.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
+      const xBeefalo = event.clientX - rect.left;
+      const yBeefalo = event.clientY - rect.top;
   
-      const pixel = ctx.getImageData(x, y, 1, 1).data;
+      const pixel = ctx.getImageData(xBeefalo, yBeefalo, 1, 1).data;
       const alpha = pixel[3]; // 0 = teljesen átlátszó, 255 = teljesen látható
   
       if (alpha < 10) return; // ha átlátszó részre kattintottunk, semmit ne csináljon
@@ -75,13 +75,15 @@
       containerCount ++;
       clickCount = 0;
       const container = document.getElementById('lottie-container');
-
+      
+      const xLottie = event.clientX;
+      const yLottie = event.clientY;
   
       // új div létrehozása
       const newContainer = document.createElement('div');
       newContainer.style.position = 'absolute';
-      newContainer.style.left = `${x - 75}px`;  // középre igazítás
-      newContainer.style.top = `${y - 150}px`;
+      newContainer.style.left = `${xLottie - 75}px`;  // középre igazítás
+      newContainer.style.top = `${yLottie - 150}px`;
       newContainer.style.width = '150px';
       newContainer.style.height = '150px';
       newContainer.style.pointerEvents = 'none';
