@@ -3,6 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <title>Hello te butha ló</title>
+  <script src="https://unpkg.com/lottie-web@5.10.2/build/player/lottie.min.js"></script>
+  <style>
+    #beefalo {
+      width: 200px;
+      cursor: pointer;
+      display: block;
+      margin: 0 auto;
+    }
+    #lottie-container {
+      width: 300px;
+      height: 300px;
+      margin: 20px auto;
+      display: none; /* kezdetben el van rejtve */
+    }
+  </style>
 </head>
 <body>
   <div style="text-align: center;">
@@ -10,8 +25,28 @@
     <p>~ Hana</p>
   </div>
   <div style="text-align: center;">
-    <img src="images/beefalo.png" alt="Beefalo" width="300">
+    <img id="beefalo" src="images/beefalo.png" alt="Beefalo" width="300">
   </div>
+  <div id="lottie-container"></div>
+
+
+  <script>
+    // Lottie animáció inicializálása, autoplay kikapcsolva
+    const animacio = lottie.loadAnimation({
+      container: document.getElementById('lottie-container'),
+      renderer: 'svg',
+      loop: true,
+      autoplay: false,
+      path: 'https://lottie.host/11d0c3fa-b3b7-4f77-96c7-8eb39b1173e0/8Yqxj34Q8z.json'
+    });
+
+    // Kattintásra indítjuk el
+    document.getElementById('beefalo').addEventListener('click', function () {
+      const container = document.getElementById('lottie-container');
+      container.style.display = 'block';
+      animacio.goToAndPlay(0, true); // újraindít minden kattintásnál
+    });
+  </script>
 </body>
 </html>
 
