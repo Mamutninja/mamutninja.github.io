@@ -71,7 +71,7 @@
       if (alpha < 10) return; // ha átlátszó részre kattintottunk, semmit ne csináljon
       
       clickCount ++;
-      if (clickCount >= 20) return; // ha már megy ÉS 20-nál többet kattintottak, ne induljon újra
+      if (clickCount >= 10) return; // ha 10-nél többet kattintottak, ne induljon újra
       containerCount ++;
       clickCount = 0;
       const container = document.getElementById('lottie-container');
