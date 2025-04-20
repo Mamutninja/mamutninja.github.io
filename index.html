@@ -12,8 +12,8 @@
       margin: 0 auto;
     }
     #lottie-container {
-      width: 100px;
-      height: 100px;
+      width: 150px;
+      height: 150px;
       margin: 10px auto;
       position: absolute;
       pointer-events: none;
@@ -33,27 +33,35 @@
 
 
   <script>
+    let isPlaying = false;
+    
     // Lottie animáció inicializálása, autoplay kikapcsolva
     const animacio = lottie.loadAnimation({
       container: document.getElementById('lottie-container'),
       renderer: 'svg',
-      loop: true,
+      loop: false,
       autoplay: false,
       path: 'images/heartlottie.json'
     });
 
-    document.getElementById('beefalo').addEventListener('click', function (event) {
+     animacio.addEventListener('complete', function () {
+    isPlaying = false; // amikor vége, újra lehet játszani
+  });
+
+  document.getElementById('beefalo').addEventListener('click', function (event) {
+    if (isPlaying) return; // ha már megy, ne induljon újra
+
     const container = document.getElementById('lottie-container');
 
     const x = event.clientX;
     const y = event.clientY;
 
-    container.style.left = `${x - 50}px`;
-    container.style.top = `${y - 100}px`;
+    container.style.left = `${x - 75}px`;
+    container.style.top = `${y - 150}px`;
     container.style.display = 'block';
 
-
-    animacio.playSegments(true);
+    animacio.goToAndPlay(0, true);
+    isPlaying = true;
     });
   </script>
 </body>
