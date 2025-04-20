@@ -52,7 +52,10 @@
     container.style.top = `${y - 100}px`;
     container.style.display = 'block';
 
-    animacio.goToAndPlay(0, true);
+    const totalFrames = animacio.totalFrames;
+    const halfwayFrame = totalFrames / 2;
+
+    animacio.playSegments([halfwayFrame, totalFrames], true);
     });
   </script>
 </body>
