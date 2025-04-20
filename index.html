@@ -33,8 +33,8 @@
 
 
   <script>
-    let isPlaying = false;
     let clickCount = 0;
+    let containerCount = 0;
     
     // Lottie animáció inicializálása, autoplay kikapcsolva
     const animacio = lottie.loadAnimation({
@@ -45,26 +45,40 @@
       path: 'images/heartlottie.json'
     });
 
-     animacio.addEventListener('complete', function () {
-    isPlaying = false; // amikor vége, újra lehet játszani
-  });
-
   document.getElementById('beefalo').addEventListener('click', function (event) {
     clickCount ++;
-    if (isPlaying && clickCount >= 20) return; // ha már megy ÉS 20-nál többet kattintottak, ne induljon újra
-
+    if (clickCount >= 20) return; // ha már megy ÉS 20-nál többet kattintottak, ne induljon újra
+    containerCount ++;
+    clickCount = 0;
     const container = document.getElementById('lottie-container');
 
     const x = event.clientX;
     const y = event.clientY;
 
-    container.style.left = `${x - 75}px`;
-    container.style.top = `${y - 150}px`;
-    container.style.display = 'block';
+    // új div létrehozása
+    const newContainer = document.createElement('div');
+    newContainer.style.position = 'absolute';
+    newContainer.style.left = `${x - 75}px`;  // középre igazítás
+    newContainer.style.top = `${y - 150}px`;
+    newContainer.style.width = '150px';
+    newContainer.style.height = '150px';
+    newContainer.style.pointerEvents = 'none';
+    newContainer.id = `lottie-heart-${containerCount}`;
 
-    animacio.goToAndPlay(0, true);
-    isPlaying = true;
+    document.body.appendChild(newContainer);
+
+    const anim = lottie.loadAnimation({
+      container: newContainer,
+      renderer: 'svg',
+      loop: false,
+      autoplay: true,
+      path: 'images/heartlottie.json'
     });
+
+    anim.addEventListener('complete', function () {
+      newContainer.remove(); // automatikusan törli magát
+    });
+  });
   </script>
 </body>
 </html>
