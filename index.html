@@ -8,6 +8,7 @@
     #beefalo {
       width: 200px;
       cursor: pointer;
+      position: absolute;
       display: block;
       margin: 0 auto;
     }
@@ -15,6 +16,7 @@
       width: 300px;
       height: 300px;
       margin: 20px auto;
+      pointer-events: none;
       display: none; /* kezdetben el van rejtve */
     }
   </style>
@@ -40,11 +42,17 @@
       path: 'images/heartlottie.json'
     });
 
-    // Kattintásra indítjuk el
-    document.getElementById('beefalo').addEventListener('click', function () {
-      const container = document.getElementById('lottie-container');
-      container.style.display = 'block';
-      animacio.goToAndPlay(0, true); // újraindít minden kattintásnál
+    document.getElementById('beefalo').addEventListener('click', function (event) {
+    const container = document.getElementById('lottie-container');
+
+    const x = event.clientX;
+    const y = event.clientY;
+
+    container.style.left = `${x - 100}px`;
+    container.style.top = `${y - 100}px`;
+    container.style.display = 'block';
+
+    animacio.goToAndPlay(0, true);
     });
   </script>
 </body>
