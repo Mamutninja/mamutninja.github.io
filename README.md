@@ -1,2 +1,2 @@
 # mamutninja.github.io
-own page
+Ez egy olyan, oldal, ami csak az enyém, és ezért azt csinálok vele, amit szeretnék :D
