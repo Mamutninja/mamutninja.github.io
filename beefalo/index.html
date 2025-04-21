@@ -30,10 +30,11 @@
     #love-counter-container {
       margin-top: 20px; /* távolság a többi tartalomtól */
       font-size: 24px;
+      margin-left: -2px; /* balra tolja az egész containert */
     }
     #heart-icon {
-      vertical-align: -2px;
-      margin-right: 5px; /* távolság a szám és a szívecske között */
+      vertical-align: -1px;
+      margin-right: 3px; /* távolság a szám és a szívecske között */
     }
     
     *:focus {
@@ -58,8 +59,8 @@
   <div style="text-align: center;">
     <img id="beefalo" src="images/beefalo.png" alt="Beefalo" width="300" draggable="false" tabindex="-1">
   </div>
-  <div id="love-counter-container" style="text-align: center;">
-    <img id="heart-icon" src="images/heart-icon.png" alt="Heart" width="40" style="vertical-align: -2px; margin-right: 5px;">
+  <div id="love-counter-container" style="text-align: center; margin-left: -2px;">
+    <img id="heart-icon" src="images/heart-icon.png" alt="Heart" width="40" style="vertical-align: -1px; margin-right: 3px;">
     <span id="love-counter">0</span>
   </div>
   <div id="lottie-container"></div>
