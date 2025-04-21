@@ -97,8 +97,6 @@
     });
 
     beefaloImg.addEventListener('click', function (event) {
-      // global love
-      incrementLove();
       // ne jelenjen meg a 'text caret'
       event.preventDefault(); // ne kapjon fókuszt semmi
       document.activeElement.blur(); // vegye el a fókuszt a jelenlegi elemtől
@@ -136,8 +134,12 @@
         loop: false,
         autoplay: true,
         path: 'images/heartlottie.json'
+      });
 
-    });
+      // global love
+      incrementLove();
+
+      
 
 
     document.addEventListener('click', function (event) {
