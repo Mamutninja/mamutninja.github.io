@@ -11,6 +11,12 @@
       cursor: pointer;
       display: block;
       margin: 0 auto;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      outline: none;
+      
     }
     #lottie-container {
       width: 150px;
@@ -28,7 +34,7 @@
     <p>~ Hana</p>
   </div>
   <div style="text-align: center;">
-    <img id="beefalo" src="images/beefalo.png" alt="Beefalo" width="300" draggable="false">
+    <img id="beefalo" src="images/beefalo.png" alt="Beefalo" width="300" draggable="false" tabindex="-1">
   </div>
   <div id="lottie-container"></div>
 
