@@ -28,12 +28,15 @@
     }
 
     #love-counter-container {
+      text-align: center;
       margin-top: 20px; /* távolság a többi tartalomtól */
-      font-size: 24px;
       margin-left: -20px; /* balra tolja az egész containert */
+      font-size: 24px;
+      
     }
     #heart-icon {
-      vertical-align: 10px;
+      position: relative;
+      top: -1px;
       margin-right: 3px; /* távolság a szám és a szívecske között */
     }
     
@@ -60,7 +63,7 @@
     <img id="beefalo" src="images/beefalo.png" alt="Beefalo" width="300" draggable="false" tabindex="-1">
   </div>
   <div id="love-counter-container" style="text-align: center; margin-left: -20px;">
-    <img id="heart-icon" src="images/heart-icon.png" alt="Heart" width="40" style="vertical-align: 10px; margin-right: 3px;">
+    <img id="heart-icon" src="images/heart-icon.png" alt="Heart" width="40">
     <span id="love-counter">0</span>
   </div>
   <div id="lottie-container"></div>
