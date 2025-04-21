@@ -31,6 +31,14 @@
       outline: none;
     }
     
+    /* no focus anywhere */ 
+    html, body {
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+    
   </style>
 </head>
 <body>
@@ -112,7 +120,16 @@
         loop: false,
         autoplay: true,
         path: 'images/heartlottie.json'
-      });
+    });
+
+
+    document.addEventListener('click', function (event) {
+      // Ez mindent defókuszál és eltünteti a caret-et
+      event.preventDefault();
+      if (document.activeElement) document.activeElement.blur();
+      window.getSelection()?.removeAllRanges();
+    }, true); // a 'true' itt fontos, hogy capturing fázisban fusson
+          
 
     anim.addEventListener('complete', function () {
       newContainer.remove(); // automatikusan törli magát
