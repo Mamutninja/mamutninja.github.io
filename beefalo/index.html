@@ -86,7 +86,6 @@
     };
     
     let containerCount = 0;
-    let loveGiven = 0;
     
     // Lottie animáció inicializálása, autoplay kikapcsolva
     const animacio = lottie.loadAnimation({
@@ -112,8 +111,6 @@
       if (alpha < 10) return; // ha átlátszó részre kattintottunk, semmit ne csináljon
       
       containerCount ++;
-      loveGiven ++;
-      document.getElementById('love-counter').textContent = loveGiven;
       const container = document.getElementById('lottie-container');
       
       const xLottie = event.clientX;
@@ -137,6 +134,9 @@
         loop: false,
         autoplay: true,
         path: 'images/heartlottie.json'
+
+      // global love
+      incrementLove();
     });
 
 
@@ -151,8 +151,54 @@
     anim.addEventListener('complete', function () {
       newContainer.remove(); // automatikusan törli magát
     });
+
+      
   });
   </script>
-</body>
+
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+    import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyAmg3Z7uEYo4_fe7rh3acKifTToSxHcdL0",
+      authDomain: "beefalo-1dc7d.firebaseapp.com",
+      databaseURL: "https://beefalo-1dc7d-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "beefalo-1dc7d",
+      storageBucket: "beefalo-1dc7d.firebasestorage.app",
+      messagingSenderId: "648795834888",
+      appId: "1:648795834888:web:f54686835665bab8eddfbd",
+      measurementId: "G-V7YQ72FZJM"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    const db = getDatabase(app);
+    const loveRef = ref(db, 'loveGiven');
+  
+    // Ha változik az érték az adatbázisban, frissíti a számlálót
+    onValue(loveRef, (snapshot) => {
+      const currentLove = snapshot.val();
+      const counterElem = document.getElementById('love-counter');
+      if (counterElem) counterElem.textContent = currentLove ?? 0;
+    });
+  
+    // Függvény, amit a másik script használhat
+    window.incrementLove = function () {
+      runTransaction(loveRef, (current) => {
+        return (current || 0) + 1;
+      });
+    };
+  </script>
+  
+  </body>
 </html>
 
