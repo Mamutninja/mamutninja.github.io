@@ -49,6 +49,9 @@
   <div style="text-align: center;">
     <img id="beefalo" src="images/beefalo.png" alt="Beefalo" width="300" draggable="false" tabindex="-1">
   </div>
+  <div style="text-align: center;">
+    <span id="love-counter">0</span>
+  </div>
   <div id="lottie-container"></div>
 
 
@@ -67,8 +70,8 @@
       ctx.drawImage(beefalo, 0, 0, beefaloImg.width, beefaloImg.height);
     };
     
-    let clickCount = 0;
     let containerCount = 0;
+    let loveGiven = 0;
     
     // Lottie animáció inicializálása, autoplay kikapcsolva
     const animacio = lottie.loadAnimation({
@@ -93,10 +96,9 @@
   
       if (alpha < 10) return; // ha átlátszó részre kattintottunk, semmit ne csináljon
       
-      clickCount ++;
-      if (clickCount >= 10) return; // ha 10-nél többet kattintottak, ne induljon újra
       containerCount ++;
-      clickCount = 0;
+      loveGiven ++;
+      document.getElementById('love-counter').textContent = loveGiven;
       const container = document.getElementById('lottie-container');
       
       const xLottie = event.clientX;
