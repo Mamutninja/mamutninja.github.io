@@ -26,6 +26,15 @@
       pointer-events: none;
       display: none; /* kezdetben el van rejtve */
     }
+
+    #love-counter-container {
+      margin-top: 20px; /* távolság a többi tartalomtól */
+      font-size: 24px;
+    }
+    #heart-icon {
+      vertical-align: middle;
+      margin-right: 8px; /* távolság a szám és a szívecske között */
+    }
     
     *:focus {
       outline: none;
@@ -49,7 +58,8 @@
   <div style="text-align: center;">
     <img id="beefalo" src="images/beefalo.png" alt="Beefalo" width="300" draggable="false" tabindex="-1">
   </div>
-  <div style="text-align: center;">
+  <div id="love-counter-container" style="text-align: center;">
+    <img id="heart-icon" src="beefalo/images/heart-icon.png" alt="Heart" width="20" style="vertical-align: middle; margin-right: 5px;">
     <span id="love-counter">0</span>
   </div>
   <div id="lottie-container"></div>
