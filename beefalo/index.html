@@ -8,7 +8,7 @@
   <style>
     #beefalo {
       width: 200px;
-      cursor: pointer;
+      cursor: default;
       display: block;
       margin: 0 auto;
       user-select: none;
@@ -17,6 +17,7 @@
       -moz-user-select: none;
       -ms-user-select: none;
       outline: none;
+      
       
     }
     #lottie-container {
@@ -95,6 +96,20 @@
       autoplay: false,
       path: 'images/heartlottie.json'
     });
+    beefaloImg.addEventListener('mousemove', function (event) {
+      const rect = beefaloImg.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+    
+      const pixel = ctx.getImageData(x, y, 1, 1).data;
+      const alpha = pixel[3];
+    
+      if (alpha < 10) {
+        beefaloImg.style.cursor = 'default'; // átlátszó -> sima kurzor
+      } else {
+        beefaloImg.style.cursor = 'pointer'; // látható rész -> kattintós kurzor
+      }
+    });
 
     beefaloImg.addEventListener('click', function (event) {
       // ne jelenjen meg a 'text caret'
@@ -138,24 +153,22 @@
 
       // global love
       incrementLove();
+          
+
+      anim.addEventListener('complete', function () {
+        newContainer.remove(); // automatikusan törli magát
+      });
 
       
-
-
+    });
+    
     document.addEventListener('click', function (event) {
       // Ez mindent defókuszál és eltünteti a caret-et
       event.preventDefault();
       if (document.activeElement) document.activeElement.blur();
       window.getSelection()?.removeAllRanges();
     }, true); // a 'true' itt fontos, hogy capturing fázisban fusson
-          
-
-    anim.addEventListener('complete', function () {
-      newContainer.remove(); // automatikusan törli magát
-    });
-
-      
-  });
+    
   </script>
 
   <script type="module">
