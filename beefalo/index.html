@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Hello te butha ló</title>
-  <link rel="icon" type="image/x-icon" href="beefalo/images/beefalo.png">
+  <link rel="icon" type="image/x-icon" href="images/beefalo.png">
   <script src="https://unpkg.com/lottie-web@5.10.2/build/player/lottie.min.js"></script>
   <style>
     #beefalo {
@@ -47,7 +47,7 @@
     <p>~ Hana</p>
   </div>
   <div style="text-align: center;">
-    <img id="beefalo" src="beefalo/images/beefalo.png" alt="Beefalo" width="300" draggable="false" tabindex="-1">
+    <img id="beefalo" src="images/beefalo.png" alt="Beefalo" width="300" draggable="false" tabindex="-1">
   </div>
   <div style="text-align: center;">
     <span id="love-counter">0</span>
@@ -62,7 +62,7 @@
     const canvas = document.getElementById('hit-test-canvas');
     const ctx = canvas.getContext('2d');
     const beefalo = new Image();
-    beefalo.src = 'beefalo/images/beefalo.png';
+    beefalo.src = 'images/beefalo.png';
   
     beefalo.onload = function () {
       canvas.width = beefaloImg.width;
@@ -121,7 +121,7 @@
         renderer: 'svg',
         loop: false,
         autoplay: true,
-        path: 'beefalo/images/heartlottie.json'
+        path: 'images/heartlottie.json'
     });
 
 
