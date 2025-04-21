@@ -28,7 +28,7 @@
     <p>~ Hana</p>
   </div>
   <div style="text-align: center;">
-    <img id="beefalo" src="images/beefalo.png" alt="Beefalo" width="300">
+    <img id="beefalo" src="images/beefalo.png" alt="Beefalo" width="300" draggable="false">
   </div>
   <div id="lottie-container"></div>
 
@@ -61,6 +61,10 @@
     });
 
     beefaloImg.addEventListener('click', function (event) {
+      // ne jelenjen meg a 'text caret'
+      event.preventDefault(); // ne kapjon fókuszt semmi
+      document.activeElement.blur(); // vegye el a fókuszt a jelenlegi elemtől
+      
       const rect = beefaloImg.getBoundingClientRect();
       const xBeefalo = event.clientX - rect.left;
       const yBeefalo = event.clientY - rect.top;
