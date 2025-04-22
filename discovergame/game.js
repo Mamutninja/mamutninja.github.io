@@ -238,23 +238,26 @@ canvas.addEventListener("mousedown", function(e) {
 function update() {
   let moving = false;
 
+  let nextX = player.x;
+  let nextY = player.y;
+
   // --- Billentyűzetes vezérlés (WASD) ---
   if (keys["w"]) {
-    player.y -= player.speed;
+    nextY -= player.speed;
     player.direction = "up";
     moving = true;
   } else if (keys["s"]) {
-    player.y += player.speed;
+    nextY += player.speed;
     player.direction = "down";
     moving = true;
   }
 
   if (keys["a"]) {
-    player.x -= player.speed;
+    nextX -= player.speed;
     player.direction = "left";
     moving = true;
   } else if (keys["d"]) {
-    player.x += player.speed;
+    nextX += player.speed;
     player.direction = "right";
     moving = true;
   }
@@ -311,13 +314,13 @@ function update() {
   }
 
   // --- Pályaszél ellenőrzés ---
-  player.x = Math.max(0, Math.min(player.x, canvas.width - player.width));
-  player.y = Math.max(0, Math.min(player.y, canvas.height - player.height));
-
+  nextX = Math.max(0, Math.min(nextX, canvas.width - player.width));
+  nextY = Math.max(0, Math.min(nextY, canvas.height - player.height));
+  
   // ne menjen az inventory-ra!
-  if (!isInInventoryArea(targetX + player.width / 2, targetY + player.height / 2)) {
-    player.x = targetX;
-    player.y = targetY;
+  if (!isInInventoryArea(nextX + player.width / 2, nextY + player.height / 2)) {
+    player.x = nextX;
+    player.y = nextY;
   }
 }
 
