@@ -104,15 +104,20 @@ const ITEM_TYPES = {
 let items = [];
 
 // item spawner
-function spawnItem(type) { // Modified to accept item type
+function spawnItem(type) {
     const config = ITEM_TYPES[type];
     const icon = itemIcons[type];
+    console.log(`spawnItem(${type}) meghívva, config:`, config, ", icon:", icon);
 
-    if (!icon || !config) return null; // Return null if icon or config is missing
+    if (!icon || !config) {
+        console.log(`spawnItem(${type}) visszatér null miatt: !icon || !config`);
+        return null;
+    }
 
     const width = config.width;
     const height = config.height;
     const spawnArea = config.spawnArea;
+    console.log(`spawnItem(${type}), spawnArea:`, spawnArea);
 
     let attempts = 0;
     let newItem;
@@ -120,23 +125,26 @@ function spawnItem(type) { // Modified to accept item type
     while (attempts < 100) {
         const x = Math.random() * (spawnArea.xMax - spawnArea.xMin) + spawnArea.xMin;
         const y = Math.random() * (spawnArea.yMax - spawnArea.yMin) + spawnArea.yMin;
+        console.log(`spawnItem(${type}), kísérlet ${attempts}, x: ${x}, y: ${y}`);
 
         const tooClose = items.some(item => {
             const dx = (x + width / 2) - (item.x + item.width / 2);
             const dy = (y + height / 2) - (item.y + item.height / 2);
             const distance = Math.sqrt(dx * dx + dy * dy);
+            console.log(`spawnItem(${type}), távolság az itemhez: ${distance}`);
             return distance < 80;
         });
 
         if (!tooClose) {
-            newItem = { x, y, width, height, type, img: icon, id: type }; // Add img and id
+            newItem = { x, y, width, height, type, img: icon, id: type };
+            console.log(`spawnItem(${type}) sikeresen létrehozott itemet:`, newItem);
             break;
         }
         attempts++;
     }
+    console.log(`spawnItem(${type}) visszatér:`, newItem);
     return newItem;
 }
-
 
 // is the new item too close?
 // new items spawning too close will be prevented
@@ -441,30 +449,27 @@ function update() {
 
 // Make things appear on the screen
 function draw() {
-  drawBackgroundCrop();
+    drawBackgroundCrop();
+    console.log("draw() meghívva, items tömb:", items);
 
-  // Draw all items
-  for (let item of items) {
-    if (!item.pickedUp) {
-      ctx.drawImage(item.img, item.x, item.y, item.width, item.height);
+    // Draw all items
+    for (let item of items) {
+        console.log("draw() - iteráció az itemen:", item);
+        if (!item.pickedUp) {
+            console.log("draw() - rajzolás:", item.img, item.x, item.y);
+            ctx.drawImage(item.img, item.x, item.y, item.width, item.height);
+        }
     }
-  }
 
-  // draw player
-  const spriteList = player.sprites[player.direction];
-  const sprite = spriteList[player.frameIndex];  
-  ctx.drawImage(sprite, player.x, player.y, player.width, player.height);
+    // draw player
+    const spriteList = player.sprites[player.direction];
+    const sprite = spriteList[player.frameIndex];
+    if (sprite) {
+        ctx.drawImage(sprite, player.x, player.y, player.width, player.height);
+    }
 
-  drawInventory();
+    drawInventory();
 }
-
-
-function gameLoop() {
-  update();
-  draw();
-  requestAnimationFrame(gameLoop);
-}
-
 // music
 const bgMusic = new Audio("audio/Soft Sunshine Wonder.mp3");
 bgMusic.loop = true;
@@ -484,7 +489,9 @@ function startMusicOnce() {
 window.addEventListener("click", startMusicOnce);
 window.addEventListener("touchstart", startMusicOnce);
 
+console.log("initItems() meghívása előtt");
 initItems();
+console.log("initItems() lefutása után, items tömb:", items);
 gameLoop();
 
 // spawn new items
