@@ -17,10 +17,10 @@ const player = {
 };
 
 // Töltsd be a megfelelő sprite-okat
-player.sprites.up.src = "sprites/player_up.png";
-player.sprites.down.src = "sprites/player_down.png";
-player.sprites.left.src = "sprites/player_left.png";
-player.sprites.right.src = "sprites/player_right.png";
+player.sprites.up.src = "sprites/up1.png";
+player.sprites.down.src = "sprites/down1.png";
+player.sprites.left.src = "sprites/left1.png";
+player.sprites.right.src = "sprites/right1.png";
 
 const keys = {};
 
