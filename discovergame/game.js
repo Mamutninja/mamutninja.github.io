@@ -73,29 +73,77 @@ const player = {
 
 
 // items
-const items = [
-  {
-    id: 'blue_flower',
-    x: 300,
-    y: 250,
+const ITEM_TYPES = {
+  blue_flower: {
+    imgSrc: "sprites/items/blueflower.png",
     width: 24,
     height: 24,
-    img: new Image(),
-    pickedUp: false
+    minCount: 5,
+    spawnArea: { xMin: 50, xMax: canvas.width - 50, yMin: 50, yMax: canvas.height - 50 }
   },
-  {
-    id: 'mushroom',
-    x: 500,
-    y: 400,
+  mushroom: {
+    imgSrc: "sprites/items/redmushroom.png",
     width: 24,
     height: 24,
+    minCount: 3,
+    spawnArea: { xMin: 100, xMax: canvas.width - 100, yMin: 100, yMax: canvas.height - 100 }
+  }
+};
+
+let items = [];
+
+// item spawner
+function spawnItem(typeKey) {
+  const type = ITEM_TYPES[typeKey];
+  const item = {
+    id: typeKey,
+    x: Math.random() * (type.spawnArea.xMax - type.spawnArea.xMin) + type.spawnArea.xMin,
+    y: Math.random() * (type.spawnArea.yMax - type.spawnArea.yMin) + type.spawnArea.yMin,
+    width: type.width,
+    height: type.height,
     img: new Image(),
     pickedUp: false
-  }
-];
+  };
+  item.img.src = type.imgSrc;
+  items.push(item);
+}
 
-items[0].img.src = "sprites/items/blueflower.png";
-items[1].img.src = "sprites/items/redmushroom.png";
+
+function createNewItem(typeKey) {
+  const type = ITEM_TYPES[typeKey];
+  const item = {
+    id: typeKey,
+    x: Math.random() * (type.spawnArea.xMax - type.spawnArea.xMin) + type.spawnArea.xMin,
+    y: Math.random() * (type.spawnArea.yMax - type.spawnArea.yMin) + type.spawnArea.yMin,
+    width: type.width,
+    height: type.height,
+    img: new Image(),
+    pickedUp: false
+  };
+  item.img.src = type.imgSrc;
+  return item;
+}
+
+function isTooClose(newItem) {
+  for (const item of items) {
+    if (item.pickedUp) continue;
+    const dx = newItem.x - item.x;
+    const dy = newItem.y - item.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    if (distance < 50) return true; // 50 px-es minimum távolság
+  }
+  return false;
+}
+// initialize items
+function initItems() {
+  for (const typeKey in ITEM_TYPES) {
+    const minCount = ITEM_TYPES[typeKey].minCount;
+    for (let i = 0; i < minCount; i++) {
+      spawnItem(typeKey);
+    }
+  }
+}
+
 
 
 const keys = {};
@@ -248,4 +296,23 @@ function startMusicOnce() {
 window.addEventListener("click", startMusicOnce);
 window.addEventListener("touchstart", startMusicOnce);
 
+initItems();
 gameLoop();
+
+setInterval(() => {
+  for (const typeKey in ITEM_TYPES) {
+    const existing = items.filter(item => item.id === typeKey && !item.pickedUp).length;
+    const missing = ITEM_TYPES[typeKey].minCount - existing;
+
+    for (let i = 0; i < missing; i++) {
+      let tryCount = 0;
+      let newItem;
+      do {
+        newItem = createNewItem(typeKey);
+        tryCount++;
+      } while (isTooClose(newItem) && tryCount < 10);
+
+      if (tryCount < 10) items.push(newItem);
+    }
+  }
+}, 10000);
