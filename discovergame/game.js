@@ -470,6 +470,13 @@ function draw() {
 
     drawInventory();
 }
+
+function gameLoop() {
+  update();
+  draw();
+  requestAnimationFrame(gameLoop);
+}
+
 // music
 const bgMusic = new Audio("audio/Soft Sunshine Wonder.mp3");
 bgMusic.loop = true;
