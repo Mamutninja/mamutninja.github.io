@@ -344,6 +344,7 @@ function draw() {
 function gameLoop() {
   update();
   draw();
+  drawInventory();
   requestAnimationFrame(gameLoop);
 }
 
