@@ -88,6 +88,7 @@ const ITEM_TYPES = {
     width: 24,
     height: 24,
     minCount: 5,
+    maxCount: 10,
     spawnArea: { xMin: 50, xMax: canvas.width - 50, yMin: 50, yMax: canvas.height - 50 }
   },
   redMushroom: {
@@ -95,6 +96,7 @@ const ITEM_TYPES = {
     width: 24,
     height: 24,
     minCount: 3,
+    maxCount: 8,
     spawnArea: { xMin: 100, xMax: canvas.width - 100, yMin: 100, yMax: canvas.height - 100 }
   }
 };
@@ -104,6 +106,10 @@ let items = [];
 // item spawner
 function spawnItem(typeKey) {
   const type = ITEM_TYPES[typeKey];
+  // Count items of this type
+  const currentCount = items.filter(item => item.id === typeKey && !item.pickedUp).length;
+  if (currentCount >= type.maxCount) return; // don't spawn more
+  
   const item = {
     id: typeKey,
     // choose random spawning point
