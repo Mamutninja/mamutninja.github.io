@@ -83,14 +83,14 @@ const player = {
 
 // items' info
 const ITEM_TYPES = {
-  blue_flower: {
+  blueFlower: {
     imgSrc: "sprites/items/blueflower.png",
     width: 24,
     height: 24,
     minCount: 5,
     spawnArea: { xMin: 50, xMax: canvas.width - 50, yMin: 50, yMax: canvas.height - 50 }
   },
-  mushroom: {
+  redMushroom: {
     imgSrc: "sprites/items/redmushroom.png",
     width: 24,
     height: 24,
@@ -232,10 +232,11 @@ window.addEventListener("keyup", (e) => {
 });
 
 
-// mobile version
+// move to target
 let targetX = null;
 let targetY = null;
 
+// mobile version
 canvas.addEventListener("touchstart", function(e) {
   const touch = e.touches[0];
   const rect = canvas.getBoundingClientRect();
