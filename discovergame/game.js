@@ -197,8 +197,8 @@ function drawInventory() {
         ctx.font = "16px Courier New";
         ctx.strokeStyle = "black";
         ctx.lineWidth = 2;
-        ctx.strokeText(count, x + inventorySlotSize - 16, y + 20);
-        ctx.fillText(count, x + inventorySlotSize - 16, y + 20);
+        ctx.strokeText(count, x + inventorySlotSize - 16, y + 16);
+        ctx.fillText(count, x + inventorySlotSize - 16, y + 16);
       }
     }
     // draw selection frame
