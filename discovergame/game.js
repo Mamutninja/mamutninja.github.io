@@ -381,7 +381,7 @@ setInterval(() => {
       do {
         newItem = createNewItem(typeKey);
         tryCount++;
-      } while (isTooClose(newItem) && tryCount < 10 && !isInInventoryArea(x, y));
+      } while ((isTooClose(newItem) || isInInventoryArea(newItem.x, newItem.y)) && tryCount < 10);
 
       if (tryCount < 10) items.push(newItem);
     }
