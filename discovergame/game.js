@@ -203,8 +203,8 @@ function drawInventory() {
         ctx.font = "16px Courier New";
         ctx.strokeStyle = "black";
         ctx.lineWidth = 3;
-        ctx.strokeText(count, x + inventorySlotSize - 12, y + 16);
-        ctx.fillText(count, x + inventorySlotSize - 12, y + 16);
+        ctx.strokeText(count, x + inventorySlotSize - 16, y + 16);
+        ctx.fillText(count, x + inventorySlotSize - 16, y + 16);
       }
     }
     // draw selection frame
@@ -314,51 +314,64 @@ function update() {
   let moving = false;
   let nextX = player.x;
   let nextY = player.y;
-
+  
+  let moveX = 0;
+  let moveY = 0;
+  
   // --- Mozgás egérkattintásra ---
   if (targetX !== null && targetY !== null) {
-    const dx = targetX - player.x - player.width / 2; // Középponthoz igazítás
+    const dx = targetX - player.x - player.width / 2;
     const dy = targetY - player.y - player.height / 2;
     const distance = Math.sqrt(dx * dx + dy * dy);
-
-    if (distance > player.speed) {
-      const angle = Math.atan2(dy, dx);
-      nextX += player.speed * Math.cos(angle);
-      nextY += player.speed * Math.sin(angle);
+  
+    if (distance > 1) {
+      moveX = dx;
+      moveY = dy;
       moving = true;
-
-      // Irány meghatározása (opcionális, ha a sprite iránya nem fontos egérnél)
+  
+      // Irány sprite meghatározása
+      const angle = Math.atan2(dy, dx);
       if (Math.abs(angle) < Math.PI / 4) player.direction = "right";
       else if (Math.abs(angle) > 3 * Math.PI / 4) player.direction = "left";
       else if (angle > 0) player.direction = "down";
       else player.direction = "up";
     } else {
-      // Célponthoz értünk
       targetX = null;
       targetY = null;
     }
+  } else {
+    // --- WASD irányítás ---
+    if (keys["w"]) {
+      moveY -= 1;
+      player.direction = "up";
+      moving = true;
+    }
+    if (keys["s"]) {
+      moveY += 1;
+      player.direction = "down";
+      moving = true;
+    }
+    if (keys["a"]) {
+      moveX -= 1;
+      player.direction = "left";
+      moving = true;
+    }
+    if (keys["d"]) {
+      moveX += 1;
+      player.direction = "right";
+      moving = true;
+    }
   }
-  // --- Movement with keys (WASD) ---
-  else if (keys["w"]) {
-    nextY -= player.speed;
-    player.direction = "up";
-    moving = true;
-  } else if (keys["s"]) {
-    nextY += player.speed;
-    player.direction = "down";
-    moving = true;
+  
+  // --- Normalizálás és pozíciófrissítés ---
+  if (moving && (moveX !== 0 || moveY !== 0)) {
+    const length = Math.sqrt(moveX * moveX + moveY * moveY);
+    moveX = (moveX / length) * player.speed;
+    moveY = (moveY / length) * player.speed;
+  
+    nextX += moveX;
+    nextY += moveY;
   }
-
-  if (keys["a"]) {
-    nextX -= player.speed;
-    player.direction = "left";
-    moving = true;
-  } else if (keys["d"]) {
-    nextX += player.speed;
-    player.direction = "right";
-    moving = true;
-  }
-
   // Pick item up
   if (keys["e"]) {
   for (let item of items) {
