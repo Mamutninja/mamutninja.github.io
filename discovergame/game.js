@@ -154,15 +154,9 @@ const itemIcons = {
 itemIcons.blueFlower.src = 'sprites/items/blueflower.png';
 itemIcons.redMushroom.src = 'sprites/items/redmushroom.png';
 
-const inventory = [
-  'blueFlower',
-  'redMushroom'
-];
+const inventory = new Array(10).fill(null); // 10 üres slot
+const inventoryCounts = {}; // dinamikusan bővül
 
-const inventoryCounts = {
-  blueFlower: 0,
-  redMushroom: 0
-};
 
 const inventorySlotImage = new Image();
 inventorySlotImage.src = 'sprites/ui/inventorySlot.png';
@@ -178,29 +172,38 @@ const inventoryPadding = 8;
 const inventoryY = canvas.height - inventorySlotSize - 20; // kb. 20 px-re az aljától
 
 function drawInventory() {
-  const totalWidth = inventory.length * (inventorySlotSize + inventoryPadding) - inventoryPadding;
-  const startX = (canvas.width - totalWidth) / 2;
+  // inventory háttér
+  const bgWidth = (inventorySlotSize + inventoryPadding) * inventory.length - inventoryPadding;
+  const bgX = (canvas.width - bgWidth) / 2;
+  ctx.drawImage(inventoryBGImage, bgX - 16, inventoryY - 16, bgWidth + 32, inventorySlotSize + 32);
 
   for (let i = 0; i < inventory.length; i++) {
-    const x = startX + i * (inventorySlotSize + inventoryPadding);
+    const x = bgX + i * (inventorySlotSize + inventoryPadding);
     const y = inventoryY;
 
-    // inventory slot háttere (feltételezve, hogy külön képként van betöltve)
     ctx.drawImage(inventorySlotImage, x, y, inventorySlotSize, inventorySlotSize);
 
-    // tárgy ikon
     const itemId = inventory[i];
-    if (itemIcons[itemId]) {
+    if (itemId && itemIcons[itemId]) {
       ctx.drawImage(itemIcons[itemId], x + 4, y + 4, inventorySlotSize - 8, inventorySlotSize - 8);
+
+      // Mennyiség kiírása
+      const count = inventoryCounts[itemId];
+      if (count > 1) {
+        ctx.fillStyle = "white";
+        ctx.font = "16px Arial";
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 2;
+        ctx.strokeText(count, x + inventorySlotSize - 16, y + 20);
+        ctx.fillText(count, x + inventorySlotSize - 16, y + 20);
+      }
     }
 
-    // kijelölés keret, ha ez a kiválasztott
     if (i === selectedInventoryIndex) {
       ctx.drawImage(selectionFrameImage, x - 2, y - 2, inventorySlotSize + 4, inventorySlotSize + 4);
     }
   }
 }
-
 function isInInventoryArea(x, y) {
   const totalWidth = inventory.length * (inventorySlotSize + inventoryPadding) - inventoryPadding;
   const startX = (canvas.width - totalWidth) / 2;
@@ -235,8 +238,15 @@ canvas.addEventListener("touchstart", function(e) {
 
 canvas.addEventListener("mousedown", function(e) {
   const rect = canvas.getBoundingClientRect();
-  targetX = e.clientX - rect.left;
-  targetY = e.clientY - rect.top;
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  if (isInInventoryArea(x, y)) {
+    return; // ne mozogjon, ha inventory-n kattintunk
+  }
+
+  targetX = x;
+  targetY = y;
 });
 
 
@@ -295,45 +305,33 @@ function update() {
 
   // Felvétel
   if (keys["e"]) {
-    for (let item of items) {
-      if (!item.pickedUp &&
-          player.x < item.x + item.width &&
-          player.x + player.width > item.x &&
-          player.y < item.y + item.height &&
-          player.y + player.height > item.y) {
-        item.pickedUp = true;
-        inventoryCounts[item] ++;
-        console.log("Felvetted: " + item.id);
-        // Itt hozzáadhatod inventory-hoz is
-      }
-    }
-  }
+  for (let item of items) {
+    if (!item.pickedUp &&
+        player.x < item.x + item.width &&
+        player.x + player.width > item.x &&
+        player.y < item.y + item.height &&
+        player.y + player.height > item.y) {
 
-  // --- Ha nincs billentyűs mozgás, de van mobilos cél ---
-  if (!moving && targetX !== null && targetY !== null) {
-    const dx = targetX - (nextX + player.width / 2);
-    const dy = targetY - (nextY + player.height / 2);
-    const distance = Math.hypot(dx, dy);
+      item.pickedUp = true;
 
-    if (distance > player.speed) {
-      const angle = Math.atan2(dy, dx);
-      nextX += Math.cos(angle) * player.speed;
-      nextY += Math.sin(angle) * player.speed;
-
-      // Irány sprite-hoz
-      if (Math.abs(dx) > Math.abs(dy)) {
-        player.direction = dx > 0 ? "right" : "left";
+      // Ha már van ilyen tárgy az inventory-ban
+      if (inventoryCounts[item.id]) {
+        inventoryCounts[item.id]++;
       } else {
-        player.direction = dy > 0 ? "down" : "up";
+        // Keress üres helyet
+        const emptyIndex = inventory.findIndex(slot => slot === null);
+        if (emptyIndex !== -1) {
+          inventory[emptyIndex] = item.id;
+          inventoryCounts[item.id] = 1;
+        } else {
+          console.log("Nincs több hely az inventory-ban!");
+        }
       }
 
-      moving = true;
-    } else {
-      targetX = null;
-      targetY = null;
+      console.log("Felvetted: " + item.id);
     }
   }
-
+}
   // --- Animációs képkockák frissítése ---
   if (moving) {
     player.frameDelay++;
