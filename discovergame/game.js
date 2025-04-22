@@ -108,7 +108,7 @@ function spawnItem(typeKey) {
   const type = ITEM_TYPES[typeKey];
   // Count items of this type
   const currentCount = items.filter(item => item.id === typeKey && !item.pickedUp).length;
-  if (currentCount >= type.maxCount) return; // don't spawn more
+  if (currentCount >= Math.floor(Math.random() * (type.maxCount+1))+type.minCount) return; // don't spawn more than a random number between min and max count
   
   const item = {
     id: typeKey,
@@ -202,9 +202,9 @@ function drawInventory() {
         ctx.fillStyle = "white";
         ctx.font = "16px Courier New";
         ctx.strokeStyle = "black";
-        ctx.lineWidth = 2;
-        ctx.strokeText(count, x + inventorySlotSize - 16, y + 16);
-        ctx.fillText(count, x + inventorySlotSize - 16, y + 16);
+        ctx.lineWidth = 3;
+        ctx.strokeText(count, x + inventorySlotSize - 12, y + 16);
+        ctx.fillText(count, x + inventorySlotSize - 12, y + 16);
       }
     }
     // draw selection frame
