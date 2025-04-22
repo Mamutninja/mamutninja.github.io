@@ -279,14 +279,14 @@ function update() {
 
   // --- Ha nincs billentyűs mozgás, de van mobilos cél ---
   if (!moving && targetX !== null && targetY !== null) {
-    const dx = targetX - (player.x + player.width / 2);
-    const dy = targetY - (player.y + player.height / 2);
+    const dx = targetX - (nextX + player.width / 2);
+    const dy = targetY - (nextY + player.height / 2);
     const distance = Math.hypot(dx, dy);
 
     if (distance > player.speed) {
       const angle = Math.atan2(dy, dx);
-      player.x += Math.cos(angle) * player.speed;
-      player.y += Math.sin(angle) * player.speed;
+      nextX += Math.cos(angle) * player.speed;
+      nextY += Math.sin(angle) * player.speed;
 
       // Irány sprite-hoz
       if (Math.abs(dx) > Math.abs(dy)) {
@@ -338,13 +338,14 @@ function draw() {
   const spriteList = player.sprites[player.direction];
   const sprite = spriteList[player.frameIndex];  
   ctx.drawImage(sprite, player.x, player.y, player.width, player.height);
+
+  drawInventory();
 }
 
 
 function gameLoop() {
   update();
   draw();
-  drawInventory();
   requestAnimationFrame(gameLoop);
 }
 
