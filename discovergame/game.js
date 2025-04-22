@@ -339,7 +339,7 @@ function update() {
     }
   }
   // --- Movement with keys (WASD) ---
-  if (keys["w"]) {
+  else if (keys["w"]) {
     nextY -= player.speed;
     player.direction = "up";
     moving = true;
