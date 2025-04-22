@@ -1,42 +1,49 @@
+// Game canvas
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+// resize to window size
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 }
-
 resizeCanvas();
+
+// always crop background when resizing the window
 window.addEventListener('resize', () => {
   resizeCanvas();
   drawBackgroundCrop();
 });
 
+// load background image
 const backgroundImage = new Image();
-backgroundImage.src = 'images/grass.png'; // <- ide tedd be a háttérképed fájlnevét vagy elérési útját
+backgroundImage.src = 'images/grass.png';
 
 backgroundImage.onload = function() {
   drawBackgroundCrop();
 };
 
+// cropping & drawing the background
 function drawBackgroundCrop() {
   const canvasRatio = canvas.width / canvas.height;
   const imgRatio = backgroundImage.width / backgroundImage.height;
 
   let srcWidth, srcHeight;
   if (imgRatio > canvasRatio) {
-    // Vágjunk a kép oldalából
+    // Cut from the side of the image
     srcHeight = backgroundImage.height;
     srcWidth = backgroundImage.height * canvasRatio;
   } else {
-    // Vágjunk a kép tetejéből/aljából
+    // Cut from the top/bottom of the image
     srcWidth = backgroundImage.width;
     srcHeight = backgroundImage.width / canvasRatio;
   }
 
+  // new position
   const srcX = (backgroundImage.width - srcWidth) / 2;
   const srcY = (backgroundImage.height - srcHeight) / 2;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  // draw it on the screen
   ctx.drawImage(
     backgroundImage,
     srcX, srcY, srcWidth, srcHeight,
@@ -44,6 +51,7 @@ function drawBackgroundCrop() {
   );
 }
 
+// player info
 const player = {
   x: 200,
   y: 200,
@@ -62,9 +70,10 @@ const player = {
   }
 };
 
-// sprite-ok betöltése
+// load player sprites
 ["up", "down", "left", "right"].forEach(dir => {
   for (let i = 1; i <= 4; i++) {
+    // load all animation images
     const img = new Image();
     img.src = `sprites/${dir}${i}.png`;
     player.sprites[dir].push(img);
@@ -72,7 +81,7 @@ const player = {
 });
 
 
-// items
+// items' info
 const ITEM_TYPES = {
   blue_flower: {
     imgSrc: "sprites/items/blueflower.png",
@@ -97,6 +106,7 @@ function spawnItem(typeKey) {
   const type = ITEM_TYPES[typeKey];
   const item = {
     id: typeKey,
+    // choose random spawning point
     x: Math.random() * (type.spawnArea.xMax - type.spawnArea.xMin) + type.spawnArea.xMin,
     y: Math.random() * (type.spawnArea.yMax - type.spawnArea.yMin) + type.spawnArea.yMin,
     width: type.width,
@@ -106,37 +116,26 @@ function spawnItem(typeKey) {
   };
   item.img.src = type.imgSrc;
   items.push(item);
-}
-
-
-function createNewItem(typeKey) {
-  const type = ITEM_TYPES[typeKey];
-  const item = {
-    id: typeKey,
-    x: Math.random() * (type.spawnArea.xMax - type.spawnArea.xMin) + type.spawnArea.xMin,
-    y: Math.random() * (type.spawnArea.yMax - type.spawnArea.yMin) + type.spawnArea.yMin,
-    width: type.width,
-    height: type.height,
-    img: new Image(),
-    pickedUp: false
-  };
-  item.img.src = type.imgSrc;
   return item;
 }
 
+// is the new item too close?
+// new items spawning too close will be prevented
 function isTooClose(newItem) {
   for (const item of items) {
     if (item.pickedUp) continue;
     const dx = newItem.x - item.x;
     const dy = newItem.y - item.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
-    if (distance < 50) return true; // 50 px-es minimum távolság
+    if (distance < 50) return true; // 50 px min distance
   }
   return false;
 }
+
 // initialize items
 function initItems() {
   for (const typeKey in ITEM_TYPES) {
+    // spawn <<minCount>> number of items of each type
     const minCount = ITEM_TYPES[typeKey].minCount;
     for (let i = 0; i < minCount; i++) {
       spawnItem(typeKey);
@@ -145,49 +144,53 @@ function initItems() {
 }
 
 
-// inventory
+// inventory icons info
 const itemIcons = {
   blueFlower: new Image(),
   redMushroom: new Image(),
 };
 
+// icon sources
 itemIcons.blueFlower.src = 'sprites/items/blueflower.png';
 itemIcons.redMushroom.src = 'sprites/items/redmushroom.png';
 
-const inventory = new Array(10).fill(null); // 10 üres slot
-const inventoryCounts = {}; // dinamikusan bővül
 
+const inventory = new Array(10).fill(null); // 10 empty slots
+const inventoryCounts = {}; // filled dynamically
 
+// inventory UI
 const inventorySlotImage = new Image();
 inventorySlotImage.src = 'sprites/ui/inventorySlot.png';
-
 const inventoryBGImage = new Image();
 inventoryBGImage.src = 'sprites/ui/inventoryBG.png';
-
 const selectionFrameImage = new Image();
 selectionFrameImage.src = 'sprites/ui/selectionFrame.png';
 
-const inventorySlotSize = 48; // pl. 48x48 px méretű slot
+const inventorySlotSize = 48; // 48x48 slot size
 const inventoryPadding = 8;
-const inventoryY = canvas.height - inventorySlotSize - 20; // kb. 20 px-re az aljától
+const inventoryY = canvas.height - inventorySlotSize - 20; // 20px from bottom
 
+// make inventory appear
 function drawInventory() {
-  // inventory háttér
+  // inventory background
   const bgWidth = (inventorySlotSize + inventoryPadding) * inventory.length - inventoryPadding;
   const bgX = (canvas.width - bgWidth) / 2;
   ctx.drawImage(inventoryBGImage, bgX - 16, inventoryY - 16, bgWidth + 32, inventorySlotSize + 32);
 
+  // draw all slots
   for (let i = 0; i < inventory.length; i++) {
     const x = bgX + i * (inventorySlotSize + inventoryPadding);
     const y = inventoryY;
-
+    // draw slot
     ctx.drawImage(inventorySlotImage, x, y, inventorySlotSize, inventorySlotSize);
 
+    // draw item in slot
     const itemId = inventory[i];
     if (itemId && itemIcons[itemId]) {
+      // draw item icon
       ctx.drawImage(itemIcons[itemId], x + 4, y + 4, inventorySlotSize - 8, inventorySlotSize - 8);
 
-      // Mennyiség kiírása
+      // write amount in inventory
       const count = inventoryCounts[itemId];
       if (count > 1) {
         ctx.fillStyle = "white";
@@ -198,12 +201,15 @@ function drawInventory() {
         ctx.fillText(count, x + inventorySlotSize - 16, y + 20);
       }
     }
-
+    // draw selection frame
     if (i === selectedInventoryIndex) {
       ctx.drawImage(selectionFrameImage, x - 2, y - 2, inventorySlotSize + 4, inventorySlotSize + 4);
     }
   }
 }
+
+
+// check if something is in the inventory area
 function isInInventoryArea(x, y) {
   const totalWidth = inventory.length * (inventorySlotSize + inventoryPadding) - inventoryPadding;
   const startX = (canvas.width - totalWidth) / 2;
@@ -213,7 +219,8 @@ function isInInventoryArea(x, y) {
 }
 
 
-
+// event listeners
+// collect keys here
 const keys = {};
 
 window.addEventListener("keydown", (e) => {
@@ -236,23 +243,26 @@ canvas.addEventListener("touchstart", function(e) {
   targetY = touch.clientY - rect.top;
 });
 
+// mousedown
 canvas.addEventListener("mousedown", function(e) {
   const rect = canvas.getBoundingClientRect();
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
 
+  // no movement in inventory area!!
   if (isInInventoryArea(x, y)) {
-    return; // ne mozogjon, ha inventory-n kattintunk
+    return;
   }
 
   targetX = x;
   targetY = y;
 });
 
-
-// inventory select
+// inventory selection with mouse
+// inventory selected index
 let selectedInventoryIndex = 0;
 
+// click
 canvas.addEventListener('click', function(e) {
   const rect = canvas.getBoundingClientRect();
   const mouseX = e.clientX - rect.left;
@@ -261,6 +271,7 @@ canvas.addEventListener('click', function(e) {
   const totalWidth = inventory.length * (inventorySlotSize + inventoryPadding) - inventoryPadding;
   const startX = (canvas.width - totalWidth) / 2;
 
+  // check each slot
   for (let i = 0; i < inventory.length; i++) {
     const x = startX + i * (inventorySlotSize + inventoryPadding);
     const y = inventoryY;
@@ -275,14 +286,14 @@ canvas.addEventListener('click', function(e) {
   }
 });
 
-
+// updates always
 function update() {
   let moving = false;
 
   let nextX = player.x;
   let nextY = player.y;
 
-  // --- Billentyűzetes vezérlés (WASD) ---
+  // --- Movement with keys (WASD) ---
   if (keys["w"]) {
     nextY -= player.speed;
     player.direction = "up";
@@ -303,7 +314,7 @@ function update() {
     moving = true;
   }
 
-  // Felvétel
+  // Pick item up
   if (keys["e"]) {
   for (let item of items) {
     if (!item.pickedUp &&
@@ -314,11 +325,11 @@ function update() {
 
       item.pickedUp = true;
 
-      // Ha már van ilyen tárgy az inventory-ban
+      // If it's already in the inventory
       if (inventoryCounts[item.id]) {
         inventoryCounts[item.id]++;
       } else {
-        // Keress üres helyet
+        // Find an empty slot
         const emptyIndex = inventory.findIndex(slot => slot === null);
         if (emptyIndex !== -1) {
           inventory[emptyIndex] = item.id;
@@ -332,7 +343,7 @@ function update() {
     }
   }
 }
-  // --- Animációs képkockák frissítése ---
+  // --- Update character animation ---
   if (moving) {
     player.frameDelay++;
     if (player.frameDelay >= player.frameMaxDelay) {
@@ -343,28 +354,29 @@ function update() {
     player.frameIndex = 0;
   }
 
-  // --- Pályaszél ellenőrzés ---
+  // --- Check if still on screen ---
   nextX = Math.max(0, Math.min(nextX, canvas.width - player.width));
   nextY = Math.max(0, Math.min(nextY, canvas.height - player.height));
   
-  // ne menjen az inventory-ra!
-  if (!isInInventoryArea(nextX + player.width / 2, nextY + player.height / 2)) {
+  // Do not enter inventory area
+  if (!isInInventoryArea(nextX + player.width, nextY + player.height)) {
     player.x = nextX;
     player.y = nextY;
   }
 }
 
-
+// Make things appear on the screen
 function draw() {
   drawBackgroundCrop();
 
-  // Tárgyak kirajzolása
+  // Draw all items
   for (let item of items) {
     if (!item.pickedUp) {
       ctx.drawImage(item.img, item.x, item.y, item.width, item.height);
     }
   }
 
+  // draw player
   const spriteList = player.sprites[player.direction];
   const sprite = spriteList[player.frameIndex];  
   ctx.drawImage(sprite, player.x, player.y, player.width, player.height);
@@ -379,6 +391,7 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 }
 
+// music
 const bgMusic = new Audio("audio/Soft Sunshine Wonder.mp3");
 bgMusic.loop = true;
 bgMusic.volume = 0.5; // 50%-os hangerő (0.0 - 1.0 között)
@@ -400,6 +413,7 @@ window.addEventListener("touchstart", startMusicOnce);
 initItems();
 gameLoop();
 
+// spawn new items
 setInterval(() => {
   for (const typeKey in ITEM_TYPES) {
     const existing = items.filter(item => item.id === typeKey && !item.pickedUp).length;
@@ -409,7 +423,7 @@ setInterval(() => {
       let tryCount = 0;
       let newItem;
       do {
-        newItem = createNewItem(typeKey);
+        newItem = spawnItem(typeKey);
         tryCount++;
       } while ((isTooClose(newItem) || isInInventoryArea(newItem.x, newItem.y)) && tryCount < 10);
 
