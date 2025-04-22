@@ -50,20 +50,26 @@ const player = {
   width: 32,
   height: 32,
   speed: 2,
-  direction: "down", // "up", "down", "left", "right"
+  direction: "down",
+  frameIndex: 0,
+  frameDelay: 0,
+  frameMaxDelay: 10, // ennyi frame-enként váltunk animációt
   sprites: {
-    up: new Image(),
-    down: new Image(),
-    left: new Image(),
-    right: new Image()
+    up: [],
+    down: [],
+    left: [],
+    right: []
   }
 };
 
-// Töltsd be a megfelelő sprite-okat
-player.sprites.up.src = "sprites/up1.png";
-player.sprites.down.src = "sprites/down1.png";
-player.sprites.left.src = "sprites/left1.png";
-player.sprites.right.src = "sprites/right1.png";
+// sprite-ok betöltése
+["up", "down", "left", "right"].forEach(dir => {
+  for (let i = 1; i <= 4; i++) {
+    const img = new Image();
+    img.src = `sprites/${dir}${i}.png`;
+    player.sprites[dir].push(img);
+  }
+});
 
 const keys = {};
 
@@ -76,28 +82,46 @@ window.addEventListener("keyup", (e) => {
 });
 
 function update() {
-  if (keys["w"]) {
+  let moving = false;
+
+  if (keys["w"] && player.y > 0) {
     player.y -= player.speed;
     player.direction = "up";
-  } else if (keys["s"]) {
+    moving = true;
+  }
+  if (keys["s"] && player.y + player.height < canvas.height) {
     player.y += player.speed;
     player.direction = "down";
+    moving = true;
   }
-
-  if (keys["a"]) {
+  if (keys["a"] && player.x > 0) {
     player.x -= player.speed;
     player.direction = "left";
-  } else if (keys["d"]) {
+    moving = true;
+  }
+  if (keys["d"] && player.x + player.width < canvas.width) {
     player.x += player.speed;
     player.direction = "right";
+    moving = true;
+  }
+
+  // ha mozog, léptessük az animációs képkockát
+  if (moving) {
+    player.frameDelay++;
+    if (player.frameDelay >= player.frameMaxDelay) {
+      player.frameDelay = 0;
+      player.frameIndex = (player.frameIndex + 1) % 4; // 0,1,2,3
+    }
+  } else {
+    player.frameIndex = 0; // álló pozícióban mindig az első képkocka
   }
 }
 
 function draw() {
-  drawBackgroundCrop(); // ez a helyes háttérkirajzolás (Crop móddal)
+  drawBackgroundCrop();
 
-  // karakter kirajzolása az aktuális irány alapján
-  const sprite = player.sprites[player.direction];
+  const spriteList = player.sprites[player.direction];
+  const sprite = spriteList[player.frameIndex];
   ctx.drawImage(sprite, player.x, player.y, player.width, player.height);
 }
 
