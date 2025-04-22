@@ -160,7 +160,7 @@ function initItems() {
     // spawn <<minCount>> number of items of each type
     const minCount = ITEM_TYPES[typeKey].minCount;
     for (let i = 0; i < minCount; i++) {
-      spawnItem(typeKey);
+      spawnItem();
     }
   }
 }
@@ -498,7 +498,7 @@ setInterval(() => {
       let tryCount = 0;
       let newItem;
       do {
-        newItem = spawnItem(typeKey);
+        newItem = spawnItem();
         tryCount++;
       } while ((isTooClose(newItem) || isInInventoryArea(newItem.x, newItem.y)) && tryCount < 10);
 
