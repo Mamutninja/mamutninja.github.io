@@ -162,7 +162,7 @@ const inventoryCounts = {}; // filled dynamically
 const inventorySlotImage = new Image();
 inventorySlotImage.src = 'sprites/ui/inventorySlot.png';
 const inventoryBGImage = new Image();
-inventoryBGImage.src = 'sprites/ui/inventoryBG.png';
+inventoryBGImage.src = 'sprites/ui/inventoryNewBG.png';
 const selectionFrameImage = new Image();
 selectionFrameImage.src = 'sprites/ui/selectionFrame.png';
 
@@ -194,7 +194,7 @@ function drawInventory() {
       const count = inventoryCounts[itemId];
       if (count > 1) {
         ctx.fillStyle = "white";
-        ctx.font = "16px Arial";
+        ctx.font = "16px Courier New";
         ctx.strokeStyle = "black";
         ctx.lineWidth = 2;
         ctx.strokeText(count, x + inventorySlotSize - 16, y + 20);
