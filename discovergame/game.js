@@ -145,6 +145,66 @@ function initItems() {
 }
 
 
+// inventory
+const itemIcons = {
+  blueFlower: new Image(),
+  redMushroom: new Image(),
+};
+
+itemIcons.blueFlower.src = 'sprites/items/blueflower.png';
+itemIcons.redMushroom.src = 'sprites/items/redmushroom.png';
+
+const inventory = [
+  'blueFlower',
+  'redMushroom'
+];
+
+const inventorySlotImage = new Image();
+inventorySlotImage.src = 'sprites/ui/inventorySlot.png';
+
+const inventoryBGImage = new Image();
+inventoryBGImage.src = 'sprites/ui/inventoryBG.png';
+
+const selectionFrameImage = new Image();
+selectionFrameImage.src = 'sprites/ui/selectionFrame.png';
+
+const inventorySlotSize = 48; // pl. 48x48 px méretű slot
+const inventoryPadding = 8;
+const inventoryY = canvas.height - inventorySlotSize - 20; // kb. 20 px-re az aljától
+
+function drawInventory() {
+  const totalWidth = inventory.length * (inventorySlotSize + inventoryPadding) - inventoryPadding;
+  const startX = (canvas.width - totalWidth) / 2;
+
+  for (let i = 0; i < inventory.length; i++) {
+    const x = startX + i * (inventorySlotSize + inventoryPadding);
+    const y = inventoryY;
+
+    // inventory slot háttere (feltételezve, hogy külön képként van betöltve)
+    ctx.drawImage(inventorySlotImage, x, y, inventorySlotSize, inventorySlotSize);
+
+    // tárgy ikon
+    const itemId = inventory[i];
+    if (itemIcons[itemId]) {
+      ctx.drawImage(itemIcons[itemId], x + 4, y + 4, inventorySlotSize - 8, inventorySlotSize - 8);
+    }
+
+    // kijelölés keret, ha ez a kiválasztott
+    if (i === selectedInventoryIndex) {
+      ctx.drawImage(selectionFrameImage, x - 2, y - 2, inventorySlotSize + 4, inventorySlotSize + 4);
+    }
+  }
+}
+
+function isInInventoryArea(x, y) {
+  const totalWidth = inventory.length * (inventorySlotSize + inventoryPadding) - inventoryPadding;
+  const startX = (canvas.width - totalWidth) / 2;
+  const endY = inventoryY + inventorySlotSize;
+
+  return x >= startX && x <= startX + totalWidth && y >= inventoryY;
+}
+
+
 
 const keys = {};
 
@@ -253,6 +313,12 @@ function update() {
   // --- Pályaszél ellenőrzés ---
   player.x = Math.max(0, Math.min(player.x, canvas.width - player.width));
   player.y = Math.max(0, Math.min(player.y, canvas.height - player.height));
+
+  // ne menjen az inventory-ra!
+  if (!isInInventoryArea(nextX, nextY)) {
+    player.x = nextX;
+    player.y = nextY;
+  }
 }
 
 
@@ -310,7 +376,7 @@ setInterval(() => {
       do {
         newItem = createNewItem(typeKey);
         tryCount++;
-      } while (isTooClose(newItem) && tryCount < 10);
+      } while (isTooClose(newItem) && tryCount < 10 && !isInInventoryArea(x, y));
 
       if (tryCount < 10) items.push(newItem);
     }
