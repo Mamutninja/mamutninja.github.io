@@ -180,7 +180,7 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 }
 
-const bgMusic = new Audio("audio/softsunshinewonder.mp3");
+const bgMusic = new Audio("audio/Soft Sunshine Wonder.mp3");
 bgMusic.loop = true;
 bgMusic.volume = 0.5; // 50%-os hangerő (0.0 - 1.0 között)
 
