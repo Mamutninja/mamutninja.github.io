@@ -71,6 +71,33 @@ const player = {
   }
 });
 
+
+// items
+const items = [
+  {
+    id: 'blue_flower',
+    x: 300,
+    y: 250,
+    width: 24,
+    height: 24,
+    img: new Image(),
+    pickedUp: false
+  },
+  {
+    id: 'mushroom',
+    x: 500,
+    y: 400,
+    width: 24,
+    height: 24,
+    img: new Image(),
+    pickedUp: false
+  }
+];
+
+items[0].img.src = "sprites/items/blueflower.png";
+items[1].img.src = "sprites/items/redmushroom.png";
+
+
 const keys = {};
 
 window.addEventListener("keydown", (e) => {
@@ -124,6 +151,21 @@ function update() {
     moving = true;
   }
 
+  // Felvétel
+  if (keys["e"]) {
+    for (let item of items) {
+      if (!item.pickedUp &&
+          player.x < item.x + item.width &&
+          player.x + player.width > item.x &&
+          player.y < item.y + item.height &&
+          player.y + player.height > item.y) {
+        item.pickedUp = true;
+        console.log("Felvetted: " + item.id);
+        // Itt hozzáadhatod inventory-hoz is
+      }
+    }
+  }
+
   // --- Ha nincs billentyűs mozgás, de van mobilos cél ---
   if (!moving && targetX !== null && targetY !== null) {
     const dx = targetX - (player.x + player.width / 2);
@@ -165,11 +207,19 @@ function update() {
   player.y = Math.max(0, Math.min(player.y, canvas.height - player.height));
 }
 
+
 function draw() {
   drawBackgroundCrop();
 
+  // Tárgyak kirajzolása
+  for (let item of items) {
+    if (!item.pickedUp) {
+      ctx.drawImage(item.img, item.x, item.y, item.width, item.height);
+    }
+  }
+
   const spriteList = player.sprites[player.direction];
-  const sprite = spriteList[player.frameIndex];
+  const sprite = spriteList[player.frameIndex];  
   ctx.drawImage(sprite, player.x, player.y, player.width, player.height);
 }
 
