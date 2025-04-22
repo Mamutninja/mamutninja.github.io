@@ -125,6 +125,22 @@ function draw() {
   ctx.drawImage(sprite, player.x, player.y, player.width, player.height);
 }
 
+
+const bgMusic = new Audio("audio/background.mp3");
+bgMusic.loop = true;
+bgMusic.volume = 0.5; // 50%-os hangerő (0.0 - 1.0 között)
+
+function startMusicOnce() {
+  bgMusic.play().catch(err => {
+    console.log("A zene nem indult el automatikusan:", err);
+  });
+  window.removeEventListener("click", startMusicOnce);
+  window.removeEventListener("touchstart", startMusicOnce);
+}
+
+window.addEventListener("click", startMusicOnce);
+window.addEventListener("touchstart", startMusicOnce);
+
 function gameLoop() {
   update();
   draw();
