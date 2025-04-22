@@ -83,25 +83,69 @@ const player = {
 
 // items' info
 const ITEM_TYPES = {
-  blueFlower: {
-    imgSrc: "sprites/items/blueflower.png",
-    width: 24,
-    height: 24,
-    minCount: 5,
-    maxCount: 10,
-    spawnArea: { xMin: 50, xMax: canvas.width - 50, yMin: 50, yMax: canvas.height - 50 }
-  },
-  redMushroom: {
-    imgSrc: "sprites/items/redmushroom.png",
-    width: 24,
-    height: 24,
-    minCount: 3,
-    maxCount: 8,
-    spawnArea: { xMin: 100, xMax: canvas.width - 100, yMin: 100, yMax: canvas.height - 100 }
-  }
+    blueFlower: {
+        imgSrc: "sprites/items/blueflower.png",
+        width: 24,
+        height: 24,
+        minCount: 5,
+        maxCount: 10,
+        spawnArea: { xMin: 50, xMax: canvas.width - 50, yMin: 50, yMax: canvas.height - 50 }
+    },
+    redMushroom: {
+        imgSrc: "sprites/items/redmushroom.png",
+        width: 24,
+        height: 24,
+        minCount: 3,
+        maxCount: 8,
+        spawnArea: { xMin: 100, xMax: canvas.width - 100, yMin: 100, yMax: canvas.height - 100 }
+    }
 };
 
 let items = [];
+
+// inventory icons info
+const itemIcons = {
+    blueFlower: new Image(),
+    redMushroom: new Image(),
+};
+
+let loadedItemIcons = 0;
+const totalItemIcons = Object.keys(itemIcons).length;
+
+for (const key in itemIcons) {
+    itemIcons[key].onload = () => {
+        loadedItemIcons++;
+        console.log(`Item ikon betöltve: ${key}`, itemIcons[key]);
+        if (loadedItemIcons === totalItemIcons && loadedSprites === totalSprites) {
+            console.log("Minden sprite és item ikon betöltődött!");
+            initItems();
+            gameLoop();
+        }
+    };
+    itemIcons[key].src = ITEM_TYPES[key].imgSrc;
+}
+
+// load player sprites (módosítva a betöltés figyelésére)
+let loadedSprites = 0;
+const totalSprites = Object.values(player.sprites).flat().length;
+
+["up", "down", "left", "right"].forEach(dir => {
+    for (let i = 1; i <= 4; i++) {
+        const img = new Image();
+        img.onload = () => {
+            loadedSprites++;
+            console.log(`Sprite betöltve: ${dir}${i}.png`);
+            if (loadedItemIcons === totalItemIcons && loadedSprites === totalSprites) {
+                console.log("Minden sprite és item ikon betöltődött!");
+                initItems();
+                gameLoop();
+            }
+        };
+        img.src = `sprites/${dir}${i}.png`;
+        player.sprites[dir].push(img);
+    }
+});
+
 
 // item spawner
 function spawnItem(type) {
@@ -117,7 +161,6 @@ function spawnItem(type) {
     const width = config.width;
     const height = config.height;
     const spawnArea = config.spawnArea;
-    console.log(`spawnItem(${type}), spawnArea:`, spawnArea);
 
     let attempts = 0;
     let newItem;
@@ -125,24 +168,20 @@ function spawnItem(type) {
     while (attempts < 100) {
         const x = Math.random() * (spawnArea.xMax - spawnArea.xMin) + spawnArea.xMin;
         const y = Math.random() * (spawnArea.yMax - spawnArea.yMin) + spawnArea.yMin;
-        console.log(`spawnItem(${type}), kísérlet ${attempts}, x: ${x}, y: ${y}`);
 
         const tooClose = items.some(item => {
             const dx = (x + width / 2) - (item.x + item.width / 2);
             const dy = (y + height / 2) - (item.y + item.height / 2);
             const distance = Math.sqrt(dx * dx + dy * dy);
-            console.log(`spawnItem(${type}), távolság az itemhez: ${distance}`);
             return distance < 80;
         });
 
         if (!tooClose) {
             newItem = { x, y, width, height, type, img: icon, id: type };
-            console.log(`spawnItem(${type}) sikeresen létrehozott itemet:`, newItem);
             break;
         }
         attempts++;
     }
-    console.log(`spawnItem(${type}) visszatér:`, newItem);
     return newItem;
 }
 
@@ -450,13 +489,10 @@ function update() {
 // Make things appear on the screen
 function draw() {
     drawBackgroundCrop();
-    console.log("draw() meghívva, items tömb:", items);
 
     // Draw all items
     for (let item of items) {
-        console.log("draw() - iteráció az itemen:", item);
         if (!item.pickedUp) {
-            console.log("draw() - rajzolás:", item.img, item.x, item.y);
             ctx.drawImage(item.img, item.x, item.y, item.width, item.height);
         }
     }
@@ -496,10 +532,6 @@ function startMusicOnce() {
 window.addEventListener("click", startMusicOnce);
 window.addEventListener("touchstart", startMusicOnce);
 
-console.log("initItems() meghívása előtt");
-initItems();
-console.log("initItems() lefutása után, items tömb:", items);
-gameLoop();
 
 // spawn new items
 setInterval(() => {
