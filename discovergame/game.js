@@ -81,40 +81,82 @@ window.addEventListener("keyup", (e) => {
   keys[e.key] = false;
 });
 
+
+// mobile version
+let targetX = null;
+let targetY = null;
+
+canvas.addEventListener("touchstart", function(e) {
+  const touch = e.touches[0];
+  const rect = canvas.getBoundingClientRect();
+  targetX = touch.clientX - rect.left;
+  targetY = touch.clientY - rect.top;
+});
+
+
 function update() {
   let moving = false;
 
-  if (keys["w"] && player.y > 0) {
+  // --- Billentyűzetes vezérlés (WASD) ---
+  if (keys["w"]) {
     player.y -= player.speed;
     player.direction = "up";
     moving = true;
-  }
-  if (keys["s"] && player.y + player.height < canvas.height) {
+  } else if (keys["s"]) {
     player.y += player.speed;
     player.direction = "down";
     moving = true;
   }
-  if (keys["a"] && player.x > 0) {
+
+  if (keys["a"]) {
     player.x -= player.speed;
     player.direction = "left";
     moving = true;
-  }
-  if (keys["d"] && player.x + player.width < canvas.width) {
+  } else if (keys["d"]) {
     player.x += player.speed;
     player.direction = "right";
     moving = true;
   }
 
-  // ha mozog, léptessük az animációs képkockát
+  // --- Ha nincs billentyűs mozgás, de van mobilos cél ---
+  if (!moving && targetX !== null && targetY !== null) {
+    const dx = targetX - (player.x + player.width / 2);
+    const dy = targetY - (player.y + player.height / 2);
+    const distance = Math.hypot(dx, dy);
+
+    if (distance > player.speed) {
+      const angle = Math.atan2(dy, dx);
+      player.x += Math.cos(angle) * player.speed;
+      player.y += Math.sin(angle) * player.speed;
+
+      // Irány sprite-hoz
+      if (Math.abs(dx) > Math.abs(dy)) {
+        player.direction = dx > 0 ? "right" : "left";
+      } else {
+        player.direction = dy > 0 ? "down" : "up";
+      }
+
+      moving = true;
+    } else {
+      targetX = null;
+      targetY = null;
+    }
+  }
+
+  // --- Animációs képkockák frissítése ---
   if (moving) {
     player.frameDelay++;
     if (player.frameDelay >= player.frameMaxDelay) {
       player.frameDelay = 0;
-      player.frameIndex = (player.frameIndex + 1) % 4; // 0,1,2,3
+      player.frameIndex = (player.frameIndex + 1) % 4;
     }
   } else {
-    player.frameIndex = 0; // álló pozícióban mindig az első képkocka
+    player.frameIndex = 0;
   }
+
+  // --- Pályaszél ellenőrzés ---
+  player.x = Math.max(0, Math.min(player.x, canvas.width - player.width));
+  player.y = Math.max(0, Math.min(player.y, canvas.height - player.height));
 }
 
 function draw() {
