@@ -157,7 +157,7 @@ function initItems() {
     // spawn <<minCount>> number of items of each type
     const minCount = ITEM_TYPES[typeKey].minCount;
     for (let i = 0; i < minCount; i++) {
-      spawnItem(typekey);
+      spawnItem(typeKey);
     }
   }
 }
