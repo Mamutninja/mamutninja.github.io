@@ -94,12 +94,11 @@ function update() {
 }
 
 function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawBackgroundCrop(); // ez a helyes háttérkirajzolás (Crop móddal)
 
-  // háttérkép kirajzolása úgy, hogy kitöltse az egész canvas-t
-  ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-
-  // egyéb dolgok: karakter, objektumok stb.
+  // karakter kirajzolása az aktuális irány alapján
+  const sprite = player.sprites[player.direction];
+  ctx.drawImage(sprite, player.x, player.y, player.width, player.height);
 }
 
 function gameLoop() {
