@@ -208,7 +208,13 @@ function drawInventory() {
     if (itemId && itemIcons[itemId]) {
       // draw item icon
       ctx.drawImage(itemIcons[itemId], x + 4, y + 4, inventorySlotSize - 8, inventorySlotSize - 8);
+    }
+    // draw selection frame
+    if (i === selectedInventoryIndex) {
+      ctx.drawImage(selectionFrameImage, x - 2, y - 2, inventorySlotSize + 4, inventorySlotSize + 4);
+    }
 
+    if (itemId && itemIcons[itemId]) {
       // write amount in inventory
       const count = inventoryCounts[itemId];
       if (count > 1) {
@@ -219,10 +225,6 @@ function drawInventory() {
         ctx.strokeText(count, x + inventorySlotSize - 16, y + 16);
         ctx.fillText(count, x + inventorySlotSize - 16, y + 16);
       }
-    }
-    // draw selection frame
-    if (i === selectedInventoryIndex) {
-      ctx.drawImage(selectionFrameImage, x - 2, y - 2, inventorySlotSize + 4, inventorySlotSize + 4);
     }
   }
 }
