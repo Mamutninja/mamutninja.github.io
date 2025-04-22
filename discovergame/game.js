@@ -126,7 +126,7 @@ function draw() {
 }
 
 
-const bgMusic = new Audio("audio/background.mp3");
+const bgMusic = new Audio("audio/softsunshinewonder.mp3");
 bgMusic.loop = true;
 bgMusic.volume = 0.5; // 50%-os hangerő (0.0 - 1.0 között)
 
