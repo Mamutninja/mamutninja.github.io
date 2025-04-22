@@ -168,25 +168,28 @@ function draw() {
 }
 
 
+function gameLoop() {
+  update();
+  draw();
+  requestAnimationFrame(gameLoop);
+}
+
 const bgMusic = new Audio("audio/softsunshinewonder.mp3");
 bgMusic.loop = true;
 bgMusic.volume = 0.5; // 50%-os hangerő (0.0 - 1.0 között)
 
 function startMusicOnce() {
-  bgMusic.play().catch(err => {
-    console.log("A zene nem indult el automatikusan:", err);
+  bgMusic.play().then(() => {
+    console.log("Zene elindult 🎶");
+  }).catch(err => {
+    console.warn("Nem tudta automatikusan elindítani:", err);
   });
+
   window.removeEventListener("click", startMusicOnce);
   window.removeEventListener("touchstart", startMusicOnce);
 }
 
 window.addEventListener("click", startMusicOnce);
 window.addEventListener("touchstart", startMusicOnce);
-
-function gameLoop() {
-  update();
-  draw();
-  requestAnimationFrame(gameLoop);
-}
 
 gameLoop();
