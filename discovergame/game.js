@@ -159,6 +159,11 @@ const inventory = [
   'redMushroom'
 ];
 
+const inventoryCounts = {
+  blueFlower: 0,
+  redMushroom: 0
+};
+
 const inventorySlotImage = new Image();
 inventorySlotImage.src = 'sprites/ui/inventorySlot.png';
 
@@ -297,6 +302,7 @@ function update() {
           player.y < item.y + item.height &&
           player.y + player.height > item.y) {
         item.pickedUp = true;
+        inventoryCounts[item] ++;
         console.log("Felvetted: " + item.id);
         // Itt hozzáadhatod inventory-hoz is
       }
