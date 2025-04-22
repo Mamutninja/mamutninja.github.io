@@ -104,42 +104,39 @@ const ITEM_TYPES = {
 let items = [];
 
 // item spawner
-function spawnItem() {
-  const type = Math.random() < 0.5 ? 'blueFlower' : 'redMushroom';
-  const icon = itemIcons[type];
+function spawnItem(type) { // Modified to accept item type
+    const config = ITEM_TYPES[type];
+    const icon = itemIcons[type];
 
-  if (!icon) return;
+    if (!icon || !config) return null; // Return null if icon or config is missing
 
-  const width = icon.width;
-  const height = icon.height;
+    const width = config.width;
+    const height = config.height;
+    const spawnArea = config.spawnArea;
 
-  let attempts = 0;
-  let newItem;
+    let attempts = 0;
+    let newItem;
 
-  while (attempts < 100) {
-    const x = Math.random() * (canvas.width - width);
-    const y = Math.random() * (canvas.height - height);
+    while (attempts < 100) {
+        const x = Math.random() * (spawnArea.xMax - spawnArea.xMin) + spawnArea.xMin;
+        const y = Math.random() * (spawnArea.yMax - spawnArea.yMin) + spawnArea.yMin;
 
-    // ellenőrzés: ne legyen túl közel más itemekhez
-    const tooClose = items.some(item => {
-      const dx = (x + width / 2) - (item.x + item.width / 2);
-      const dy = (y + height / 2) - (item.y + item.height / 2);
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      return distance < 80; // minimum távolság
-    });
+        const tooClose = items.some(item => {
+            const dx = (x + width / 2) - (item.x + item.width / 2);
+            const dy = (y + height / 2) - (item.y + item.height / 2);
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            return distance < 80;
+        });
 
-    if (!tooClose) {
-      newItem = { x, y, width, height, type };
-      break;
+        if (!tooClose) {
+            newItem = { x, y, width, height, type, img: icon, id: type }; // Add img and id
+            break;
+        }
+        attempts++;
     }
-
-    attempts++;
-  }
-
-  if (newItem) {
-    items.push(newItem);
-  }
+    return newItem;
 }
+
 
 // is the new item too close?
 // new items spawning too close will be prevented
@@ -160,7 +157,7 @@ function initItems() {
     // spawn <<minCount>> number of items of each type
     const minCount = ITEM_TYPES[typeKey].minCount;
     for (let i = 0; i < minCount; i++) {
-      spawnItem();
+      spawnItem(typekey);
     }
   }
 }
@@ -498,7 +495,8 @@ setInterval(() => {
       let tryCount = 0;
       let newItem;
       do {
-        newItem = spawnItem();
+        spawnedType = Math.random() < 0.5 ? 'blueFlower' : 'redMushroom';
+        newItem = spawnItem(spawnedType);
         tryCount++;
       } while ((isTooClose(newItem) || isInInventoryArea(newItem.x, newItem.y)) && tryCount < 10);
 
