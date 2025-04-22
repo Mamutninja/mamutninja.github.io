@@ -288,11 +288,34 @@ canvas.addEventListener('click', function(e) {
 
 // updates always
 function update() {
-  let moving = false;
 
+  let moving = false;
   let nextX = player.x;
   let nextY = player.y;
 
+  // --- Mozgás egérkattintásra ---
+  if (targetX !== null && targetY !== null) {
+    const dx = targetX - player.x - player.width / 2; // Középponthoz igazítás
+    const dy = targetY - player.y - player.height / 2;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance > player.speed) {
+      const angle = Math.atan2(dy, dx);
+      nextX += player.speed * Math.cos(angle);
+      nextY += player.speed * Math.sin(angle);
+      moving = true;
+
+      // Irány meghatározása (opcionális, ha a sprite iránya nem fontos egérnél)
+      if (Math.abs(angle) < Math.PI / 4) player.direction = "right";
+      else if (Math.abs(angle) > 3 * Math.PI / 4) player.direction = "left";
+      else if (angle > 0) player.direction = "down";
+      else player.direction = "up";
+    } else {
+      // Célponthoz értünk
+      targetX = null;
+      targetY = null;
+    }
+  }
   // --- Movement with keys (WASD) ---
   if (keys["w"]) {
     nextY -= player.speed;
