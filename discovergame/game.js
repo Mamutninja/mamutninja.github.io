@@ -104,25 +104,41 @@ const ITEM_TYPES = {
 let items = [];
 
 // item spawner
-function spawnItem(typeKey) {
-  const type = ITEM_TYPES[typeKey];
-  // Count items of this type
-  const currentCount = items.filter(item => item.id === typeKey && !item.pickedUp).length;
-  if (currentCount >= Math.floor(Math.random() * (type.maxCount+1))+type.minCount) return; // don't spawn more than a random number between min and max count
-  
-  const item = {
-    id: typeKey,
-    // choose random spawning point
-    x: Math.random() * (type.spawnArea.xMax - type.spawnArea.xMin) + type.spawnArea.xMin,
-    y: Math.random() * (type.spawnArea.yMax - type.spawnArea.yMin) + type.spawnArea.yMin,
-    width: type.width,
-    height: type.height,
-    img: new Image(),
-    pickedUp: false
-  };
-  item.img.src = type.imgSrc;
-  items.push(item);
-  return item;
+function spawnItem() {
+  const type = Math.random() < 0.5 ? 'blueFlower' : 'redMushroom';
+  const icon = itemIcons[type];
+
+  if (!icon) return;
+
+  const width = icon.width;
+  const height = icon.height;
+
+  let attempts = 0;
+  let newItem;
+
+  while (attempts < 100) {
+    const x = Math.random() * (canvas.width - width);
+    const y = Math.random() * (canvas.height - height);
+
+    // ellenőrzés: ne legyen túl közel más itemekhez
+    const tooClose = items.some(item => {
+      const dx = (x + width / 2) - (item.x + item.width / 2);
+      const dy = (y + height / 2) - (item.y + item.height / 2);
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      return distance < 80; // minimum távolság
+    });
+
+    if (!tooClose) {
+      newItem = { x, y, width, height, type };
+      break;
+    }
+
+    attempts++;
+  }
+
+  if (newItem) {
+    items.push(newItem);
+  }
 }
 
 // is the new item too close?
