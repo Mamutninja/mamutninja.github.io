@@ -235,6 +235,32 @@ canvas.addEventListener("mousedown", function(e) {
 });
 
 
+// inventory select
+let selectedInventoryIndex = 0;
+
+canvas.addEventListener('click', function(e) {
+  const rect = canvas.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+
+  const totalWidth = inventory.length * (inventorySlotSize + inventoryPadding) - inventoryPadding;
+  const startX = (canvas.width - totalWidth) / 2;
+
+  for (let i = 0; i < inventory.length; i++) {
+    const x = startX + i * (inventorySlotSize + inventoryPadding);
+    const y = inventoryY;
+
+    if (
+      mouseX >= x && mouseX <= x + inventorySlotSize &&
+      mouseY >= y && mouseY <= y + inventorySlotSize
+    ) {
+      selectedInventoryIndex = i;
+      break;
+    }
+  }
+});
+
+
 function update() {
   let moving = false;
 
