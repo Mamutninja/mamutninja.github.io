@@ -93,6 +93,12 @@ canvas.addEventListener("touchstart", function(e) {
   targetY = touch.clientY - rect.top;
 });
 
+canvas.addEventListener("mousedown", function(e) {
+  const rect = canvas.getBoundingClientRect();
+  targetX = e.clientX - rect.left;
+  targetY = e.clientY - rect.top;
+});
+
 
 function update() {
   let moving = false;
