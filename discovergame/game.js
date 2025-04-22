@@ -287,6 +287,21 @@ canvas.addEventListener('click', function(e) {
   }
 });
 
+// in-game sounds
+const pickUpSound = new Audio("audio/pickUp.wav");
+pickUpSound.loop = false;
+pickUpSound.volume = 0.5; // 50%-os hangerő (0.0 - 1.0 között)
+
+function startPickUpSound() {
+  pickUpSound.play().then(() => {
+    console.log("Pickup sound elindult 🎶");
+  }).catch(err => {
+    console.warn("Nem tudta automatikusan elindítani:", err);
+  });
+}
+
+
+
 // updates always
 function update() {
 
@@ -348,6 +363,7 @@ function update() {
         player.y + player.height > item.y) {
 
       item.pickedUp = true;
+      startPickUpSound();
 
       // If it's already in the inventory
       if (inventoryCounts[item.id]) {
