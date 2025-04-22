@@ -315,9 +315,9 @@ function update() {
   player.y = Math.max(0, Math.min(player.y, canvas.height - player.height));
 
   // ne menjen az inventory-ra!
-  if (!isInInventoryArea(nextX, nextY)) {
-    player.x = nextX;
-    player.y = nextY;
+  if (!isInInventoryArea(targetX + player.width / 2, targetY + player.height / 2)) {
+    player.x = targetX;
+    player.y = targetY;
   }
 }
 
