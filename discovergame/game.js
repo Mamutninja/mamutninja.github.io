@@ -151,7 +151,7 @@ const ITEM_TYPES = {
         minCount: 0, // Kezdetben nincs a pályán
         maxCount: 100,
         // Nincs spawnArea, mert a fákról szedjük
-    };
+    }
 };
 
 const SPAWN_WEIGHTS = {
