@@ -694,6 +694,11 @@ function draw() {
             ctx.drawImage(item.img, item.x, item.y, item.width, item.height);
         }
     }
+    // Almafák rajzolása
+    console.log("Almafák rajzolása:", appleTrees.length); // Ellenőrizzük a tömb méretét rajzoláskor
+    for (const tree of appleTrees) {
+        ctx.drawImage(tree.image, tree.x, tree.y, tree.width, tree.height);
+    }
 
     // draw player
     const spriteList = player.sprites[player.direction];
