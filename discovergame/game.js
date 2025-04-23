@@ -100,13 +100,13 @@ function AppleTree(x, y) {
     this.canPick = true;
 }
 
+const appleTrees = [];
+const MAX_APPLE_TREES = 10; // Például maximum 10 fa a pályán
+
 function spawnAppleTree(x, y) {
     const newTree = new AppleTree(x, y);
     appleTrees.push(newTree);
 }
-
-const appleTrees = [];
-const MAX_APPLE_TREES = 10; // Például maximum 10 fa a pályán
 
 function spawnRandomAppleTree() {
     console.log("spawnRandomAppleTree() meghívva");
