@@ -120,10 +120,6 @@ function spawnRandomAppleTree() {
     }
 }
 
-// A játék indításakor néhány fa spawnolása:
-for (let i = 0; i < 5; i++) {
-    spawnRandomAppleTree();
-}
 
 
 // items' info
@@ -244,6 +240,9 @@ for (const key in itemIcons) {
             console.log("Minden sprite és item ikon betöltődött!");
             initItems();
             initPlayerInventory();
+            for (let i = 0; i < 5; i++) { // Ez a ciklus a betöltés után kell fusson
+                spawnRandomAppleTree();
+            }
             gameLoop();
         }
     };
