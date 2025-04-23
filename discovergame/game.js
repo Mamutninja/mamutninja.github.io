@@ -210,16 +210,6 @@ function initItems() {
 }
 
 
-// inventory icons info
-const itemIcons = {
-  blueFlower: new Image(),
-  redMushroom: new Image(),
-};
-
-// icon sources
-itemIcons.blueFlower.src = 'sprites/items/blueflower.png';
-itemIcons.redMushroom.src = 'sprites/items/redmushroom.png';
-
 
 const inventory = new Array(10).fill(null); // 10 empty slots
 const inventoryCounts = {}; // filled dynamically
