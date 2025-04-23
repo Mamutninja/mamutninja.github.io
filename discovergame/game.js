@@ -532,13 +532,24 @@ function drawInventory() {
     }
 
     // draw dragged item
+    // draw dragged item
     if (isDragging && draggedItemIndex !== null && inventory[draggedItemIndex]) {
         const draggedItemId = inventory[draggedItemIndex];
         if (itemIcons[draggedItemId]) {
             const dragX = dragStartX - dragOffsetX;
             const dragY = dragStartY - dragOffsetY;
             ctx.drawImage(itemIcons[draggedItemId], dragX, dragY, inventorySlotSize, inventorySlotSize);
-            // A darabszámot itt nem rajzoljuk ki a húzás közben
+
+            // Rajzoljuk ki a darabszámot a húzott itemen is
+            const draggedCount = inventoryCounts[draggedItemId];
+            if (draggedCount > 1) {
+                ctx.fillStyle = "white";
+                ctx.font = "16px Courier New";
+                ctx.strokeStyle = "black";
+                ctx.lineWidth = 3;
+                ctx.strokeText(draggedCount, dragX + inventorySlotSize - 16, dragY + 16);
+                ctx.fillText(draggedCount, dragX + inventorySlotSize - 16, dragY + 16);
+            }
         }
     }
 }
