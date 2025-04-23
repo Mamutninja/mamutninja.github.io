@@ -145,18 +145,25 @@ const totalSprites = Object.values(player.sprites).flat().length;
     }
 });
 
-
+// is the new item too close?
+// new items spawning too close will be prevented
+function isTooClose(newItem) {
+  for (const item of items) {
+    if (item.pickedUp) continue;
+    const dx = newItem.x - item.x;
+    const dy = newItem.y - item.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    if (distance < 50) return true; // 50 px min distance
+  }
+  return false;
+}
 
 // item spawner
 function spawnItem(type) {
     const config = ITEM_TYPES[type];
     const icon = itemIcons[type];
-    console.log(`spawnItem(${type}) meghívva, config:`, config, ", icon:", icon);
 
-    if (!icon || !config) {
-        console.log(`spawnItem(${type}) visszatér null miatt: !icon || !config`);
-        return null;
-    }
+    if (!icon || !config) return null;
 
     const width = config.width;
     const height = config.height;
@@ -169,33 +176,15 @@ function spawnItem(type) {
         const x = Math.random() * (spawnArea.xMax - spawnArea.xMin) + spawnArea.xMin;
         const y = Math.random() * (spawnArea.yMax - spawnArea.yMin) + spawnArea.yMin;
 
-        const tooClose = items.some(item => {
-            const dx = (x + width / 2) - (item.x + item.width / 2);
-            const dy = (y + height / 2) - (item.y + item.height / 2);
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            return distance < 80;
-        });
+        const potentialNewItem = { x, y, width, height, type, img: icon, id: type };
 
-        if (!tooClose) {
-            newItem = { x, y, width, height, type, img: icon, id: type };
+        if (!isTooClose(potentialNewItem)) {
+            newItem = potentialNewItem;
             break;
         }
         attempts++;
     }
     return newItem;
-}
-
-// is the new item too close?
-// new items spawning too close will be prevented
-function isTooClose(newItem) {
-  for (const item of items) {
-    if (item.pickedUp) continue;
-    const dx = newItem.x - item.x;
-    const dy = newItem.y - item.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    if (distance < 50) return true; // 50 px min distance
-  }
-  return false;
 }
 
 // initialize items
@@ -525,20 +514,23 @@ window.addEventListener("touchstart", startMusicOnce);
 
 // spawn new items
 setInterval(() => {
-  for (const typeKey in ITEM_TYPES) {
-    const existing = items.filter(item => item.id === typeKey && !item.pickedUp).length;
-    const missing = ITEM_TYPES[typeKey].minCount - existing;
+    for (const typeKey in ITEM_TYPES) {
+        const existing = items.filter(item => item.id === typeKey && !item.pickedUp).length;
+        const missing = ITEM_TYPES[typeKey].minCount - existing;
 
-    for (let i = 0; i < missing; i++) {
-      let tryCount = 0;
-      let newItem;
-      do {
-          spawnedType = Math.random() < 0.5 ? 'blueFlower' : 'redMushroom';
-          newItem = spawnItem(spawnedType);
-          tryCount++;
-      } while (newItem && (isTooClose(newItem) || isInInventoryArea(newItem.x, newItem.y)) && tryCount < 10);
-      
-      if (tryCount < 10 && newItem) items.push(newItem);
+        for (let i = 0; i < missing; i++) {
+            let tryCount = 0;
+            let newItem;
+            do {
+                spawnedType = Math.random() < 0.5 ? 'blueFlower' : 'redMushroom';
+                const potentialNewItem = spawnItem(spawnedType);
+                if (potentialNewItem && !isTooClose(potentialNewItem)) {
+                    newItem = potentialNewItem;
+                }
+                tryCount++;
+            } while (newItem === undefined && tryCount < 10); // Várj, amíg egy nem túl közeli item létrejön
+
+            if (newItem) items.push(newItem);
+        }
     }
-  }
 }, 10000);
