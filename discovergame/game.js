@@ -668,11 +668,7 @@ canvas.addEventListener('mouseup', (e) => {
                 inventory[i] = draggedItemId;
                 inventory[draggedItemIndex] = targetItemId;
 
-                // Darabszámok cseréje
-                const draggedCount = inventoryCounts[draggedItemId] || 0;
-                const targetCount = inventoryCounts[targetItemId] || 0;
-                inventoryCounts[draggedItemId] = targetCount;
-                inventoryCounts[targetItemId] = draggedCount;
+
             } else if (i !== draggedItemIndex) {
                 // Ha a cél slot üres és nem az eredeti, mozgassuk oda az itemet és frissítsük a darabszámot
                 inventory[i] = draggedItemId;
