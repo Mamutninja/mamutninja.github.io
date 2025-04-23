@@ -111,8 +111,8 @@ function spawnAppleTree(x, y) {
 function spawnRandomAppleTree() {
     console.log("spawnRandomAppleTree() meghívva");
     if (appleTrees.length < MAX_APPLE_TREES) {
-        const x = Math.random() * (canvas.width - 48); // Véletlenszerű x pozíció
-        const y = Math.random() * (canvas.height - 64); // Véletlenszerű y pozíció
+        const x = Math.random() * (canvas.width - 64); // Véletlenszerű x pozíció
+        const y = Math.random() * (canvas.height - 128); // Véletlenszerű y pozíció
         spawnAppleTree(x, y); // Használjuk a spawnAppleTree-t
         console.log("Új almafa spawnolva:", x, y);
     }
@@ -144,6 +144,14 @@ const ITEM_TYPES = {
         minCount: 0, // Kezdetben nincs a pályán
         maxCount: 100,
         // Nincs spawnArea, mert a fákról szedjük
+    },
+    log: {
+        imgSrc: "sprites/items/log.png",
+        width: 24,
+        height: 24,
+        minCount: 0, // Kezdetben nincs a pályán
+        maxCount: 100,
+        // Nincs spawnArea, mert a fákat kivágva kapjuk
     },
     axe: {
         imgSrc: "sprites/tools/axe.png", // Töltsd be a balta sprite-ot
@@ -222,6 +230,7 @@ const itemIcons = {
     blueFlower: new Image(),
     redMushroom: new Image(),
     apple: new Image(),
+    log: new Image(),
     axe: new Image()
 
 };
@@ -630,6 +639,8 @@ function update() {
                 if (hasAxeEquipped && tree.state !== 'cut') {
                     // Kivágás, ha a balta a kiválasztott slotban van
                     console.log("Kivágtad az almafát!");
+                    addItemToInventory('log');
+                    playPickUpSound();
                     tree.state = 'cut';
                     tree.image = appleTreeCutImage;
                     appleTrees.splice(i, 1);
