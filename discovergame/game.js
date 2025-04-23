@@ -146,7 +146,7 @@ const ITEM_TYPES = {
         // Nincs spawnArea, mert a fákról szedjük
     },
     log: {
-        imgSrc: "sprites/items/log.png",
+        imgSrc: "sprites/items/woodenlog.png",
         width: 24,
         height: 24,
         minCount: 0, // Kezdetben nincs a pályán
