@@ -162,17 +162,14 @@ function isTooClose(newItem) {
 function spawnItem(type) {
     const config = ITEM_TYPES[type];
     const icon = itemIcons[type];
-    console.log(`spawnItem(${type}) meghívva, config:`, config, ", icon:", icon);
 
     if (!icon || !config) {
-        console.log(`spawnItem(${type}) visszatér null miatt: !icon || !config`);
         return null;
     }
 
     const width = config.width;
     const height = config.height;
     const spawnArea = config.spawnArea;
-    console.log(`spawnItem(${type}), spawnArea:`, spawnArea);
 
     let attempts = 0;
     let newItem;
@@ -184,31 +181,24 @@ function spawnItem(type) {
 
         if (!isTooClose(potentialNewItem)) {
             newItem = potentialNewItem;
-            console.log(`spawnItem(${type}) sikeresen létrehozott itemet:`, newItem);
             break;
         }
         attempts++;
     }
-    console.log(`spawnItem(${type}) visszatér:`, newItem);
     return newItem;
 }
 
 // initialize items
 function initItems() {
-    console.log("initItems() meghívva");
     for (const typeKey in ITEM_TYPES) {
         const minCount = ITEM_TYPES[typeKey].minCount;
-        console.log(`Próbálok létrehozni ${minCount} darab ${typeKey} itemet.`);
         for (let i = 0; i < minCount; i++) {
             const newItem = spawnItem(typeKey);
-            console.log(`Létrehozott item (${i}):`, newItem);
             if (newItem) {
                 items.push(newItem);
-                console.log(`items tömb hossza a ciklusban: ${items.length}`);
             }
         }
     }
-    console.log("initItems() lefutása után, items tömb:", items);
 }
 
 
