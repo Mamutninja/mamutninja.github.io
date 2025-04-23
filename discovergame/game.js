@@ -81,17 +81,14 @@ const player = {
 });
 
 // apple tree
-appleTreeFullImage.onload = () => console.log("appleTreeFullImage betöltve");
-appleTreeFullImage.onerror = () => console.error("Hiba az appleTreeFullImage betöltésekor!");
-appleTreeFullImage.src = 'sprites/interactable/appleTreeWithApples.png';
+const appleTreeFullImage = new Image();
+appleTreeFullImage.src = 'sprites/interactable/appleTreeWithApples.png'; // Sprite tele almával
 
-appleTreeEmptyImage.onload = () => console.log("appleTreeEmptyImage betöltve");
-appleTreeEmptyImage.onerror = () => console.error("Hiba az appleTreeEmptyImage betöltésekor!");
-appleTreeEmptyImage.src = 'sprites/interactable/appleTreeWithoutApples.png';
+const appleTreeEmptyImage = new Image();
+appleTreeEmptyImage.src = 'sprites/interactable/appleTreeWithoutApples.png'; // Sprite alma nélkül
 
-appleTreeCutImage.onload = () => console.log("appleTreeCutImage betöltve");
-appleTreeCutImage.onerror = () => console.error("Hiba az appleTreeCutImage betöltésekor!");
-appleTreeCutImage.src = 'sprites/interactable/appleTreeCut.png';
+const appleTreeCutImage = new Image();
+appleTreeCutImage.src = 'sprites/interactable/appleTreeCut.png';    // Kivágott fa tuskója
 
 function AppleTree(x, y) {
     this.x = x;
@@ -114,8 +111,8 @@ const MAX_APPLE_TREES = 10; // Például maximum 10 fa a pályán
 function spawnRandomAppleTree() {
     console.log("spawnRandomAppleTree() meghívva");
     if (appleTrees.length < MAX_APPLE_TREES) {
-        const x = Math.random() * (canvas.width - 48);
-        const y = Math.random() * (canvas.height - 64);
+        const x = Math.random() * (canvas.width - 48); // Véletlenszerű x pozíció
+        const y = Math.random() * (canvas.height - 64); // Véletlenszerű y pozíció
         const newTree = new AppleTree(x, y);
         appleTrees.push(newTree);
         console.log("Új almafa spawnolva:", newTree.x, newTree.y);
