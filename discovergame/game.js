@@ -1,6 +1,14 @@
+// noise
+const noise = new SimplexNoise();
+const NOISE_FREQUENCY = 0.01; // Finomhangold ezt az értéket
+function getNoise(x, y) {
+    return noise.noise2D(x * NOISE_FREQUENCY, y * NOISE_FREQUENCY);
+}
+
 // Game canvas
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+
 // resize to window size
 function resizeCanvas() {
   canvas.width = window.innerWidth;
@@ -103,6 +111,7 @@ function AppleTree(x, y) {
 const appleTrees = [];
 const MAX_APPLE_TREES = 10; // Például maximum 10 fa a pályán
 
+/*
 function spawnAppleTree(x, y) {
     const newTree = new AppleTree(x, y);
     appleTrees.push(newTree);
@@ -117,7 +126,36 @@ function spawnRandomAppleTree() {
         console.log("Új almafa spawnolva:", x, y);
     }
 }
+*/
+const MIN_TREE_DISTANCE = 60;
 
+function spawnRandomAppleTreeWithNoise() {
+    if (appleTrees.length < MAX_APPLE_TREES) {
+        let attempts = 0;
+        while (attempts < 100) {
+            const x = Math.random() * (canvas.width - 64);
+            const y = Math.random() * (canvas.height - 128);
+
+            const noiseValue = getNoise(x, y);
+
+            if (noiseValue > NOISE_THRESHOLD && canSpawnAt(x, y, appleTrees, MIN_TREE_DISTANCE)) {
+                spawnAppleTree(x, y);
+                console.log("Új almafa spawnolva zaj alapon:", x, y, "zaj:", noiseValue);
+                break;
+            }
+            attempts++;
+        }
+    }
+}
+
+function initializeAppleTreesWithNoise() {
+    appleTrees.length = 0;
+    for (let i = 0; i < MAX_APPLE_TREES * 2; i++) {
+        spawnRandomAppleTreeWithNoise();
+        if (appleTrees.length >= 5) break;
+    }
+    console.log("Almafák inicializálva zaj alapon:", appleTrees.length);
+}
 
 // items' info
 const ITEM_TYPES = {
@@ -244,12 +282,9 @@ for (const key in itemIcons) {
         console.log(`Item ikon betöltve: ${key}`, itemIcons[key]);
         if (loadedItemIcons === totalItemIcons && loadedSprites === totalSprites) {
             console.log("Minden sprite és item ikon betöltődött!");
-            initItems();
-            
+            initItemsWithNoise();          // Új item inicializálás
+            initializeAppleTreesWithNoise(); // Új fa inicializálás
             initPlayerInventory();
-            for (let i = 0; i < 5; i++) {
-                spawnRandomAppleTree();
-            }
             attemptSpawnNewItem();
             gameLoop();
         }
@@ -269,11 +304,9 @@ const totalSprites = Object.values(player.sprites).flat().length;
             console.log(`Sprite betöltve: ${dir}${i}.png`);
             if (loadedItemIcons === totalItemIcons && loadedSprites === totalSprites) {
                 console.log("Minden sprite és item ikon betöltődött!");
-                initItems();
+                initItemsWithNoise();          // Új item inicializálás
+                initializeAppleTreesWithNoise(); // Új fa inicializálás
                 initPlayerInventory();
-                for (let i = 0; i < 5; i++) {
-                    spawnRandomAppleTree();
-                }
                 attemptSpawnNewItem();
                 gameLoop();
             }
@@ -326,6 +359,7 @@ function spawnItem(type) {
     return newItem;
 }
 
+/*
 // initialize items
 function initItems() {
     for (const typeKey in ITEM_TYPES) {
@@ -338,6 +372,47 @@ function initItems() {
         }
     }
 }
+*/
+
+function canSpawnAt(x, y, existingObjects, minDistance) {
+    for (const obj of existingObjects) {
+        const dx = x - obj.x;
+        const dy = y - obj.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance < minDistance) {
+            return false;
+        }
+    }
+    return true;
+}
+
+const NOISE_THRESHOLD = 0.3; // Finomhangold ezt az értéket
+
+function initItemsWithNoise() {
+    const placedItems = [];
+    for (const typeKey in ITEM_TYPES) {
+        const config = ITEM_TYPES[typeKey];
+        const icon = itemIcons[typeKey];
+        if (!config.spawnArea) continue;
+
+        for (let i = 0; i < config.maxCount * 2; i++) {
+            const x = Math.random() * (config.spawnArea.xMax - config.spawnArea.xMin) + config.spawnArea.xMin;
+            const y = Math.random() * (config.spawnArea.yMax - config.spawnArea.yMin) + config.spawnArea.yMin;
+
+            const noiseValue = getNoise(x, y);
+
+            if (noiseValue > NOISE_THRESHOLD && canSpawnAt(x, y, placedItems, 30)) {
+                const newItem = { x, y, width: config.width, height: config.height, type: typeKey, img: icon, id: typeKey };
+                placedItems.push(newItem);
+                if (placedItems.length >= config.minCount) break;
+            }
+        }
+    }
+    items = placedItems.slice(0, Math.max(items.length, placedItems.length));
+    console.log("Itemek inicializálva zaj alapon:", items.length);
+}
+
+
 
 // spawn new items
 function attemptSpawnNewItem() {
