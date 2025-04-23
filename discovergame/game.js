@@ -741,39 +741,55 @@ function update() {
 function draw() {
     drawBackgroundCrop();
 
-    // Draw all items
-    for (let item of items) {
+    const drawables = [];
+
+    // Add items (csak a fel nem vett elemeket)
+    for (const item of items) {
         if (!item.pickedUp) {
-            ctx.drawImage(item.img, item.x, item.y, item.width, item.height);
+            drawables.push(item);
         }
     }
 
-    // Almafák rajzolása
-    console.log("Almafák rajzolása:", appleTrees.length);
+    // Add apple trees
     for (const tree of appleTrees) {
-        if (tree.state === 'cut') {
-            // A kivágott fa rajzolása arányosan, alul középen
-            const cutWidth = 20;
-            const cutHeight = 20;
-            const drawX = tree.x + (tree.width - cutWidth) / 2; // Középre igazítás vízszintesen
-            const drawY = tree.y + tree.height - cutHeight;     // Aljára igazítás függőlegesen
-            ctx.drawImage(tree.image, drawX, drawY, cutWidth, cutHeight);
-        } else {
-            // A nem kivágott fa rajzolása az eredeti méretében
-            ctx.drawImage(tree.image, tree.x, tree.y, tree.width, tree.height);
+        drawables.push(tree);
+    }
+
+    // Add player
+    drawables.push(player);
+
+    // Sort drawables by their y-coordinate (bottom position for overlap)
+    drawables.sort((a, b) => {
+        const aBottom = a.y + (a.height || 0); // Ha van magasság, add hozzá
+        const bBottom = b.y + (b.height || 0);
+        return aBottom - bBottom;
+    });
+
+    // Draw the sorted drawables
+    for (const drawable of drawables) {
+        if (drawable === player) {
+            const spriteList = player.sprites[player.direction];
+            const sprite = spriteList[player.frameIndex];
+            if (sprite) {
+                ctx.drawImage(sprite, player.x, player.y, player.width, player.height);
+            }
+        } else if (drawable instanceof AppleTree) {
+            if (drawable.state === 'cut') {
+                const cutWidth = 20;
+                const cutHeight = 20;
+                const drawX = drawable.x + (drawable.width - cutWidth) / 2;
+                const drawY = drawable.y + drawable.height - cutHeight;
+                ctx.drawImage(drawable.image, drawX, drawY, cutWidth, cutHeight);
+            } else {
+                ctx.drawImage(drawable.image, drawable.x, drawable.y, drawable.width, drawable.height);
+            }
+        } else { // It's an item
+            ctx.drawImage(drawable.img, drawable.x, drawable.y, drawable.width, drawable.height);
         }
     }
 
-    // draw player
-    const spriteList = player.sprites[player.direction];
-    const sprite = spriteList[player.frameIndex];
-    if (sprite) {
-        ctx.drawImage(sprite, player.x, player.y, player.width, player.height);
-    }
-
-    drawInventory();
+    drawInventory(); // Az UI-t mindig a legfelső rétegben rajzoljuk ki
 }
-
 function gameLoop() {
   update();
   draw();
