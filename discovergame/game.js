@@ -97,7 +97,15 @@ const ITEM_TYPES = {
         minCount: 3,
         maxCount: 8,
         spawnArea: { xMin: 100, xMax: canvas.width - 100, yMin: 100, yMax: canvas.height - 100 }
-    }
+    },
+    apple: {
+        imgSrc: "sprites/items/apple.png", // Töltsd be az alma sprite-ot
+        width: 24,
+        height: 24,
+        minCount: 0, // Kezdetben nincs a pályán
+        maxCount: 100,
+        // Nincs spawnArea, mert a fákról szedjük
+    };
 };
 
 const SPAWN_WEIGHTS = {
@@ -163,9 +171,10 @@ function getRandomSpawnableItemTypeWithWeightsAll() {
 let items = [];
 
 // inventory icons info
-const itemIcons = { // EZ AZ ELSŐ ÉS EGYETLEN DEKLARÁCIÓJA LEGYEN!
+const itemIcons = {
     blueFlower: new Image(),
     redMushroom: new Image(),
+    apple = new Image();
 };
 
 let loadedItemIcons = 0;
