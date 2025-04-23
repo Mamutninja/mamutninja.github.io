@@ -592,6 +592,8 @@ canvas.addEventListener('mousedown', (e) => {
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
 
+    let clickedOnInventoryItem = false;
+
     for (let i = 0; i < inventory.length; i++) {
         const slotX = (canvas.width - (inventorySlotSize + inventoryPadding) * inventory.length + inventoryPadding) / 2 + i * (inventorySlotSize + inventoryPadding);
         const slotY = inventoryY;
@@ -607,17 +609,16 @@ canvas.addEventListener('mousedown', (e) => {
             dragStartY = mouseY;
             dragOffsetX = mouseX - slotX;
             dragOffsetY = mouseY - slotY;
+            clickedOnInventoryItem = true;
             break;
         }
     }
 
-    // no movement in inventory area!!
-    if (isInInventoryArea(x, y)) {
-      return;
-  }
-
-  targetX = x;
-  targetY = y;
+    // Ha nem kattintottunk inventory itemre, akkor mozgassuk a karaktert
+    if (!clickedOnInventoryItem && !isInInventoryArea(mouseX, mouseY)) {
+        targetX = mouseX;
+        targetY = mouseY;
+    }
 });
 
 canvas.addEventListener('mousemove', (e) => {
