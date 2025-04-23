@@ -111,12 +111,12 @@ function AppleTree(x, y) {
 const appleTrees = [];
 const MAX_APPLE_TREES = 10; // Például maximum 10 fa a pályán
 
-/*
+
 function spawnAppleTree(x, y) {
     const newTree = new AppleTree(x, y);
     appleTrees.push(newTree);
 }
-
+/*
 function spawnRandomAppleTree() {
     console.log("spawnRandomAppleTree() meghívva");
     if (appleTrees.length < MAX_APPLE_TREES) {
