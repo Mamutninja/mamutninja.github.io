@@ -100,6 +100,66 @@ const ITEM_TYPES = {
     }
 };
 
+const SPAWN_WEIGHTS = {
+    blueFlower: 6,
+    redMushroom: 3,
+    // ide jöhetnek a további itemek súlyai
+};
+
+function getRandomSpawnableItemTypeWithWeightsAndDeficit() {
+    const eligibleTypes = [];
+    for (const typeKey in SPAWN_WEIGHTS) {
+        const existingCount = items.filter(item => item.id === typeKey && !item.pickedUp).length;
+        if (existingCount < ITEM_TYPES[typeKey].minCount) {
+            eligibleTypes.push(typeKey);
+        }
+    }
+
+    if (eligibleTypes.length === 0) {
+        // Ha minden itemből legalább a minimum mennyiség van,
+        // akkor választhatunk az összes közül (vagy csinálhatunk mást, pl. nem spawnolunk)
+        console.log("Minden itemből elérte a minimum mennyiséget.");
+        return getRandomSpawnableItemTypeWithWeightsAll(); // Lásd a következő függvényt
+    }
+
+    let totalWeight = 0;
+    const weightsOfEligible = {};
+    for (const type of eligibleTypes) {
+        totalWeight += SPAWN_WEIGHTS[type];
+        weightsOfEligible[type] = SPAWN_WEIGHTS[type];
+    }
+
+    const randomNumber = Math.random() * totalWeight;
+    let cumulativeWeight = 0;
+
+    for (const type of eligibleTypes) {
+        cumulativeWeight += weightsOfEligible[type];
+        if (randomNumber < cumulativeWeight) {
+            return type;
+        }
+    }
+    return eligibleTypes[eligibleTypes.length - 1]; // Biztonsági visszatérés
+}
+
+// Ez a segédfüggvény akkor fut le, ha minden itemből elég van
+function getRandomSpawnableItemTypeWithWeightsAll() {
+    let totalWeight = 0;
+    for (const type in SPAWN_WEIGHTS) {
+        totalWeight += SPAWN_WEIGHTS[type];
+    }
+
+    const randomNumber = Math.random() * totalWeight;
+    let cumulativeWeight = 0;
+
+    for (const type in SPAWN_WEIGHTS) {
+        cumulativeWeight += SPAWN_WEIGHTS[type];
+        if (randomNumber < cumulativeWeight) {
+            return type;
+        }
+    }
+    return Object.keys(SPAWN_WEIGHTS)[Object.keys(SPAWN_WEIGHTS).length - 1];
+}
+
 let items = [];
 
 // inventory icons info
@@ -525,7 +585,7 @@ setInterval(() => {
             let tryCount = 0;
             let newItem;
             do {
-                spawnedType = Math.random() < 0.5 ? 'blueFlower' : 'redMushroom';
+                spawnedType = getRandomSpawnableItemTypeWithWeightsAndDeficit();
                 const potentialNewItem = spawnItem(spawnedType);
                 if (potentialNewItem && !isTooClose(potentialNewItem)) {
                     newItem = potentialNewItem;
