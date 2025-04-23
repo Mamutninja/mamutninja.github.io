@@ -80,7 +80,6 @@ const player = {
   }
 });
 
-
 // items' info
 const ITEM_TYPES = {
     blueFlower: {
