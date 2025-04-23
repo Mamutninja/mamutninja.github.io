@@ -262,6 +262,13 @@ const totalSprites = Object.values(player.sprites).flat().length;
             if (loadedItemIcons === totalItemIcons && loadedSprites === totalSprites) {
                 console.log("Minden sprite és item ikon betöltődött!");
                 initItems();
+                initPlayerInventory();
+                console.log("Inventory a játék elején:", inventory);
+                console.log("Almafák a spawnolás előtt:", appleTrees.length);
+                for (let i = 0; i < 5; i++) {
+                    spawnRandomAppleTree();
+                }
+                console.log("Almafák a spawnolás után:", appleTrees.length);
                 gameLoop();
             }
         };
