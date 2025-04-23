@@ -245,13 +245,11 @@ for (const key in itemIcons) {
         if (loadedItemIcons === totalItemIcons && loadedSprites === totalSprites) {
             console.log("Minden sprite és item ikon betöltődött!");
             initItems();
+            attemptSpawnNewItem();
             initPlayerInventory();
-            console.log("Inventory a játék elején:", inventory);
-            console.log("Almafák a spawnolás előtt:", appleTrees.length); // Ellenőrizd a tömböt a ciklus előtt
             for (let i = 0; i < 5; i++) {
                 spawnRandomAppleTree();
             }
-            console.log("Almafák a spawnolás után:", appleTrees.length); // Ellenőrizd a tömböt a ciklus után
             gameLoop();
         }
     };
@@ -337,6 +335,43 @@ function initItems() {
             }
         }
     }
+}
+
+// spawn new items
+function attemptSpawnNewItem() {
+    const deficitTypes = [];
+    for (const typeKey in ITEM_TYPES) {
+        const existing = items.filter(item => item.id === typeKey && !item.pickedUp).length;
+        const missing = ITEM_TYPES[typeKey].minCount - existing;
+        if (missing > 0) {
+            deficitTypes.push(typeKey);
+        }
+    }
+
+    if (deficitTypes.length > 0) {
+        // Véletlenszerűen válassz egy item típust, amiből hiány van
+        const randomDeficitType = deficitTypes[Math.floor(Math.random() * deficitTypes.length)];
+
+        // Próbálj meg egy új itemet spawnolni ebből a típusból
+        let tryCount = 0;
+        let newItem;
+        do {
+            const potentialNewItem = spawnItem(randomDeficitType);
+            if (potentialNewItem && !isTooClose(potentialNewItem)) {
+                newItem = potentialNewItem;
+            }
+            tryCount++;
+        } while (newItem === undefined && tryCount < 10);
+
+        if (newItem) {
+            items.push(newItem);
+            console.log(`Új ${newItem.id} spawnolva (időzítve).`);
+        }
+    }
+
+    // Állíts be egy véletlenszerű időzítőt a következő spawn kísérlethez
+    const randomInterval = Math.random() * 15000 + 5000; // 5 és 20 másodperc közötti véletlenszerű idő
+    setTimeout(attemptSpawnNewItem, randomInterval);
 }
 
 
@@ -764,25 +799,4 @@ window.addEventListener("click", startMusicOnce);
 window.addEventListener("touchstart", startMusicOnce);
 
 
-// spawn new items
-setInterval(() => {
-    for (const typeKey in ITEM_TYPES) {
-        const existing = items.filter(item => item.id === typeKey && !item.pickedUp).length;
-        const missing = ITEM_TYPES[typeKey].minCount - existing;
 
-        for (let i = 0; i < missing; i++) {
-            let tryCount = 0;
-            let newItem;
-            do {
-                spawnedType = getRandomSpawnableItemTypeWithWeightsAndDeficit();
-                const potentialNewItem = spawnItem(spawnedType);
-                if (potentialNewItem && !isTooClose(potentialNewItem)) {
-                    newItem = potentialNewItem;
-                }
-                tryCount++;
-            } while (newItem === undefined && tryCount < 10); // Várj, amíg egy nem túl közeli item létrejön
-
-            if (newItem) items.push(newItem);
-        }
-    }
-}, 10000);
