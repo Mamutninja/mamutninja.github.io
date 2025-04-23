@@ -640,6 +640,9 @@ function update() {
                     // Kivágás, ha a balta a kiválasztott slotban van
                     console.log("Kivágtad az almafát!");
                     addItemToInventory('log');
+                    if (tree.state === 'full') {
+                        addItemToInventory('apple');
+                    }
                     playPickUpSound();
                     tree.state = 'cut';
                     tree.image = appleTreeCutImage;
