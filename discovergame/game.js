@@ -1,10 +1,3 @@
-// noise
-const noise = new SimplexNoise();
-const NOISE_FREQUENCY = 0.01; // Finomhangold ezt az értéket
-function getNoise(x, y) {
-    return noise.noise2D(x * NOISE_FREQUENCY, y * NOISE_FREQUENCY);
-}
-
 // Game canvas
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -57,6 +50,13 @@ function drawBackgroundCrop() {
     srcX, srcY, srcWidth, srcHeight,
     0, 0, canvas.width, canvas.height
   );
+}
+
+// noise
+const noise = new SimplexNoise();
+const NOISE_FREQUENCY = 0.01; // Finomhangold ezt az értéket
+function getNoise(x, y) {
+    return noise.noise2D(x * NOISE_FREQUENCY, y * NOISE_FREQUENCY);
 }
 
 // player info
