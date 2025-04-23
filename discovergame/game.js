@@ -623,7 +623,10 @@ canvas.addEventListener('mousedown', (e) => {
 
 canvas.addEventListener('mousemove', (e) => {
     if (!isDragging) return;
-    // A húzott item pozícióját az egér pozíciójához igazítjuk a draw() függvényben
+    const rect = canvas.getBoundingClientRect();
+    dragStartX = e.clientX - rect.left;
+    dragStartY = e.clientY - rect.top;
+    // A húzott item pozícióját a draw() függvényben az egér pozíciójához igazítjuk
 });
 
 canvas.addEventListener('mouseup', (e) => {
@@ -634,6 +637,8 @@ canvas.addEventListener('mouseup', (e) => {
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
 
+    let droppedOnValidSlot = false;
+
     // Ellenőrizzük, hogy a húzott item egy másik inventory slot fölé került-e
     for (let i = 0; i < inventory.length; i++) {
         const slotX = (canvas.width - (inventorySlotSize + inventoryPadding) * inventory.length + inventoryPadding) / 2 + i * (inventorySlotSize + inventoryPadding);
@@ -643,13 +648,13 @@ canvas.addEventListener('mouseup', (e) => {
             mouseX >= slotX && mouseX <= slotX + inventorySlotSize &&
             mouseY >= slotY && mouseY <= slotY + inventorySlotSize
         ) {
-            // Ha a cél slot nem üres, cseréljük ki az itemeket
+            droppedOnValidSlot = true;
+            // Ha a cél slot nem üres és nem az eredeti, cseréljük ki az itemeket
             if (inventory[i] !== null && i !== draggedItemIndex) {
                 const tempItem = inventory[i];
                 inventory[i] = inventory[draggedItemIndex];
                 inventory[draggedItemIndex] = tempItem;
 
-                // Frissítsük a darabszámokat is
                 const draggedItemId = inventory[i];
                 const targetItemId = inventory[draggedItemIndex];
                 const draggedCount = inventoryCounts[draggedItemId] || 0;
@@ -657,12 +662,17 @@ canvas.addEventListener('mouseup', (e) => {
                 inventoryCounts[draggedItemId] = targetCount;
                 inventoryCounts[targetItemId] = draggedCount;
             } else if (i !== draggedItemIndex) {
-                // Ha a cél slot üres, mozgassuk oda az itemet
+                // Ha a cél slot üres és nem az eredeti, mozgassuk oda az itemet
                 inventory[i] = inventory[draggedItemIndex];
                 inventory[draggedItemIndex] = null;
             }
             break;
         }
+    }
+
+    // Ha nem érvényes slotra dobtuk, állítsuk vissza az eredeti állapotot (nincs változás)
+    if (!droppedOnValidSlot) {
+        // Semmi különösebb teendő, az item marad az eredeti helyén a `inventory` tömbben
     }
 
     draggedItemIndex = null; // Húzás vége, töröljük a húzott item indexét
