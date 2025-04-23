@@ -109,7 +109,7 @@ function AppleTree(x, y) {
 }
 
 const appleTrees = [];
-const MAX_APPLE_TREES = 10; // Például maximum 10 fa a pályán
+const MAX_APPLE_TREES = 20; // Például maximum 10 fa a pályán
 
 
 function spawnAppleTree(x, y) {
@@ -163,16 +163,16 @@ const ITEM_TYPES = {
         imgSrc: "sprites/items/blueflower.png",
         width: 24,
         height: 24,
-        minCount: 5,
-        maxCount: 10,
+        minCount: 15,
+        maxCount: 30,
         spawnArea: { xMin: 50, xMax: canvas.width - 50, yMin: 50, yMax: canvas.height - 50 }
     },
     redMushroom: {
         imgSrc: "sprites/items/redmushroom.png",
         width: 24,
         height: 24,
-        minCount: 3,
-        maxCount: 8,
+        minCount: 10,
+        maxCount: 20,
         spawnArea: { xMin: 100, xMax: canvas.width - 100, yMin: 100, yMax: canvas.height - 100 }
     },
     apple: {
