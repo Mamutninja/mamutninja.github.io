@@ -643,7 +643,12 @@ function update() {
                     playPickUpSound();
                     tree.state = 'cut';
                     tree.image = appleTreeCutImage;
-                    appleTrees.splice(i, 1);
+                    // Új setTimeout az újranövesztéshez
+                    setTimeout(() => {
+                        tree.state = 'full';
+                        tree.image = appleTreeFullImage;
+                        console.log("Az almafa újra kinőtt!");
+                    }, 30000); // Például 30 másodperc múlva nő újra
                     break;
                 } else if (tree.state === 'full') {
                     // Szedés, ha a balta nincs a kiválasztott slotban vagy a fa tele van
