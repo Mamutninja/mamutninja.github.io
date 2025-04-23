@@ -113,12 +113,10 @@ function spawnRandomAppleTree() {
     if (appleTrees.length < MAX_APPLE_TREES) {
         const x = Math.random() * (canvas.width - 48); // Véletlenszerű x pozíció
         const y = Math.random() * (canvas.height - 64); // Véletlenszerű y pozíció
-        const newTree = new AppleTree(x, y);
-        appleTrees.push(newTree);
-        console.log("Új almafa spawnolva:", newTree.x, newTree.y);
+        spawnAppleTree(x, y); // Használjuk a spawnAppleTree-t
+        console.log("Új almafa spawnolva:", x, y);
     }
 }
-
 
 
 // items' info
