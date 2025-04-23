@@ -263,12 +263,9 @@ const totalSprites = Object.values(player.sprites).flat().length;
                 console.log("Minden sprite és item ikon betöltődött!");
                 initItems();
                 initPlayerInventory();
-                console.log("Inventory a játék elején:", inventory);
-                console.log("Almafák a spawnolás előtt:", appleTrees.length);
                 for (let i = 0; i < 5; i++) {
                     spawnRandomAppleTree();
                 }
-                console.log("Almafák a spawnolás után:", appleTrees.length);
                 gameLoop();
             }
         };
@@ -641,6 +638,7 @@ function update() {
                     // Szedés, ha a balta nincs a kiválasztott slotban vagy a fa tele van
                     console.log("Almát szedtél a fáról!");
                     addItemToInventory('apple');
+                    playPickUpSound();
                     tree.state = 'empty';
                     tree.image = appleTreeEmptyImage;
                     tree.canPick = false;
@@ -648,7 +646,7 @@ function update() {
                         tree.state = 'full';
                         tree.image = appleTreeFullImage;
                         tree.canPick = true;
-                        console.log("Az almafa újra termő!");
+                        console.log("Az almafa újratermő!");
                     }, 20000);
                     break;
                 } else if (tree.state === 'empty') {
