@@ -340,6 +340,7 @@ function initItems() {
 
 // spawn new items
 function attemptSpawnNewItem() {
+    console.log("attemptSpawnNewItem() meghívva"); 
     const deficitTypes = [];
     for (const typeKey in ITEM_TYPES) {
         const existing = items.filter(item => item.id === typeKey && !item.pickedUp).length;
