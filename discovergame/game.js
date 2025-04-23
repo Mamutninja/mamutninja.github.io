@@ -245,11 +245,12 @@ for (const key in itemIcons) {
         if (loadedItemIcons === totalItemIcons && loadedSprites === totalSprites) {
             console.log("Minden sprite és item ikon betöltődött!");
             initItems();
-            attemptSpawnNewItem();
+            
             initPlayerInventory();
             for (let i = 0; i < 5; i++) {
                 spawnRandomAppleTree();
             }
+            attemptSpawnNewItem();
             gameLoop();
         }
     };
