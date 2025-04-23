@@ -708,10 +708,21 @@ function draw() {
             ctx.drawImage(item.img, item.x, item.y, item.width, item.height);
         }
     }
+
     // Almafák rajzolása
-    console.log("Almafák rajzolása:", appleTrees.length); // Ellenőrizzük a tömb méretét rajzoláskor
+    console.log("Almafák rajzolása:", appleTrees.length);
     for (const tree of appleTrees) {
-        ctx.drawImage(tree.image, tree.x, tree.y, tree.width, tree.height);
+        if (tree.state === 'cut') {
+            // A kivágott fa rajzolása arányosan, alul középen
+            const cutWidth = 20;
+            const cutHeight = 20;
+            const drawX = tree.x + (tree.width - cutWidth) / 2; // Középre igazítás vízszintesen
+            const drawY = tree.y + tree.height - cutHeight;     // Aljára igazítás függőlegesen
+            ctx.drawImage(tree.image, drawX, drawY, cutWidth, cutHeight);
+        } else {
+            // A nem kivágott fa rajzolása az eredeti méretében
+            ctx.drawImage(tree.image, tree.x, tree.y, tree.width, tree.height);
+        }
     }
 
     // draw player
