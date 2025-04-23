@@ -103,7 +103,7 @@ const ITEM_TYPES = {
 let items = [];
 
 // inventory icons info
-const itemIcons = {
+const itemIcons = { // EZ AZ ELSŐ ÉS EGYETLEN DEKLARÁCIÓJA LEGYEN!
     blueFlower: new Image(),
     redMushroom: new Image(),
 };
@@ -144,6 +144,7 @@ const totalSprites = Object.values(player.sprites).flat().length;
         player.sprites[dir].push(img);
     }
 });
+
 
 
 // item spawner
