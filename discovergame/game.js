@@ -398,16 +398,33 @@ canvas.addEventListener('click', function(e) {
 });
 
 // in-game sounds
-const pickUpSound = new Audio("audio/pickUp.wav");
-pickUpSound.loop = false;
-pickUpSound.volume = 0.5; // 50%-os hangerő (0.0 - 1.0 között)
+const pickUpSoundPool = [];
+const PICKUP_SOUND_POOL_SIZE = 5; // Például 5 párhuzamos hang
 
-function startPickUpSound() {
-  pickUpSound.play().then(() => {
-    console.log("Pickup sound elindult 🎶");
-  }).catch(err => {
-    console.warn("Nem tudta automatikusan elindítani:", err);
-  });
+// Inicializáld a hangkészletet
+for (let i = 0; i < PICKUP_SOUND_POOL_SIZE; i++) {
+    const sound = new Audio("audio/pickUp.wav");
+    sound.loop = false;
+    sound.volume = 0.5;
+    pickUpSoundPool.push(sound);
+}
+
+function playPickUpSound() {
+    // Keress egy éppen nem játszó hangot a készletben
+    const availableSound = pickUpSoundPool.find(sound => sound.paused || sound.ended);
+
+    if (availableSound) {
+        availableSound.currentTime = 0; // Állítsd vissza a lejátszás elejére, ha korábban lejátszott
+        availableSound.play().then(() => {
+            console.log("Pickup sound elindult 🎶");
+        }).catch(err => {
+            console.warn("Nem tudta automatikusan elindítani:", err);
+        });
+    } else {
+        console.warn("Nincs szabad hang a pickup hangkészletben!");
+        // Esetleg itt létrehozhatsz egy újabb hangobjektumot,
+        // de érdemes korlátozni a párhuzamos hangok számát a teljesítmény miatt.
+    }
 }
 
 
@@ -486,7 +503,7 @@ function update() {
         player.y + player.height > item.y) {
 
       item.pickedUp = true;
-      startPickUpSound();
+      playPickUpSound();
 
       // If it's already in the inventory
       if (inventoryCounts[item.id]) {
