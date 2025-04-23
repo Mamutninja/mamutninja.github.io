@@ -668,7 +668,11 @@ canvas.addEventListener('mouseup', (e) => {
                 inventory[i] = draggedItemId;
                 inventory[draggedItemIndex] = targetItemId;
 
-
+                // Darabszámok cseréje
+                const draggedCount = inventoryCounts[draggedItemId] || 0;
+                const targetCount = inventoryCounts[targetItemId] || 0;
+                inventoryCounts[draggedItemId] = targetCount;
+                inventoryCounts[targetItemId] = draggedCount;
             } else if (i !== draggedItemIndex) {
                 // Ha a cél slot üres és nem az eredeti, mozgassuk oda az itemet és frissítsük a darabszámot
                 inventory[i] = draggedItemId;
@@ -676,15 +680,22 @@ canvas.addEventListener('mouseup', (e) => {
 
                 // Darabszám mozgatása
                 inventoryCounts[draggedItemId] = inventoryCounts[draggedItemId] || 1; // Biztosítsuk, hogy létezik
-                if (targetItemId === null) {
-                    // Ha üres slotba mozgattuk, nem kell semmit tenni a cél darabszámmal
-                } else {
-                    // Ha nem üres volt (de a feltétel nem teljesült a csere miatt), akkor valami hiba van a logikában
-                    console.warn("Váratlan helyzet a darabszámok mozgatásakor üres slotba.");
+                if (inventoryCounts[targetItemId]) {
+                    // Ha a cél slot nem volt üres, de nem történt csere (azonos item?), akkor lehet, hogy össze kell adni a darabszámokat (a logika függvénye)
+                    // Jelen esetben üres slotba mozgatunk, így a cél darabszámot nem kell módosítani.
+                }
+                // Ha az eredeti slotban csak 1 item volt, töröljük a darabszám bejegyzést
+                if (inventoryCounts[draggedItemId] === 1 && inventory[draggedItemIndex] === null) {
+                    delete inventoryCounts[draggedItemId];
                 }
             }
             break;
         }
+    }
+
+    // Ha nem érvényes slotra dobtuk, állítsuk vissza az eredeti állapotot (nincs változás)
+    if (!droppedOnValidSlot) {
+        // Semmi különösebb teendő, az item marad az eredeti helyén a `inventory` tömbben
     }
 
     draggedItemIndex = null; // Húzás vége, töröljük a húzott item indexét
