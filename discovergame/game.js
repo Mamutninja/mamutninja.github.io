@@ -457,6 +457,15 @@ function attemptSpawnNewItem() {
 const inventory = new Array(10).fill(null); // 10 empty slots
 const inventoryCounts = {}; // filled dynamically
 
+// rearrange inventory
+let isDragging = false; // Igaz, ha éppen húzunk egy itemet
+let draggedItemIndex = null; // A húzott item indexe az inventory tömbben
+let dragStartX; // A húzás kezdő X koordinátája az egéren
+let dragStartY; // A húzás kezdő Y koordinátája az egéren
+let dragOffsetX; // Az egér relatív eltolódása a húzott item bal felső sarkához képest
+let dragOffsetY;
+
+
 function addItemToInventory(itemId) {
     if (inventoryCounts[itemId]) {
         inventoryCounts[itemId]++;
@@ -488,42 +497,50 @@ const inventoryY = canvas.height - inventorySlotSize - 20; // 20px from bottom
 
 // make inventory appear
 function drawInventory() {
-  // inventory background
-  const bgWidth = (inventorySlotSize + inventoryPadding) * inventory.length - inventoryPadding;
-  const bgX = (canvas.width - bgWidth) / 2;
-  ctx.drawImage(inventoryBGImage, bgX - 16, inventoryY - 16, bgWidth + 32, inventorySlotSize + 32);
+    // inventory background
+    const bgWidth = (inventorySlotSize + inventoryPadding) * inventory.length - inventoryPadding;
+    const bgX = (canvas.width - bgWidth) / 2;
+    ctx.drawImage(inventoryBGImage, bgX - 16, inventoryY - 16, bgWidth + 32, inventorySlotSize + 32);
 
-  // draw all slots
-  for (let i = 0; i < inventory.length; i++) {
-    const x = bgX + i * (inventorySlotSize + inventoryPadding);
-    const y = inventoryY;
-    // draw slot
-    ctx.drawImage(inventorySlotImage, x, y, inventorySlotSize, inventorySlotSize);
+    // draw all slots
+    for (let i = 0; i < inventory.length; i++) {
+        const x = bgX + i * (inventorySlotSize + inventoryPadding);
+        const y = inventoryY;
+        // draw slot
+        ctx.drawImage(inventorySlotImage, x, y, inventorySlotSize, inventorySlotSize);
 
-    // draw item in slot
-    const itemId = inventory[i];
-    if (itemId && itemIcons[itemId]) {
-      // draw item icon
-      ctx.drawImage(itemIcons[itemId], x + 4, y + 4, inventorySlotSize - 8, inventorySlotSize - 8);
-    }
-    // draw selection frame
-    if (i === selectedInventoryIndex) {
-      ctx.drawImage(selectionFrameImage, x - 2, y - 2, inventorySlotSize + 4, inventorySlotSize + 4);
+        // draw item in slot (kivéve, ha éppen húzzuk)
+        const itemId = inventory[i];
+        if (itemId && itemIcons[itemId] && i !== draggedItemIndex) {
+            // draw item icon
+            ctx.drawImage(itemIcons[itemId], x + 4, y + 4, inventorySlotSize - 8, inventorySlotSize - 8);
+            // write amount in inventory (csak ha nem húzzuk)
+            const count = inventoryCounts[itemId];
+            if (count > 1) {
+                ctx.fillStyle = "white";
+                ctx.font = "16px Courier New";
+                ctx.strokeStyle = "black";
+                ctx.lineWidth = 3;
+                ctx.strokeText(count, x + inventorySlotSize - 16, y + 16);
+                ctx.fillText(count, x + inventorySlotSize - 16, y + 16);
+            }
+        }
+        // draw selection frame
+        if (i === selectedInventoryIndex) {
+            ctx.drawImage(selectionFrameImage, x - 2, y - 2, inventorySlotSize + 4, inventorySlotSize + 4);
+        }
     }
 
-    if (itemId && itemIcons[itemId]) {
-      // write amount in inventory
-      const count = inventoryCounts[itemId];
-      if (count > 1) {
-        ctx.fillStyle = "white";
-        ctx.font = "16px Courier New";
-        ctx.strokeStyle = "black";
-        ctx.lineWidth = 3;
-        ctx.strokeText(count, x + inventorySlotSize - 16, y + 16);
-        ctx.fillText(count, x + inventorySlotSize - 16, y + 16);
-      }
+    // draw dragged item
+    if (isDragging && draggedItemIndex !== null && inventory[draggedItemIndex]) {
+        const draggedItemId = inventory[draggedItemIndex];
+        if (itemIcons[draggedItemId]) {
+            const dragX = dragStartX - dragOffsetX;
+            const dragY = dragStartY - dragOffsetY;
+            ctx.drawImage(itemIcons[draggedItemId], dragX, dragY, inventorySlotSize, inventorySlotSize);
+            // A darabszámot itt nem rajzoljuk ki a húzás közben
+        }
     }
-  }
 }
 
 
@@ -570,18 +587,84 @@ canvas.addEventListener("touchstart", function(e) {
 });
 
 // mousedown
-canvas.addEventListener("mousedown", function(e) {
-  const rect = canvas.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
+canvas.addEventListener('mousedown', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
 
-  // no movement in inventory area!!
-  if (isInInventoryArea(x, y)) {
-    return;
+    for (let i = 0; i < inventory.length; i++) {
+        const slotX = (canvas.width - (inventorySlotSize + inventoryPadding) * inventory.length + inventoryPadding) / 2 + i * (inventorySlotSize + inventoryPadding);
+        const slotY = inventoryY;
+
+        if (
+            mouseX >= slotX && mouseX <= slotX + inventorySlotSize &&
+            mouseY >= slotY && mouseY <= slotY + inventorySlotSize &&
+            inventory[i] !== null
+        ) {
+            isDragging = true;
+            draggedItemIndex = i;
+            dragStartX = mouseX;
+            dragStartY = mouseY;
+            dragOffsetX = mouseX - slotX;
+            dragOffsetY = mouseY - slotY;
+            break;
+        }
+    }
+
+    // no movement in inventory area!!
+    if (isInInventoryArea(x, y)) {
+      return;
   }
 
   targetX = x;
   targetY = y;
+});
+
+canvas.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    // A húzott item pozícióját az egér pozíciójához igazítjuk a draw() függvényben
+});
+
+canvas.addEventListener('mouseup', (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    // Ellenőrizzük, hogy a húzott item egy másik inventory slot fölé került-e
+    for (let i = 0; i < inventory.length; i++) {
+        const slotX = (canvas.width - (inventorySlotSize + inventoryPadding) * inventory.length + inventoryPadding) / 2 + i * (inventorySlotSize + inventoryPadding);
+        const slotY = inventoryY;
+
+        if (
+            mouseX >= slotX && mouseX <= slotX + inventorySlotSize &&
+            mouseY >= slotY && mouseY <= slotY + inventorySlotSize
+        ) {
+            // Ha a cél slot nem üres, cseréljük ki az itemeket
+            if (inventory[i] !== null && i !== draggedItemIndex) {
+                const tempItem = inventory[i];
+                inventory[i] = inventory[draggedItemIndex];
+                inventory[draggedItemIndex] = tempItem;
+
+                // Frissítsük a darabszámokat is
+                const draggedItemId = inventory[i];
+                const targetItemId = inventory[draggedItemIndex];
+                const draggedCount = inventoryCounts[draggedItemId] || 0;
+                const targetCount = inventoryCounts[targetItemId] || 0;
+                inventoryCounts[draggedItemId] = targetCount;
+                inventoryCounts[targetItemId] = draggedCount;
+            } else if (i !== draggedItemIndex) {
+                // Ha a cél slot üres, mozgassuk oda az itemet
+                inventory[i] = inventory[draggedItemIndex];
+                inventory[draggedItemIndex] = null;
+            }
+            break;
+        }
+    }
+
+    draggedItemIndex = null; // Húzás vége, töröljük a húzott item indexét
 });
 
 // inventory selection with mouse
