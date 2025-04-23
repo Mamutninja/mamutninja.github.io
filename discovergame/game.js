@@ -650,7 +650,6 @@ canvas.addEventListener('mouseup', (e) => {
 
     let droppedOnValidSlot = false;
 
-    // Ellenőrizzük, hogy a húzott item egy másik inventory slot fölé került-e
     for (let i = 0; i < inventory.length; i++) {
         const slotX = (canvas.width - (inventorySlotSize + inventoryPadding) * inventory.length + inventoryPadding) / 2 + i * (inventorySlotSize + inventoryPadding);
         const slotY = inventoryY;
@@ -668,34 +667,26 @@ canvas.addEventListener('mouseup', (e) => {
                 inventory[i] = draggedItemId;
                 inventory[draggedItemIndex] = targetItemId;
 
-                // Darabszámok cseréje
+                // Darabszámok cseréje (indexek használatával)
                 const draggedCount = inventoryCounts[draggedItemId] || 0;
                 const targetCount = inventoryCounts[targetItemId] || 0;
-                inventoryCounts[draggedItemId] = targetCount;
-                inventoryCounts[targetItemId] = draggedCount;
+
+                // Ideiglenesen tároljuk a darabszámokat
+                const tempCounts = {};
+                tempCounts[draggedItemId] = draggedCount;
+                tempCounts[targetItemId] = targetCount;
+
+                // Frissítsük a darabszámokat az új helyeken lévő itemekhez
+                inventoryCounts[inventory[i]] = tempCounts[inventory[i]];
+                inventoryCounts[inventory[draggedItemIndex]] = tempCounts[inventory[draggedItemIndex]];
             } else if (i !== draggedItemIndex) {
-                // Ha a cél slot üres és nem az eredeti, mozgassuk oda az itemet és frissítsük a darabszámot
+                // Ha a cél slot üres és nem az eredeti, mozgassuk oda az itemet
                 inventory[i] = draggedItemId;
                 inventory[draggedItemIndex] = null;
-
-                // Darabszám mozgatása
-                inventoryCounts[draggedItemId] = inventoryCounts[draggedItemId] || 1; // Biztosítsuk, hogy létezik
-                if (inventoryCounts[targetItemId]) {
-                    // Ha a cél slot nem volt üres, de nem történt csere (azonos item?), akkor lehet, hogy össze kell adni a darabszámokat (a logika függvénye)
-                    // Jelen esetben üres slotba mozgatunk, így a cél darabszámot nem kell módosítani.
-                }
-                // Ha az eredeti slotban csak 1 item volt, töröljük a darabszám bejegyzést
-                if (inventoryCounts[draggedItemId] === 1 && inventory[draggedItemIndex] === null) {
-                    delete inventoryCounts[draggedItemId];
-                }
+                // A darabszám a húzott itemhez tartozik, nem kell külön cserélni
             }
             break;
         }
-    }
-
-    // Ha nem érvényes slotra dobtuk, állítsuk vissza az eredeti állapotot (nincs változás)
-    if (!droppedOnValidSlot) {
-        // Semmi különösebb teendő, az item marad az eredeti helyén a `inventory` tömbben
     }
 
     draggedItemIndex = null; // Húzás vége, töröljük a húzott item indexét
