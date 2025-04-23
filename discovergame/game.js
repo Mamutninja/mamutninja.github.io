@@ -274,6 +274,7 @@ const totalSprites = Object.values(player.sprites).flat().length;
                 for (let i = 0; i < 5; i++) {
                     spawnRandomAppleTree();
                 }
+                attemptSpawnNewItem();
                 gameLoop();
             }
         };
