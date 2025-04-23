@@ -80,6 +80,52 @@ const player = {
   }
 });
 
+// apple tree
+const appleTreeFullImage = new Image();
+appleTreeFullImage.src = 'sprites/interactable/appleTreeWithApples.png'; // Sprite tele almával
+
+const appleTreeEmptyImage = new Image();
+appleTreeEmptyImage.src = 'sprites/interactable/appleTreeWithoutApples.png'; // Sprite alma nélkül
+
+const appleTreeCutImage = new Image();
+appleTreeCutImage.src = 'sprites/interactable/appleTreeCut.png';   // Kivágott fa tuskója
+
+function AppleTree(x, y) {
+    this.x = x;
+    this.y = y;
+    this.width = 48;
+    this.height = 64;
+    this.state = 'full'; // Lehetséges állapotok: 'full', 'empty', 'cut'
+    this.image = appleTreeFullImage;
+    this.canPick = true;
+}
+
+function spawnAppleTree(x, y) {
+    const newTree = new AppleTree(x, y);
+    appleTrees.push(newTree);
+}
+
+const appleTrees = [];
+const MAX_APPLE_TREES = 10; // Például maximum 10 fa a pályán
+
+function spawnRandomAppleTree() {
+    if (appleTrees.length < MAX_APPLE_TREES) {
+        const x = Math.random() * (canvas.width - 48); // Véletlenszerű x pozíció
+        const y = Math.random() * (canvas.height - 64); // Véletlenszerű y pozíció
+
+        // Opcionális: Ellenőrizd, hogy a fa nem spawnol-e túl közel a játékoshoz vagy más objektumokhoz
+
+        const newTree = new AppleTree(x, y);
+        appleTrees.push(newTree);
+    }
+}
+
+// A játék indításakor néhány fa spawnolása:
+for (let i = 0; i < 5; i++) {
+    spawnRandomAppleTree();
+}
+
+
 // items' info
 const ITEM_TYPES = {
     blueFlower: {
@@ -504,33 +550,75 @@ function update() {
   }
   // Pick item up
   if (keys["e"]) {
-  for (let item of items) {
-    if (!item.pickedUp &&
-        player.x < item.x + item.width &&
-        player.x + player.width > item.x &&
-        player.y < item.y + item.height &&
-        player.y + player.height > item.y) {
-
-      item.pickedUp = true;
-      playPickUpSound();
-
-      // If it's already in the inventory
-      if (inventoryCounts[item.id]) {
-        inventoryCounts[item.id]++;
-      } else {
-        // Find an empty slot
-        const emptyIndex = inventory.findIndex(slot => slot === null);
-        if (emptyIndex !== -1) {
-          inventory[emptyIndex] = item.id;
-          inventoryCounts[item.id] = 1;
+    for (let item of items) {
+      if (!item.pickedUp &&
+          player.x < item.x + item.width &&
+          player.x + player.width > item.x &&
+          player.y < item.y + item.height &&
+          player.y + player.height > item.y) {
+  
+        item.pickedUp = true;
+        playPickUpSound();
+  
+        // If it's already in the inventory
+        if (inventoryCounts[item.id]) {
+          inventoryCounts[item.id]++;
         } else {
-          console.log("Nincs több hely az inventory-ban!");
+          // Find an empty slot
+          const emptyIndex = inventory.findIndex(slot => slot === null);
+          if (emptyIndex !== -1) {
+            inventory[emptyIndex] = item.id;
+            inventoryCounts[item.id] = 1;
+          } else {
+            console.log("Nincs több hely az inventory-ban!");
+          }
         }
+  
+        console.log("Felvetted: " + item.id);
       }
-
-      console.log("Felvetted: " + item.id);
     }
-  }
+
+    // apple trees
+    for (let i = 0; i < appleTrees.length; i++) {
+            const tree = appleTrees[i];
+            const distanceX = Math.abs(player.x + player.width / 2 - (tree.x + tree.width / 2));
+            const distanceY = Math.abs(player.y + player.height / 2 - (tree.y + tree.height / 2));
+            const interactionDistance = 40;
+
+            if (distanceX < interactionDistance && distanceY < interactionDistance) {
+                const selectedItem = inventory[selectedInventoryIndex];
+                const hasAxeEquipped = selectedItem === 'axe'; // Feltételezzük, hogy a balta ID-ja 'axe'
+
+                if (hasAxeEquipped && tree.state !== 'cut') {
+                    // Kivágás, ha a balta a kézben van
+                    console.log("Kivágtad az almafát!");
+                    tree.state = 'cut';
+                    tree.image = appleTreeCutImage;
+                    appleTrees.splice(i, 1);
+                    break; // Egyszerre csak egy fával lehet interakcióba lépni
+                } else if (tree.state === 'full') {
+                    // Szedés, ha nincs balta a kézben vagy a fa már üres
+                    console.log("Almát szedtél a fáról!");
+                    addItemToInventory('apple');
+                    tree.state = 'empty';
+                    tree.image = appleTreeEmptyImage;
+                    tree.canPick = false;
+                    setTimeout(() => {
+                        tree.state = 'full';
+                        tree.image = appleTreeFullImage;
+                        tree.canPick = true;
+                        console.log("Az almafa újra termő!");
+                    }, 20000);
+                    break; // Egyszerre csak egy fával lehet interakcióba lépni
+                } else if (tree.state === 'empty') {
+                    console.log("Erről a fáról már nem lehet almát szedni.");
+                    break;
+                } else if (tree.state === 'cut') {
+                    console.log("Ez a fa már ki van vágva.");
+                    break;
+                }
+            }
+        }
 }
   // --- Update character animation ---
   if (moving) {
