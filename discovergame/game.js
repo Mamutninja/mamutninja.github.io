@@ -151,6 +151,14 @@ const ITEM_TYPES = {
         minCount: 0, // Kezdetben nincs a pályán
         maxCount: 100,
         // Nincs spawnArea, mert a fákról szedjük
+    },
+    axe: {
+        imgSrc: "sprites/tools/axe.png", // Töltsd be a balta sprite-ot
+        width: 32,
+        height: 32,
+        minCount: 0,
+        maxCount: 1, // Egyszerre csak egy balta lehet a játékosnál (kezdetben)
+        // Nincs spawnArea, mert a játékosnál kezdődik
     }
 };
 
@@ -220,7 +228,9 @@ let items = [];
 const itemIcons = {
     blueFlower: new Image(),
     redMushroom: new Image(),
-    apple = new Image();
+    apple: new Image(),
+    axe: new Image()
+
 };
 
 let loadedItemIcons = 0;
@@ -233,6 +243,7 @@ for (const key in itemIcons) {
         if (loadedItemIcons === totalItemIcons && loadedSprites === totalSprites) {
             console.log("Minden sprite és item ikon betöltődött!");
             initItems();
+            initPlayerInventory();
             gameLoop();
         }
     };
@@ -381,6 +392,13 @@ function isInInventoryArea(x, y) {
   const endY = inventoryY + inventorySlotSize + 16;
 
   return x >= startX && x <= startX + totalWidth && y >= inventoryY;
+}
+
+// initialize inventory with axe
+function initPlayerInventory() {
+    inventory[0] = 'axe'; // A balta az inventory első helyére (index 0)
+    inventoryCounts['axe'] = 1; // Egy darab balta
+    console.log("A balta hozzáadva a inventory első helyére.");
 }
 
 
@@ -587,17 +605,17 @@ function update() {
 
             if (distanceX < interactionDistance && distanceY < interactionDistance) {
                 const selectedItem = inventory[selectedInventoryIndex];
-                const hasAxeEquipped = selectedItem === 'axe'; // Feltételezzük, hogy a balta ID-ja 'axe'
+                const hasAxeEquipped = selectedItem === 'axe'; // Igaz, ha a kiválasztott slotban balta van
 
                 if (hasAxeEquipped && tree.state !== 'cut') {
-                    // Kivágás, ha a balta a kézben van
+                    // Kivágás, ha a balta a kiválasztott slotban van
                     console.log("Kivágtad az almafát!");
                     tree.state = 'cut';
                     tree.image = appleTreeCutImage;
                     appleTrees.splice(i, 1);
-                    break; // Egyszerre csak egy fával lehet interakcióba lépni
+                    break;
                 } else if (tree.state === 'full') {
-                    // Szedés, ha nincs balta a kézben vagy a fa már üres
+                    // Szedés, ha a balta nincs a kiválasztott slotban vagy a fa tele van
                     console.log("Almát szedtél a fáról!");
                     addItemToInventory('apple');
                     tree.state = 'empty';
@@ -609,7 +627,7 @@ function update() {
                         tree.canPick = true;
                         console.log("Az almafa újra termő!");
                     }, 20000);
-                    break; // Egyszerre csak egy fával lehet interakcióba lépni
+                    break;
                 } else if (tree.state === 'empty') {
                     console.log("Erről a fáról már nem lehet almát szedni.");
                     break;
@@ -619,6 +637,7 @@ function update() {
                 }
             }
         }
+  }
 }
   // --- Update character animation ---
   if (moving) {
