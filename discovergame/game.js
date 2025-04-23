@@ -533,12 +533,12 @@ setInterval(() => {
       let tryCount = 0;
       let newItem;
       do {
-        spawnedType = Math.random() < 0.5 ? 'blueFlower' : 'redMushroom';
-        newItem = spawnItem(spawnedType);
-        tryCount++;
-      } while ((isTooClose(newItem) || isInInventoryArea(newItem.x, newItem.y)) && tryCount < 10);
-
-      if (tryCount < 10) items.push(newItem);
+          spawnedType = Math.random() < 0.5 ? 'blueFlower' : 'redMushroom';
+          newItem = spawnItem(spawnedType);
+          tryCount++;
+      } while (newItem && (isTooClose(newItem) || isInInventoryArea(newItem.x, newItem.y)) && tryCount < 10);
+      
+      if (tryCount < 10 && newItem) items.push(newItem);
     }
   }
 }, 10000);
