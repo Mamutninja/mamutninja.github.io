@@ -637,7 +637,7 @@ function update() {
                 }
             }
         }
-  }
+  
 }
   // --- Update character animation ---
   if (moving) {
