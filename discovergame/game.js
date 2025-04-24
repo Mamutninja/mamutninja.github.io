@@ -12,7 +12,7 @@ resizeCanvas();
 // always crop background when resizing the window
 window.addEventListener('resize', () => {
   resizeCanvas();
-  drawBackgroundCrop();
+  backgroundNeedsRedraw = true;
 });
 
 // load background image
@@ -924,8 +924,6 @@ function update() {
 
 // Make things appear on the screen
 function draw() {
-    drawBackgroundCrop();
-
     const drawables = [];
 
     // Add items (csak a fel nem vett elemeket)
@@ -975,31 +973,34 @@ function draw() {
 
     drawInventory(); // Az UI-t mindig a legfelső rétegben rajzoljuk ki
 }
-function gameLoop() {
-  update();
-  draw();
-  requestAnimationFrame(gameLoop);
 
-  // FPS
-  let lastTime = performance.now();
-  let frames = 0;
-  
-  function gameLoop(currentTime) {
-      requestAnimationFrame(gameLoop);
-      const deltaTime = currentTime - lastTime;
-      lastTime = currentTime;
-      frames++;
-  
-      if (deltaTime > 1000) {
-          fps = Math.round((frames * 1000) / deltaTime);
-          frames = 0;
-          // Itt frissítheted az FPS kijelzését a képernyőn
-          console.log("FPS:", fps);
-      }
-  
-      update(deltaTime / 1000);
-      draw();
-  }
+// fps
+let lastTime = performance.now();
+let frames = 0;
+let fps = 0;
+let backgroundNeedsRedraw = true; // Kezdetben rajzolni kell a hátteret
+
+
+// gameloop
+function gameLoop(currentTime) {
+    requestAnimationFrame(gameLoop);
+    const deltaTime = currentTime - lastTime;
+    lastTime = currentTime;
+    frames++;
+
+    if (deltaTime > 1000) {
+        fps = Math.round((frames * 1000) / deltaTime);
+        frames = 0;
+        console.log("FPS:", fps);
+    }
+
+    if (backgroundNeedsRedraw) {
+        drawBackgroundCrop();
+        backgroundNeedsRedraw = false; // Újrarajzolás után false
+    }
+
+    update(deltaTime / 1000);
+    draw(); // A többi játékelem rajzolása továbbra is minden frame-ben
 }
 
 // music
