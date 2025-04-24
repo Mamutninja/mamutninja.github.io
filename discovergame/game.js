@@ -109,7 +109,7 @@ function AppleTree(x, y) {
 }
 
 const appleTrees = [];
-const MAX_APPLE_TREES = 20; // Például maximum 10 fa a pályán
+const MAX_APPLE_TREES = 100;
 
 
 function spawnAppleTree(x, y) {
@@ -758,7 +758,7 @@ const WOOSH_SOUND_POOL_SIZE = 5; // Például 5 párhuzamos hang
 for (let i = 0; i < WOOSH_SOUND_POOL_SIZE; i++) {
     const wooshSound = new Audio("audio/woosh.wav");
     wooshSound.loop = false;
-    wooshSound.volume = 0.5;
+    wooshSound.volume = 0.8;
     wooshSoundPool.push(wooshSound);
 }
 
