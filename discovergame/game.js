@@ -924,6 +924,9 @@ function update() {
 
 // Make things appear on the screen
 function draw() {
+    // Töröld a vásznat minden frame elején
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     const drawables = [];
 
     // Add items (csak a fel nem vett elemeket)
