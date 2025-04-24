@@ -561,7 +561,7 @@ function isInInventoryArea(x, y) {
   const startX = (canvas.width - totalWidth) / 2;
   const endY = inventoryY + inventorySlotSize + 16;
 
-  return x >= startX && x <= startX + totalWidth && y >= inventoryY;
+  return x >= startX && x <= startX + totalWidth && y >= endY;
 }
 
 // initialize inventory with axe
