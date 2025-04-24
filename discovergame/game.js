@@ -720,15 +720,17 @@ canvas.addEventListener('click', function(e) {
 });
 
 // in-game sounds
+
+// pick up sound
 const pickUpSoundPool = [];
 const PICKUP_SOUND_POOL_SIZE = 5; // Például 5 párhuzamos hang
 
 // Inicializáld a hangkészletet
 for (let i = 0; i < PICKUP_SOUND_POOL_SIZE; i++) {
-    const sound = new Audio("audio/pickUp.wav");
-    sound.loop = false;
-    sound.volume = 0.5;
-    pickUpSoundPool.push(sound);
+    const pickUpSound = new Audio("audio/pickUp.wav");
+    pickUpSound.loop = false;
+    pickUpSound.volume = 0.5;
+    pickUpSoundPool.push(pickUpSound);
 }
 
 function playPickUpSound() {
@@ -744,6 +746,35 @@ function playPickUpSound() {
         });
     } else {
         console.warn("Nincs szabad hang a pickup hangkészletben!");
+        // Esetleg itt létrehozhatsz egy újabb hangobjektumot,
+        // de érdemes korlátozni a párhuzamos hangok számát a teljesítmény miatt.
+    }
+}
+
+const wooshSoundPool = [];
+const WOOSH_SOUND_POOL_SIZE = 5; // Például 5 párhuzamos hang
+
+// Inicializáld a hangkészletet
+for (let i = 0; i < WOOSH_SOUND_POOL_SIZE; i++) {
+    const wooshSound = new Audio("audio/woosh.wav");
+    wooshSound.loop = false;
+    wooshSound.volume = 0.5;
+    wooshSoundPool.push(wooshSound);
+}
+
+function playWooshSound() {
+    // Keress egy éppen nem játszó hangot a készletben
+    const availableSound = wooshSoundPool.find(sound => sound.paused || sound.ended);
+
+    if (availableSound) {
+        availableSound.currentTime = 0; // Állítsd vissza a lejátszás elejére, ha korábban lejátszott
+        availableSound.play().then(() => {
+            console.log("Woosh sound elindult 🎶");
+        }).catch(err => {
+            console.warn("Nem tudta automatikusan elindítani:", err);
+        });
+    } else {
+        console.warn("Nincs szabad hang a woosh hangkészletben!");
         // Esetleg itt létrehozhatsz egy újabb hangobjektumot,
         // de érdemes korlátozni a párhuzamos hangok számát a teljesítmény miatt.
     }
@@ -863,7 +894,7 @@ function update() {
                     if (tree.state === 'full') {
                         addItemToInventory('apple');
                     }
-                    playPickUpSound();
+                    playWooshSound();
                     tree.state = 'cut';
                     tree.image = appleTreeCutImage;
                     // Új setTimeout az újranövesztéshez
