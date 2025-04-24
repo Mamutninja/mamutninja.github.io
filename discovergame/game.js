@@ -987,10 +987,7 @@ function gameLoop(currentTime) {
     let lastTime = performance.now();
     let frames = 0;
     let fps = 0;
-    if (backgroundNeedsRedraw) {
-        drawBackgroundCrop();
-        backgroundNeedsRedraw = false; // Újrarajzolás után false
-    }
+    
     requestAnimationFrame(gameLoop);
     const deltaTime = currentTime - lastTime;
     lastTime = currentTime;
@@ -1000,6 +997,10 @@ function gameLoop(currentTime) {
         fps = Math.round((frames * 1000) / deltaTime);
         frames = 0;
         console.log("FPS:", fps);
+    }
+    if (backgroundNeedsRedraw) {
+        drawBackgroundCrop();
+        backgroundNeedsRedraw = false; // Újrarajzolás után false
     }
 
     update(deltaTime / 1000);
