@@ -559,9 +559,8 @@ function drawInventory() {
 function isInInventoryArea(x, y) {
   const totalWidth = inventory.length * (inventorySlotSize + inventoryPadding) + inventoryPadding;
   const startX = (canvas.width - totalWidth) / 2;
-  const endY = inventoryY + inventorySlotSize + 16;
 
-  return x >= startX && x <= startX + totalWidth && y >= endY;
+  return x >= startX && x <= startX + totalWidth && y >= inventoryY - 16;
 }
 
 // initialize inventory with axe
