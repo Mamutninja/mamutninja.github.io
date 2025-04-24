@@ -977,15 +977,20 @@ function draw() {
     drawInventory(); // Az UI-t mindig a legfelső rétegben rajzoljuk ki
 }
 
-// fps
-let lastTime = performance.now();
-let frames = 0;
-let fps = 0;
-let backgroundNeedsRedraw = true; // Kezdetben rajzolni kell a hátteret
+
 
 
 // gameloop
 function gameLoop(currentTime) {
+    // fps
+    let lastTime = performance.now();
+    let frames = 0;
+    let fps = 0;
+    let backgroundNeedsRedraw = true; // Kezdetben rajzolni kell a hátteret
+    if (backgroundNeedsRedraw) {
+        drawBackgroundCrop();
+        backgroundNeedsRedraw = false; // Újrarajzolás után false
+    }
     requestAnimationFrame(gameLoop);
     const deltaTime = currentTime - lastTime;
     lastTime = currentTime;
@@ -995,11 +1000,6 @@ function gameLoop(currentTime) {
         fps = Math.round((frames * 1000) / deltaTime);
         frames = 0;
         console.log("FPS:", fps);
-    }
-
-    if (backgroundNeedsRedraw) {
-        drawBackgroundCrop();
-        backgroundNeedsRedraw = false; // Újrarajzolás után false
     }
 
     update(deltaTime / 1000);
