@@ -815,22 +815,22 @@ function update() {
     }
   } else {
     // --- WASD irányítás ---
-    if (keys["w"]) {
+    if (keys["w"] || keys["W"]) {
       moveY -= 1;
       player.direction = "up";
       moving = true;
     }
-    if (keys["s"]) {
+    if (keys["s"] || keys["S"]) {
       moveY += 1;
       player.direction = "down";
       moving = true;
     }
-    if (keys["a"]) {
+    if (keys["a"] || keys["A"]) {
       moveX -= 1;
       player.direction = "left";
       moving = true;
     }
-    if (keys["d"]) {
+    if (keys["d"] || keys["D"]) {
       moveX += 1;
       player.direction = "right";
       moving = true;
@@ -847,7 +847,7 @@ function update() {
     nextY += moveY;
   }
   // Pick item up
-  if (keys["e"]) {
+  if (keys["e"] || keys["E"] || keys[" "]) {
     for (let item of items) {
       if (!item.pickedUp &&
           player.x < item.x + item.width &&
