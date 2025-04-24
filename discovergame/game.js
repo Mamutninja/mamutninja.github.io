@@ -21,7 +21,18 @@ const backgroundImage = new Image();
 backgroundImage.src = 'images/grass.png';
 
 backgroundImage.onload = function() {
-  drawBackgroundCrop();
+    drawBackgroundCrop();
+    backgroundLoaded = true; // Jelöld, hogy a háttér betöltődött
+    console.log("Háttérkép betöltődött!");
+    // Itt már nem indítjuk el a gameLoop-ot, hanem a központi ellenőrzésre hagyjuk
+    if (loadedItemIcons === totalItemIcons && loadedSprites === totalSprites && backgroundLoaded) {
+        console.log("Minden sprite, item ikon és háttér betöltődött!");
+        initItemsWithNoise();
+        initializeAppleTreesWithNoise();
+        initPlayerInventory();
+        attemptSpawnNewItem();
+        gameLoop();
+    }
 };
 
 // cropping & drawing the background
