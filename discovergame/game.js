@@ -729,7 +729,7 @@ const PICKUP_SOUND_POOL_SIZE = 5; // Például 5 párhuzamos hang
 for (let i = 0; i < PICKUP_SOUND_POOL_SIZE; i++) {
     const pickUpSound = new Audio("audio/pickUp.wav");
     pickUpSound.loop = false;
-    pickUpSound.volume = 0.5;
+    pickUpSound.volume = 0.3;
     pickUpSoundPool.push(pickUpSound);
 }
 
@@ -758,7 +758,7 @@ const WOOSH_SOUND_POOL_SIZE = 5; // Például 5 párhuzamos hang
 for (let i = 0; i < WOOSH_SOUND_POOL_SIZE; i++) {
     const wooshSound = new Audio("audio/woosh.wav");
     wooshSound.loop = false;
-    wooshSound.volume =1.5;
+    wooshSound.volume = 1;
     wooshSoundPool.push(wooshSound);
 }
 
@@ -1035,7 +1035,7 @@ function gameLoop() {
 // music
 const bgMusic = new Audio("audio/Soft Sunshine Wonder.mp3");
 bgMusic.loop = true;
-bgMusic.volume = 0.5; // 50%-os hangerő (0.0 - 1.0 között)
+bgMusic.volume = 0.3; // 50%-os hangerő (0.0 - 1.0 között)
 
 function startMusicOnce() {
   bgMusic.play().then(() => {
