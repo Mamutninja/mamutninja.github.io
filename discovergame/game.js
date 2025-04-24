@@ -758,7 +758,7 @@ const WOOSH_SOUND_POOL_SIZE = 5; // Például 5 párhuzamos hang
 for (let i = 0; i < WOOSH_SOUND_POOL_SIZE; i++) {
     const wooshSound = new Audio("audio/woosh.wav");
     wooshSound.loop = false;
-    wooshSound.volume = 0.8;
+    wooshSound.volume =1.5;
     wooshSoundPool.push(wooshSound);
 }
 
