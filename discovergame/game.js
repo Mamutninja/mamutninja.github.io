@@ -9,6 +9,7 @@ function resizeCanvas() {
 }
 resizeCanvas();
 
+let backgroundNeedsRedraw = true; // Kezdetben rajzolni kell a hátteret
 // always crop background when resizing the window
 window.addEventListener('resize', () => {
   resizeCanvas();
@@ -986,7 +987,6 @@ function gameLoop(currentTime) {
     let lastTime = performance.now();
     let frames = 0;
     let fps = 0;
-    let backgroundNeedsRedraw = true; // Kezdetben rajzolni kell a hátteret
     if (backgroundNeedsRedraw) {
         drawBackgroundCrop();
         backgroundNeedsRedraw = false; // Újrarajzolás után false
