@@ -1004,7 +1004,36 @@ function draw() {
     }
 
     drawInventory(); // Az UI-t mindig a legfelső rétegben rajzoljuk ki
+  
 }
+
+// force landscape on mobile
+function forceLandscape() {
+  if (screen && screen.orientation && screen.orientation.lock) {
+    screen.orientation.lock('landscape')
+      .then(() => {
+        console.log('Képernyő tájolás sikeresen kényszerítve fekvőre.');
+      })
+      .catch(error => {
+        console.error('Hiba a képernyő tájolásának kényszerítésekor:', error);
+        // A felhasználó vagy a böngésző nem engedélyezte az elforgatást.
+        // Esetleg itt megjeleníthetsz egy üzenetet a felhasználónak.
+      });
+  } else if (window.orientation !== undefined) {
+    // Régebbi böngészők támogatása (nem ajánlott, de létezik)
+    if (window.orientation === 0 || window.orientation === 180) {
+      // Álló tájolásban vagy fejjel lefelé, próbáljuk elforgatni
+      if (typeof window.orientationchange === 'object') {
+        window.dispatchEvent(new Event('orientationchange'));
+      } else {
+        // Ez a módszer megbízhatatlan és elavult
+        screen.orientation.angle = 90;
+      }
+    }
+  }
+}
+
+// gameloop is here
 function gameLoop() {
   update();
   draw();
@@ -1050,3 +1079,8 @@ function startMusicOnce() {
 
 window.addEventListener("click", startMusicOnce);
 window.addEventListener("touchstart", startMusicOnce);
+
+// Képernyő elforgatás kényszerítése
+window.addEventListener('load', forceLandscape);
+window.addEventListener('resize', forceLandscape);
+
