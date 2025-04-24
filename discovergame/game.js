@@ -109,7 +109,7 @@ function AppleTree(x, y) {
 }
 
 const appleTrees = [];
-const MAX_APPLE_TREES = 100;
+const MAX_APPLE_TREES = 20;
 
 
 function spawnAppleTree(x, y) {
@@ -152,7 +152,7 @@ function initializeAppleTreesWithNoise() {
     appleTrees.length = 0;
     for (let i = 0; i < MAX_APPLE_TREES * 2; i++) {
         spawnRandomAppleTreeWithNoise();
-        if (appleTrees.length >= 100) break;
+        if (appleTrees.length >= 6) break;
     }
     console.log("Almafák inicializálva zaj alapon:", appleTrees.length);
 }
