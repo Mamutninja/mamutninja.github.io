@@ -52,6 +52,10 @@ function drawBackgroundCrop() {
   );
 }
 
+// Has the game started yet?
+let gameStarted = false;
+
+
 // noise
 const noise = new SimplexNoise();
 const NOISE_FREQUENCY = 0.01; // Finomhangold ezt az értéket
@@ -280,7 +284,7 @@ for (const key in itemIcons) {
     itemIcons[key].onload = () => {
         loadedItemIcons++;
         console.log(`Item ikon betöltve: ${key}`, itemIcons[key]);
-        if (loadedItemIcons === totalItemIcons && loadedSprites === totalSprites) {
+        if (loadedItemIcons === totalItemIcons && loadedSprites === totalSprites && gameStarted === false) {
             console.log("Minden sprite és item ikon betöltődött!");
             initItemsWithNoise();          // Új item inicializálás
             initializeAppleTreesWithNoise(); // Új fa inicializálás
@@ -302,7 +306,7 @@ const totalSprites = Object.values(player.sprites).flat().length;
         img.onload = () => {
             loadedSprites++;
             console.log(`Sprite betöltve: ${dir}${i}.png`);
-            if (loadedItemIcons === totalItemIcons && loadedSprites === totalSprites) {
+            if (loadedItemIcons === totalItemIcons && loadedSprites === totalSprites && gameStarted === false) {
                 console.log("Minden sprite és item ikon betöltődött!");
                 initItemsWithNoise();          // Új item inicializálás
                 initializeAppleTreesWithNoise(); // Új fa inicializálás
