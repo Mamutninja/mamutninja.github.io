@@ -1038,27 +1038,6 @@ function gameLoop() {
   update();
   draw();
   requestAnimationFrame(gameLoop);
-
-  // FPS
-  let lastTime = performance.now();
-  let frames = 0;
-  
-  function gameLoop(currentTime) {
-      requestAnimationFrame(gameLoop);
-      const deltaTime = currentTime - lastTime;
-      lastTime = currentTime;
-      frames++;
-  
-      if (deltaTime > 1000) {
-          fps = Math.round((frames * 1000) / deltaTime);
-          frames = 0;
-          // Itt frissítheted az FPS kijelzését a képernyőn
-          console.log("FPS:", fps);
-      }
-  
-      update(deltaTime / 1000);
-      draw();
-  }
 }
 
 // music
