@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stardust Clicker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    TEST
+
+    <div class="game-container">
+        
+        <!-- LEFT COLUMN: BUILDINGS -->
+        <div class="column-wrapper left-column">
+            <h2 class="column-title">buildings</h2>
+            <div class="scroll-container" id="buildings-container">
+                <!-- Dynamically populated via JS -->
+            </div>
+        </div>
+
+        <!-- CENTER AREA: INTERACTIVE STAR -->
+        <div class="center-area">
+            <!-- Decorative ring of icons around the star -->
+            <div class="star-ring" id="star-ring"></div>
+            
+            <div class="star-wrapper">
+                <button id="main-star" class="star-btn">
+                    <!-- If you have a custom star image, swap the src here -->
+                    <img src="images/star.png" alt="Star" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23FFF3CD\' stroke=\'%236A5257\' stroke-width=\'1\'><path d=\'M12 .587l3.668 7.431 8.2 1.192-5.934 5.785 1.4 8.168L12 18.896l-7.334 3.857 1.4-8.168L.133 9.21l8.2-1.192z\'/></svg>'">
+                </button>
+            </div>
+
+            <div class="score-display">
+                <div class="score-number" id="stardust-count">0</div>
+                <div class="score-label">quadrillion<br>stardust</div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: UPGRADES -->
+        <div class="column-wrapper right-column">
+            <h2 class="column-title">upgrades</h2>
+            
+            <button class="scroll-arrow up-arrow" id="upgrade-up">▲</button>
+            
+            <div class="scroll-container" id="upgrades-container">
+                <!-- Dynamically populated via JS -->
+            </div>
+            
+            <button class="scroll-arrow down-arrow" id="upgrade-down">▼</button>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
