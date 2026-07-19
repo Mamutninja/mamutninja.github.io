@@ -84,33 +84,28 @@ body {
 .scroll-container::-webkit-scrollbar { display: none; }
 
 .star-btn {
-    background: transparent; /* Ensures no default button background shows */
+    background: transparent; /* Totally invisible background rectangle */
     border: none;
     cursor: pointer;
     z-index: 5;
     outline: none;
-    padding: 0;   /* Removes any hidden browser padding */
+    padding: 0;
     margin: 0;
-    
-    /* The Magic Trick: Masks the click hitbox into a perfect 5-pointed star */
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-    
     display: flex;
     justify-content: center;
     align-items: center;
     width: 260px;
     height: 260px;
+    transition: transform 0.05s ease-in-out;
 }
 
 .star-btn img {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    pointer-events: none; /* Passes click tracking directly up to the clipped button */
-    transition: transform 0.05s ease-in-out;
 }
 
-/* Move the active shrink effect to the button container so it respects the clip path */
+/* The click-shrink effect happens on the whole button wrapper */
 .star-btn:active {
     transform: scale(0.95);
 }
