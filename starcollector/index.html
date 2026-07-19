@@ -3,23 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Star Collector</title>
+    <title>Stardust Clicker</title>
+    <!-- Double-check that your CSS file is named exactly style.css and is in the same folder -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <!-- This main container acts as the horizontal grid wrapper -->
     <div class="game-container">
         
-        <!-- LEFT COLUMN: BUILDINGS -->
+        <!-- LEFT TRACK: BUILDINGS -->
         <div class="column-wrapper left-column">
             <h2 class="column-title">buildings</h2>
-            <div class="scroll-container" id="buildings-container"></div>
+            <div class="scroll-container" id="buildings-container">
+                <!-- Dynamically populated by script.js -->
+            </div>
         </div>
 
-        <!-- CENTER AREA: LOCKED STAR -->
+        <!-- CENTER TRACK: STAR CORE SYSTEM -->
         <div class="center-area">
             <div class="star-system">
-                <!-- The ring container is now a 0x0 point at the exact center of the star -->
+                <!-- Zero-dot anchor for orbiting particles -->
                 <div class="star-ring" id="star-ring"></div>
                 
                 <button id="main-star" class="star-btn">
@@ -33,16 +37,22 @@
             </div>
         </div>
 
-        <!-- RIGHT COLUMN: UPGRADES -->
+        <!-- RIGHT TRACK: UPGRADES -->
         <div class="column-wrapper right-column">
             <h2 class="column-title">upgrades</h2>
+            
             <button class="scroll-arrow up-arrow" id="upgrade-up">▲</button>
-            <div class="scroll-container" id="upgrades-container"></div>
+            
+            <div class="scroll-container" id="upgrades-container">
+                <!-- Dynamically populated by script.js -->
+            </div>
+            
             <button class="scroll-arrow down-arrow" id="upgrade-down">▼</button>
         </div>
 
     </div>
 
+    <!-- Script loaded at the bottom so the DOM elements exist before execution -->
     <script src="script.js"></script>
 </body>
 </html>
