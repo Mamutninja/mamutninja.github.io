@@ -1,55 +1,86 @@
-// --- PIXEL-PERFECT STAR CLICK ENGINE ---
+// --- PIXEL-PERFECT STAR CLICK & CURSOR ENGINE ---
 const starBtn = document.getElementById('main-star');
-const starImg = starBtn.querySelector('img');
-
 const starCanvas = document.createElement('canvas');
 const starCtx = starCanvas.getContext('2d');
-let starMaskLoaded = false;
 
-// Pre-render the star image onto an off-screen canvas to map its transparent pixels
+let starMaskLoaded = false;
+let starAlphaData = null; // Holds cached pixel transparency array
+
 const starImageMap = new Image();
 starImageMap.src = 'images/star.png';
 starImageMap.onload = () => {
-    starCanvas.width = 260;  // Matches the base design dimensions
+    starCanvas.width = 260;
     starCanvas.height = 260;
     starCtx.drawImage(starImageMap, 0, 0, 260, 260);
+    
+    // Cache raw pixel data for instant zero-lag lookup on hover/click
+    starAlphaData = starCtx.getImageData(0, 0, 260, 260).data;
     starMaskLoaded = true;
 };
 
-// Handle fallback if your custom star image fails to load
-starImageMap.onerror = () => {
-    starMaskLoaded = false; // Will drop back to standard box clicks if image missing
-};
-
-starBtn.addEventListener('click', (e) => {
-    if (!starMaskLoaded) {
-        // Fallback: If star.png isn't loaded yet, register any click on the box
-        registerStarClick();
-        return;
-    }
-
-    // Calculate exactly where the mouse clicked relative to the star button bounds
+// Helper: Calculates mouse position mapped back to 260x260 image pixels
+function getPixelAtCoords(e) {
     const rect = starBtn.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
     const clickY = e.clientY - rect.top;
 
-    // Convert the scaled display coordinates back into our raw 260x260 asset pixels
     const pixelX = Math.floor((clickX / rect.width) * 260);
     const pixelY = Math.floor((clickY / rect.height) * 260);
 
-    // Safeguard bounds check
-    if (pixelX >= 0 && pixelX < 260 && pixelY >= 0 && pixelY < 260) {
-        // Read image data pixel vector arrays [Red, Green, Blue, Alpha]
-        const alpha = starCtx.getImageData(pixelX, pixelY, 1, 1).data[3];
+    return { pixelX, pixelY };
+}
 
-        // Alpha ranges from 0 (transparent) to 255 (fully visible color)
-        if (alpha > 0) {
-            registerStarClick();
-        }
+// Helper: Checks if the alpha value at (x, y) is non-transparent (> 0)
+function isOpaquePixel(pixelX, pixelY) {
+    if (!starAlphaData || pixelX < 0 || pixelX >= 260 || pixelY < 0 || pixelY >= 260) {
+        return false;
+    }
+    // Calculate index in 1D RGBA array: (Y * width + X) * 4 channels + Alpha byte offset (+3)
+    const alphaIndex = (pixelY * 260 + pixelX) * 4 + 3;
+    return starAlphaData[alphaIndex] > 0;
+}
+
+// Dynamic Cursor Handler: Changes pointer style on hover
+starBtn.addEventListener('mousemove', (e) => {
+    if (!starMaskLoaded) {
+        starBtn.style.cursor = 'pointer';
+        return;
+    }
+
+    const { pixelX, pixelY } = getPixelAtCoords(e);
+    
+    if (isOpaquePixel(pixelX, pixelY)) {
+        starBtn.style.cursor = 'pointer';
+    } else {
+        starBtn.style.cursor = 'default';
     }
 });
 
-function registerStarClick() {
+// Reset cursor when mouse leaves the button bounds entirely
+starBtn.addEventListener('mouseleave', () => {
+    starBtn.style.cursor = 'default';
+});
+
+// Click Handler with visual shrink bounce
+starBtn.addEventListener('click', (e) => {
+    if (!starMaskLoaded) {
+        triggerStarClick();
+        return;
+    }
+
+    const { pixelX, pixelY } = getPixelAtCoords(e);
+
+    if (isOpaquePixel(pixelX, pixelY)) {
+        triggerStarClick();
+    }
+});
+
+function triggerStarClick() {
+    // Add click shrink animation
+    starBtn.classList.add('star-active');
+    setTimeout(() => starBtn.classList.remove('star-active'), 50);
+
+    // Increment stardust score
     stardust += 1;
-    stardustCountEl.textContent = stardust;
+    if (stardustCountEl) stardustCountEl.textContent = stardust;
 }
