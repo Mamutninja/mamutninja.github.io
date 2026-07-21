@@ -80,12 +80,12 @@ body {
     transform: scale(0.97);
 }
 .item-card:hover {
-    background-color: #F8EDF3; /* Slightly brightens on hover */
+    background-color: #7F565C;
 }
 
 .card-icon {
-    width: 32px;
-    height: 32px;
+    width: 60px;
+    height: 45px;
     object-fit: contain;
     margin-right: 12px;
     pointer-events: none;
