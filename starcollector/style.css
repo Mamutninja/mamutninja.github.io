@@ -40,8 +40,10 @@ body {
     color: #6A5257;
     justify-content: center;
     align-items: center;
-    left: 507px;
-    top: 671px;
+    top: 507px;
+    left: 671px;
+    width: 277;
+    height: 77;
     margin: 0; 
 }
 
