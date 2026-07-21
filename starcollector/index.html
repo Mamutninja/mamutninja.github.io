@@ -11,45 +11,19 @@
 
     <div class="game-container">
         
-        <!-- LEFT TRACK: BUILDINGS -->
-        <div class="column-wrapper left-column">
-            <h2 class="column-title">buildings</h2>
-            <div class="scroll-container" id="buildings-container">
-                <!-- Dynamically populated by script.js -->
-            </div>
+        <h2 class="column-title">buildings</h2>
+        <div class="scroll-container" id="buildings-container">
+            <!-- Dynamically populated by script.js -->
+        </div>
+        <button id="main-star" class="star-btn">
+            <img src="images/star.png" alt="Star" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23FFF3CD\' stroke=\'%236A5257\' stroke-width=\'1\'><path d=\'M12 .587l3.668 7.431 8.2 1.192-5.934 5.785 1.4 8.168L12 18.896l-7.334 3.857 1.4-8.168L.133 9.21l8.2-1.192z\'/></svg>'">
+        </button>
+        
+        <div class="score-display">
+            <div class="score-number" id="stardust-count">405</div>
+            <div class="score-label">quadrillion<br>stardust</div>
         </div>
 
-        <!-- CENTER TRACK: STAR CORE SYSTEM -->
-        <div class="center-area">
-            <div class="star-system">
-                <!-- Zero-dot anchor for orbiting particles -->
-                <div class="star-ring" id="star-ring"></div>
-                
-                <button id="main-star" class="star-btn">
-                    <img src="images/star.png" alt="Star" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23FFF3CD\' stroke=\'%236A5257\' stroke-width=\'1\'><path d=\'M12 .587l3.668 7.431 8.2 1.192-5.934 5.785 1.4 8.168L12 18.896l-7.334 3.857 1.4-8.168L.133 9.21l8.2-1.192z\'/></svg>'">
-                </button>
-            </div>
-
-            <div class="score-display">
-                <div class="score-number" id="stardust-count">405</div>
-                <div class="score-label">quadrillion<br>stardust</div>
-            </div>
-        </div>
-
-        <!-- RIGHT TRACK: UPGRADES -->
-        <div class="column-wrapper right-column">
-            <h2 class="column-title">upgrades</h2>
-            
-            <button class="scroll-arrow up-arrow" id="upgrade-up">▲</button>
-            
-            <div class="scroll-container" id="upgrades-container">
-                <!-- Dynamically populated by script.js -->
-            </div>
-            
-            <button class="scroll-arrow down-arrow" id="upgrade-down">▼</button>
-        </div>
-
-    </div>
 
     <!-- Script loaded at the bottom so the DOM elements exist before execution -->
     <script src="script.js"></script>

@@ -12,8 +12,8 @@ body {
 /* The Fixed Artboard Canvas */
 .game-container {
     position: absolute;
-    width: 1440px;
-    height: 1024px;
+    width: 1280px;
+    height: 800px;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%) scale(1); /* Managed by JavaScript scale engine */
@@ -22,45 +22,8 @@ body {
     overflow: hidden;
 }
 
-/* Position Left Column at exact pixels */
-.left-column {
-    position: absolute;
-    left: 50px;
-    top: 40px;
-    width: 320px;
-    height: 720px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* Position Center Area at exact pixels */
-.center-area {
-    position: absolute;
-    left: 440px; /* Centered perfectly: (1280 width - 400 width) / 2 */
-    top: 40px;
-    width: 400px;
-    height: 720px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Position Right Column at exact pixels */
-.right-column {
-    position: absolute;
-    right: 0px;
-    top: 0px;
-    width: 320px;
-    height: 720px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* Keep your title styling clean */
 .column-title {
+    position: absolute;
     font-size: 1.8rem;
     font-weight: bold;
     margin-bottom: 20px;
@@ -69,24 +32,20 @@ body {
     color: #6A5257;
 }
 
-/* Inside the columns, keep your scrolling containers functional */
-.scroll-container {
-    width: 100%;
-    height: 550px;
-    overflow-y: scroll;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    padding: 100px 0;
-    scrollbar-width: none;
+.score-display {
+    position: absolute;
+    left: 507px;
+    top: 671px;
+    margin: 0; 
 }
-.scroll-container::-webkit-scrollbar { display: none; }
 
 .star-btn {
-    background: transparent; /* Totally invisible background rectangle */
+    position: absolute;
+    left: 468px;
+    top: 213px;
+    background: transparent;
     border: none;
-    cursor: pointer;
+    cursor: default; /* Default cursor until JS detects star color */
     z-index: 5;
     outline: none;
     padding: 0;
@@ -94,8 +53,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 260px;
-    height: 260px;
+    width: 358px;
+    height: 341px;
     transition: transform 0.05s ease-in-out;
 }
 
@@ -103,9 +62,10 @@ body {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    pointer-events: none; /* Passes mouse coordinates straight to the button container */
 }
 
-/* The click-shrink effect happens on the whole button wrapper */
-.star-btn:active {
+/* Click animation class toggled via JavaScript */
+.star-btn.star-active {
     transform: scale(0.95);
 }
