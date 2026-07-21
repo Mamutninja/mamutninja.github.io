@@ -35,6 +35,11 @@ body {
     position: absolute;
     font-size: 1.8rem;
     font-weight: bold;
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+    color: #6A5257;
+    justify-content: center;
+    align-items: center;
     left: 507px;
     top: 671px;
     margin: 0; 
