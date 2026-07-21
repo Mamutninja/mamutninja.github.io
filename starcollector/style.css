@@ -76,40 +76,59 @@ body {
     background-image: url('images/rectangle_dark.png');
 }
 
+.item-card {
+    position: absolute;
+    
+    /* 1. Strip default browser button appearance (Matches star-btn) */
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0 16px; /* Horizontal spacing inside the pill */
+    margin: 0;
+    cursor: default; /* Stops the cursor from turning into a pointer/hand */
+    
+    /* 2. Card Background Graphic */
+    background-image: url('images/card-bg.png'); /* Replace with your pill graphic path */
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    
+    /* 3. Tight, controlled dimensions for the pill */
+    width: 220px;  /* Reduced width to fit nicely */
+    height: 48px;  /* Fixed height for the pill */
+    box-sizing: border-box;
+    
+    /* 4. Align contents side-by-side inside the pill */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    
+    z-index: 5;
+    transition: transform 0.05s ease-in-out;
+}
+
 .card-icon {
-    width: 32px;
-    height: 32px;
+    /* 5. Force the paw image to remain small */
+    width: 28px !important;
+    height: 28px !important;
+    max-width: 28px;
+    max-height: 28px;
+    flex-shrink: 0; /* CRITICAL: Stops flexbox from stretching the paw graphic */
+    
     object-fit: contain;
-    margin-right: 12px;
+    margin-right: 10px;
     pointer-events: none;
 }
 
 .card-text {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     font-weight: bold;
-    text-align: center;
+    text-align: left;
     font-family: 'Courier New', Courier, monospace;
     color: #7F565C;
     pointer-events: none;
-}
-
-.star-btn {
-    position: absolute;
-    left: 468px;
-    top: 213px;
-    background: transparent;
-    border: none;
-    cursor: default; /* Default cursor until JS detects star color */
-    z-index: 5;
-    outline: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 358px;
-    height: 341px;
-    transition: transform 0.05s ease-in-out;
+    white-space: nowrap; /* Keeps text on a single line inside the pill */
 }
 
 .star-btn img {
