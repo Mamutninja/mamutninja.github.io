@@ -23,7 +23,6 @@ body {
 }
 
 .column-title {
-    position: absolute;
     font-size: 1.8rem;
     font-weight: bold;
     margin-bottom: 20px;
@@ -34,6 +33,8 @@ body {
 
 .score-display {
     position: absolute;
+    font-size: 1.8rem;
+    font-weight: bold;
     left: 507px;
     top: 671px;
     margin: 0; 
