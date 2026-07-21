@@ -1,6 +1,6 @@
 /* Reset body to act as a strict viewport window */
 body {
-    background-color: #FCDAD7;
+    background-color: #FFE2E4;
     height: 100vh;
     width: 100vw;
     margin: 0;
@@ -18,7 +18,7 @@ body {
     top: 50%;
     transform: translate(-50%, -50%) scale(1); /* Managed by JavaScript scale engine */
     transform-origin: center center;
-    background-color: #FCDAD7;
+    background-color: #FFE2E4;
     overflow: hidden;
 }
 
@@ -28,7 +28,7 @@ body {
     margin-bottom: 20px;
     text-align: center;
     font-family: 'Courier New', Courier, monospace;
-    color: #6A5257;
+    color: #7F565C;
 }
 
 .score-display {
@@ -37,14 +37,42 @@ body {
     font-weight: bold;
     text-align: center;
     font-family: 'Courier New', Courier, monospace;
-    color: #6A5257;
+    color: #7F565C;
     justify-content: center;
     align-items: center;
-    top: 507px;
-    left: 671px;
+    left: 508px;
+    top: 671px;
     width: 277;
     height: 77;
     margin: 0; 
+}
+
+.item-card {
+    display: flex;
+    align-items: center;
+    width: 240px;
+    min-height: 56px;
+    background-color: #EEE2EC;
+    border: 2px solid #7F565C;
+    border-radius: 30px;
+    padding: 5px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s ease-out;
+    flex-shrink: 0;
+    user-select: none;
+}
+.item-card:hover { background-color: #E1CBDD; }
+
+.card-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    margin-right: 12px;
+}
+
+.card-text {
+    font-size: 0.95rem;
+    font-weight: bold;
 }
 
 .star-btn {
