@@ -48,31 +48,49 @@ body {
 }
 
 .item-card {
+    position: absolute;
+
     display: flex;
+    flex-direction: row;
     align-items: center;
-    width: 240px;
-    min-height: 56px;
-    background-color: #EEE2EC;
-    border: 2px solid #7F565C;
-    border-radius: 30px;
-    padding: 5px 20px;
+    padding: 0 16px;
+
+    width: 259;
+    height: 64;
+    box-sizing: border-box;
+
+    background-image: url('images/rectangle.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+
     cursor: pointer;
-    transition: background-color 0.2s, transform 0.1s ease-out;
-    flex-shrink: 0;
     user-select: none;
+    transition: transform 0.05s ease-in-out;
 }
-.item-card:hover { background-color: #E1CBDD; }
+
+.item-card:active {
+    transform: scale(0.97);
+}
+.item-card:hover {
+    background-image: url('images/rectangle_dark.png');
+}
 
 .card-icon {
     width: 32px;
     height: 32px;
     object-fit: contain;
     margin-right: 12px;
+    pointer-events: none;
 }
 
 .card-text {
     font-size: 0.95rem;
     font-weight: bold;
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+    color: #7F565C;
+    pointer-events: none;
 }
 
 .star-btn {
