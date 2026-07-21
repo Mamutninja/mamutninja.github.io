@@ -65,6 +65,10 @@ body {
 
     width: 259;
     height: 64;
+    min-width: 259px;
+    max-width: 259px;
+    min-height: 64px;
+    max-height: 64px;
     box-sizing: border-box;
 
     cursor: pointer;
@@ -98,7 +102,7 @@ body {
 
 .star-btn {
     position: absolute;
-    left: 468px;
+    left: 461px;
     top: 213px;
     background: transparent;
     border: none;
