@@ -41,7 +41,7 @@ body {
     justify-content: center;
     align-items: center;
     left: 508px;
-    top: 671px;
+    top: 672px;
     width: 277;
     height: 77;
     margin: 0; 
@@ -84,7 +84,7 @@ body {
 }
 
 .card-icon {
-    width: 60px;
+    width: 55px;
     height: 45px;
     object-fit: contain;
     margin-right: 12px;
