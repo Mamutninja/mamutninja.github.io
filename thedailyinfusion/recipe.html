@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Recipe Detail — StillSip</title>
+  <title>Recipe Details - The Daily Infusion</title>
   
   <!-- Google Fonts: Fraunces (Serif) & Plus Jakarta Sans (Sans) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -60,8 +60,7 @@
           <path d="M50 40 Q40 25 54 22 Q58 32 50 40 Z" fill="#8A9A86" stroke="#2C221E" stroke-width="2.5" stroke-linejoin="round"/>
         </svg>
         <div class="flex flex-col">
-          <span class="font-serif-heading font-bold text-lg leading-none text-cozy-text">StillSip</span>
-          <span class="text-[10px] tracking-wider uppercase text-cozy-muted font-semibold">The Daily Infusion</span>
+          <span class="font-serif-heading font-bold text-lg leading-none text-cozy-text">The Daily Infusion</span>
         </div>
       </a>
 
@@ -171,7 +170,7 @@
   </main>
 
   <footer class="mt-auto border-t border-cozy-border bg-white/40 py-8 text-center text-sm text-cozy-muted">
-    <p>© StillSip — Non-Alcoholic & Non-Sparkling Pantry Drink Recipes.</p>
+    <p>© The Daily Infusion</p>
   </footer>
 
   <!-- LOAD CENTRAL DATABASE & PAGE LOGIC -->
@@ -195,7 +194,7 @@
     });
 
     function renderRecipeDetails() {
-      document.title = `${currentRecipe.name} — StillSip`;
+      document.title = `${currentRecipe.name} — The Daily Infusion`;
       document.getElementById('recipe-title').innerText = currentRecipe.name;
       document.getElementById('recipe-style').innerText = currentRecipe.style;
       document.getElementById('recipe-temp').innerText = currentRecipe.temperature;
