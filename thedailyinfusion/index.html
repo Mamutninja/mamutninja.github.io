@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>All Drink Recipes — The Daily Infusion</title>
+  <title>The Daily Infusion — StillSip</title>
   
   <!-- Google Fonts: Fraunces (Serif) & Plus Jakarta Sans (Sans) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -57,19 +57,9 @@
       border: 1px solid rgba(110, 99, 91, 0.12);
       box-shadow: 0 10px 30px -5px rgba(60, 40, 20, 0.04);
     }
-    .filter-chip {
-      transition: all 0.15s ease;
-      cursor: pointer;
-      user-select: none;
-    }
-    .filter-chip.active {
-      background-color: #C86D51 !important;
-      color: #FFFFFF !important;
-      border-color: #C86D51 !important;
-    }
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col justify-between">
 
   <!-- ================= NAVIGATION HEADER ================= -->
   <header class="sticky top-0 z-30 bg-[#FAF6F0]/90 backdrop-blur-md border-b border-cozy-border">
@@ -85,14 +75,15 @@
           <path d="M50 40 Q40 25 54 22 Q58 32 50 40 Z" fill="#8A9A86" stroke="#2C221E" stroke-width="2.5" stroke-linejoin="round"/>
         </svg>
         <div class="flex flex-col">
-          <span class="font-serif-heading font-bold text-lg leading-none text-cozy-text">The Daily Infusion</span>
+          <span class="font-serif-heading font-bold text-lg leading-none text-cozy-text">StillSip</span>
+          <span class="text-[10px] tracking-wider uppercase text-cozy-muted font-semibold">The Daily Infusion</span>
         </div>
       </a>
 
       <!-- Navigation Links -->
       <nav class="hidden md:flex items-center gap-1 bg-white/60 p-1.5 rounded-full border border-cozy-border shadow-sm">
-        <a href="index.html" class="px-4 py-1.5 rounded-full text-sm font-medium text-cozy-muted hover:text-cozy-text transition">Home</a>
-        <a href="recipes.html" class="px-4 py-1.5 rounded-full text-sm font-medium bg-cozy-terracotta text-white shadow-sm">All Recipes</a>
+        <a href="index.html" class="px-4 py-1.5 rounded-full text-sm font-medium bg-cozy-terracotta text-white shadow-sm">Home</a>
+        <a href="recipes.html" class="px-4 py-1.5 rounded-full text-sm font-medium text-cozy-muted hover:text-cozy-text transition">All Recipes</a>
         <a href="pantry.html" class="px-4 py-1.5 rounded-full text-sm font-medium text-cozy-muted hover:text-cozy-text transition">Pantry</a>
         <a href="shopping-list.html" class="px-4 py-1.5 rounded-full text-sm font-medium text-cozy-muted hover:text-cozy-text transition flex items-center gap-1.5">
           Shopping List
@@ -111,506 +102,75 @@
     </div>
   </header>
 
-  <!-- ================= MAIN CONTENT ================= -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-8">
+  <!-- ================= HERO SECTION (CENTERED TITLE & CTA) ================= -->
+  <main class="flex-1 flex flex-col justify-center items-center text-center px-4 py-12 md:py-20 max-w-4xl mx-auto my-auto">
     
-    <!-- HEADER HERO SECTION -->
-    <div class="text-left mb-8 border-b border-cozy-border pb-6 flex flex-wrap items-end justify-between gap-4">
-      <div>
-        <h1 class="font-serif-heading text-3xl md:text-4xl font-bold text-cozy-text mb-2">All Drink Recipes</h1>
-        <p class="text-cozy-muted text-base">
-          Filter and discover non-alcoholic, still beverages tailored to your tastes, nutrients, and seasonal moods.
-        </p>
-      </div>
-      <button onclick="resetAllFilters()" class="text-xs font-semibold text-cozy-terracotta bg-cozy-terracotta/10 px-4 py-2 rounded-full hover:bg-cozy-terracotta hover:text-white transition">
-        ↺ Reset All Filters
-      </button>
+    <!-- Subtitle Badge -->
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cozy-sage/15 border border-cozy-sage/30 text-cozy-text text-xs md:text-sm font-semibold mb-6">
+      <span>🌿</span> Non-Alcoholic & Non-Sparkling Pantry Drinks
     </div>
 
-    <!-- MAIN TWO-COLUMN LAYOUT -->
-    <div class="flex flex-col lg:flex-row gap-8 items-start">
+    <!-- Main Title -->
+    <h1 class="font-serif-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold text-cozy-text tracking-tight leading-tight mb-6">
+      The Daily Infusion
+    </h1>
 
-      <!-- ================= LEFT SIDEBAR (9 MULTI-SELECT CATEGORIES) ================= -->
-      <aside class="w-full lg:w-80 shrink-0 lg:sticky lg:top-20 max-h-[85vh] overflow-y-auto pr-1">
-        <div class="cozy-card rounded-cozy p-5 space-y-6">
-          
-          <!-- Search Box -->
-          <div>
-            <label for="search-input" class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">
-              Search Keyword
-            </label>
-            <div class="relative">
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-cozy-muted text-sm">🔍</span>
-              <input 
-                type="text" 
-                id="search-input" 
-                placeholder="Mint, turmeric, lime..." 
-                class="w-full pl-9 pr-3 py-2 bg-cozy-bg rounded-xl border border-cozy-border text-cozy-text text-sm focus:outline-none focus:border-cozy-terracotta transition"
-                oninput="filterRecipes()"
-              />
-            </div>
-          </div>
+    <!-- Cozy Description -->
+    <p class="text-cozy-muted text-base sm:text-lg md:text-xl max-w-2xl leading-relaxed mb-10">
+      Turn what you already have in your kitchen into comforting herbal teas, fruit agua frescas, creamy lassis, and botanical mocktails.
+    </p>
 
-          <hr class="border-cozy-border" />
+    <!-- Centered Call to Action Buttons -->
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+      <a href="pantry.html" class="w-full sm:w-auto px-8 py-4 rounded-full bg-cozy-terracotta text-white font-semibold text-base hover:bg-cozy-terracotta-hover transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+        <span>🧺 Check Your Pantry</span>
+        <span>→</span>
+      </a>
+      
+      <a href="recipes.html" class="w-full sm:w-auto px-8 py-4 rounded-full bg-white text-cozy-text border border-cozy-border font-semibold text-base hover:border-cozy-terracotta hover:text-cozy-terracotta transition-all duration-200 shadow-sm flex items-center justify-center gap-2">
+        <span>Browse All Recipes</span>
+      </a>
+    </div>
 
-          <!-- 1. TEMPERATURE -->
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">1. Temperature</label>
-            <div class="flex flex-wrap gap-1.5" data-category="temperature">
-              <button onclick="toggleFilter('temperature', 'Cold', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🧊 Cold</button>
-              <button onclick="toggleFilter('temperature', 'Warm', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">☕ Warm / Hot</button>
-              <button onclick="toggleFilter('temperature', 'Room Temp', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🌡️ Room Temp</button>
-            </div>
-          </div>
-
-          <!-- 2. COLOR -->
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">2. Drink Color</label>
-            <div class="flex flex-wrap gap-1.5" data-category="color">
-              <button onclick="toggleFilter('color', 'Green', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text flex items-center gap-1.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 inline-block"></span> Green
-              </button>
-              <button onclick="toggleFilter('color', 'Yellow', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text flex items-center gap-1.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> Yellow / Gold
-              </button>
-              <button onclick="toggleFilter('color', 'Red', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text flex items-center gap-1.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-red-600 inline-block"></span> Ruby / Red
-              </button>
-              <button onclick="toggleFilter('color', 'Purple', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text flex items-center gap-1.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-purple-700 inline-block"></span> Purple
-              </button>
-              <button onclick="toggleFilter('color', 'White', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text flex items-center gap-1.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-amber-100 border border-gray-300 inline-block"></span> Cream / White
-              </button>
-              <button onclick="toggleFilter('color', 'Brown', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text flex items-center gap-1.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-amber-800 inline-block"></span> Amber / Brown
-              </button>
-            </div>
-          </div>
-
-          <!-- 3. HEALTHINESS & DIETARY -->
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">3. Healthiness & Dietary</label>
-            <div class="flex flex-wrap gap-1.5" data-category="healthiness">
-              <button onclick="toggleFilter('healthiness', 'Caffeine-Free', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🌱 Caffeine-Free</button>
-              <button onclick="toggleFilter('healthiness', 'Dairy-Free', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🥛 Dairy-Free</button>
-              <button onclick="toggleFilter('healthiness', 'Refined Sugar-Free', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🍯 Sugar-Free Option</button>
-              <button onclick="toggleFilter('healthiness', 'Vegan', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🍃 100% Vegan</button>
-            </div>
-          </div>
-
-          <!-- 4. NUTRIENTS & ACTIVES -->
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">4. Nutrients & Actives</label>
-            <div class="flex flex-wrap gap-1.5" data-category="nutrients">
-              <button onclick="toggleFilter('nutrients', 'Vitamin C', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🍋 Vitamin C</button>
-              <button onclick="toggleFilter('nutrients', 'Curcumin', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">✨ Curcumin</button>
-              <button onclick="toggleFilter('nutrients', 'Gingerol', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🫚 Gingerol</button>
-              <button onclick="toggleFilter('nutrients', 'Anthocyanins', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🍇 Anthocyanins</button>
-              <button onclick="toggleFilter('nutrients', 'Electrolytes', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">⚡ Electrolytes</button>
-              <button onclick="toggleFilter('nutrients', 'Probiotics', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🦠 Probiotics</button>
-            </div>
-          </div>
-
-          <!-- 5. USE / FUNCTION -->
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">5. Use / Functional Goal</label>
-            <div class="flex flex-wrap gap-1.5" data-category="useCases">
-              <button onclick="toggleFilter('useCases', 'Deep Hydration', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">💧 Hydration</button>
-              <button onclick="toggleFilter('useCases', 'Gut & Digestion', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🍃 Gut Health</button>
-              <button onclick="toggleFilter('useCases', 'Anti-Inflammatory', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🌿 Anti-Inflammatory</button>
-              <button onclick="toggleFilter('useCases', 'Stress & Relaxation', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🧘 Relaxation</button>
-              <button onclick="toggleFilter('useCases', 'Immune Boost', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🛡️ Immune Boost</button>
-            </div>
-          </div>
-
-          <!-- 6. PRIMARY TASTE -->
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">6. Primary Taste</label>
-            <div class="flex flex-wrap gap-1.5" data-category="primaryTaste">
-              <button onclick="toggleFilter('primaryTaste', 'Citrusy & Tart', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🍋 Citrusy & Tart</button>
-              <button onclick="toggleFilter('primaryTaste', 'Sweet & Fruity', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🍓 Sweet & Fruity</button>
-              <button onclick="toggleFilter('primaryTaste', 'Herbal & Fresh', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🌿 Herbal & Fresh</button>
-              <button onclick="toggleFilter('primaryTaste', 'Creamy & Indulgent', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🥛 Creamy</button>
-              <button onclick="toggleFilter('primaryTaste', 'Spiced & Warm', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🌶️ Spiced & Earthy</button>
-            </div>
-          </div>
-
-          <!-- 7. SEASON -->
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">7. Season</label>
-            <div class="flex flex-wrap gap-1.5" data-category="season">
-              <button onclick="toggleFilter('season', 'Summer', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">☀️ Summer</button>
-              <button onclick="toggleFilter('season', 'Autumn', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🍂 Autumn / Winter</button>
-              <button onclick="toggleFilter('season', 'All-Year', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🔄 All-Year</button>
-            </div>
-          </div>
-
-          <!-- 8. STYLE -->
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">8. Drink Style</label>
-            <div class="flex flex-wrap gap-1.5" data-category="style">
-              <button onclick="toggleFilter('style', 'Agua Fresca', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🍉 Agua Fresca</button>
-              <button onclick="toggleFilter('style', 'Spiced Latte', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">☕ Latte / Milk</button>
-              <button onclick="toggleFilter('style', 'Smoothie / Lassi', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🥭 Lassi / Smoothie</button>
-              <button onclick="toggleFilter('style', 'Herbal Tea', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🫖 Infused Tea</button>
-            </div>
-          </div>
-
-          <!-- 9. PREP TIME -->
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">9. Prep Time</label>
-            <div class="flex flex-wrap gap-1.5" data-category="prepTime">
-              <button onclick="toggleFilter('prepTime', 'Instant', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">⚡ Instant (< 2m)</button>
-              <button onclick="toggleFilter('prepTime', 'Quick', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">⏱️ Quick (< 5m)</button>
-              <button onclick="toggleFilter('prepTime', 'Steep / Cook', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🍳 Steep / Cook (> 10m)</button>
-            </div>
-          </div>
-
-          <!-- Count Indicator -->
-          <div class="pt-3 border-t border-cozy-border flex items-center justify-between">
-            <span id="recipe-count" class="text-xs font-semibold text-cozy-muted">Showing 0 recipes</span>
-          </div>
-
-        </div>
-      </aside>
-
-      <!-- ================= RIGHT COLUMN (RECIPE GRID) ================= -->
-      <div class="flex-1 w-full">
-        
-        <!-- Active Filter Indicator Badges -->
-        <div id="active-badges-container" class="hidden mb-4 flex flex-wrap items-center gap-2">
-          <span class="text-xs text-cozy-muted font-medium">Active Filters:</span>
-          <div id="active-badges" class="flex flex-wrap gap-1.5"></div>
-        </div>
-
-        <!-- RECIPE CATALOG GRID -->
-        <div id="recipe-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-          <!-- Recipe Cards Rendered Dynamically -->
-        </div>
-
-        <!-- EMPTY STATE (WHEN NO MATCHES FOUND) -->
-        <div id="empty-state" class="hidden text-center py-16 cozy-card rounded-cozy">
-          <span class="text-4xl block mb-3">🫖</span>
-          <h3 class="font-serif-heading font-bold text-xl text-cozy-text mb-1">No matching recipes</h3>
-          <p class="text-cozy-muted text-sm max-w-sm mx-auto mb-4">Try clearing some filter criteria to broaden your results.</p>
-          <button onclick="resetAllFilters()" class="px-4 py-2 bg-cozy-terracotta text-white rounded-full text-xs font-semibold hover:bg-cozy-terracotta-hover transition">Reset All Filters</button>
-        </div>
-
+    <!-- Features Overview -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-16 text-left w-full pt-12 border-t border-cozy-border">
+      <div class="cozy-card rounded-cozy p-5">
+        <span class="text-2xl mb-2 block">🥑</span>
+        <h3 class="font-serif-heading font-bold text-base text-cozy-text mb-1">Pantry Matching</h3>
+        <p class="text-xs text-cozy-muted leading-relaxed">Check off what ingredients you own and see what delicious drinks you can mix right now.</p>
       </div>
 
+      <div class="cozy-card rounded-cozy p-5">
+        <span class="text-2xl mb-2 block">🧊</span>
+        <h3 class="font-serif-heading font-bold text-base text-cozy-text mb-1">100% Still & Alcohol-Free</h3>
+        <p class="text-xs text-cozy-muted leading-relaxed">No carbonation or fizz. Built purely on fresh juices, steepings, plant milks, and herbs.</p>
+      </div>
+
+      <div class="cozy-card rounded-cozy p-5">
+        <span class="text-2xl mb-2 block">🛒</span>
+        <h3 class="font-serif-heading font-bold text-base text-cozy-text mb-1">Smart Shopping List</h3>
+        <p class="text-xs text-cozy-muted leading-relaxed">Missing a couple of items? Add them directly to your personal built-in shopping list.</p>
+      </div>
     </div>
 
   </main>
 
   <!-- ================= FOOTER ================= -->
-  <footer class="mt-auto border-t border-cozy-border bg-white/40 py-8 text-center text-sm text-cozy-muted">
-    <p>© The Daily Infusion</p>
+  <footer class="border-t border-cozy-border bg-white/40 py-8 text-center text-sm text-cozy-muted">
+    <p>© StillSip — Non-Alcoholic & Non-Sparkling Pantry Drink Recipes.</p>
   </footer>
 
   <!-- ================= JAVASCRIPT LOGIC ================= -->
   <script>
-    // FULL RECIPE CATALOG WITH ALL 9 CATEGORY ATTRIBUTES
-    const ALL_RECIPES = [
-      {
-        id: "cucumber-mint-agua-fresca",
-        name: "Cucumber Mint Agua Fresca",
-        temperature: "Cold",
-        color: "Green",
-        healthiness: ["Caffeine-Free", "Dairy-Free", "Vegan", "Refined Sugar-Free"],
-        nutrients: ["Vitamin C", "Electrolytes"],
-        useCases: ["Deep Hydration", "Gut & Digestion"],
-        primaryTaste: "Herbal & Fresh",
-        season: "Summer",
-        style: "Agua Fresca",
-        prepTime: "Quick",
-        description: "A classic Mexican still-water refresher that is deeply hydrating, light, and balanced between tart lime and cool herbal mint notes.",
-        ingredients: ["cucumber", "lime juice", "mint leaves", "water", "agave nectar"]
-      },
-      {
-        id: "iced-golden-milk",
-        name: "Iced Golden Milk Tea",
-        temperature: "Cold",
-        color: "Yellow",
-        healthiness: ["Caffeine-Free", "Dairy-Free", "Refined Sugar-Free"],
-        nutrients: ["Curcumin", "Gingerol"],
-        useCases: ["Anti-Inflammatory", "Stress & Relaxation"],
-        primaryTaste: "Spiced & Warm",
-        season: "Autumn",
-        style: "Spiced Latte",
-        prepTime: "Steep / Cook",
-        description: "An earthy, warming caffeine-free beverage built on creamy oat milk and anti-inflammatory spices, chilled over ice.",
-        ingredients: ["oat milk", "turmeric", "cinnamon", "black pepper", "ginger", "maple syrup"]
-      },
-      {
-        id: "mango-cardamom-lassi",
-        name: "Mango Cardamom Lassi",
-        temperature: "Cold",
-        color: "Yellow",
-        healthiness: ["Caffeine-Free"],
-        nutrients: ["Vitamin C", "Probiotics"],
-        useCases: ["Gut & Digestion"],
-        primaryTaste: "Creamy & Indulgent",
-        season: "Summer",
-        style: "Smoothie / Lassi",
-        prepTime: "Quick",
-        description: "A velvety Indian yogurt beverage balancing sweet tropical mango with fragrant ground cardamom.",
-        ingredients: ["mango", "yogurt", "milk", "cardamom", "honey"]
-      },
-      {
-        id: "hibiscus-ginger-iced-tea",
-        name: "Hibiscus Ginger Iced Tea",
-        temperature: "Cold",
-        color: "Red",
-        healthiness: ["Caffeine-Free", "Dairy-Free", "Vegan", "Refined Sugar-Free"],
-        nutrients: ["Anthocyanins", "Gingerol", "Vitamin C"],
-        useCases: ["Immune Boost", "Anti-Inflammatory"],
-        primaryTaste: "Citrusy & Tart",
-        season: "All-Year",
-        style: "Herbal Tea",
-        prepTime: "Steep / Cook",
-        description: "Visually striking ruby red still infusion delivering bold cranberry tartness, softened by warm ginger heat.",
-        ingredients: ["dried hibiscus flowers", "fresh ginger", "water", "honey", "lime"]
-      },
-      {
-        id: "mexican-rice-horchata",
-        name: "Mexican Rice Horchata",
-        temperature: "Cold",
-        color: "White",
-        healthiness: ["Caffeine-Free"],
-        nutrients: [],
-        useCases: ["Stress & Relaxation"],
-        primaryTaste: "Sweet & Fruity",
-        season: "Summer",
-        style: "Agua Fresca",
-        prepTime: "Steep / Cook",
-        description: "A smooth, creamy sweet cinnamon-infused rice drink served cold over ice.",
-        ingredients: ["white rice", "cinnamon stick", "water", "milk", "sweetened condensed milk", "vanilla"]
-      },
-      {
-        id: "limonada-de-coco",
-        name: "Limonada de Coco",
-        temperature: "Cold",
-        color: "White",
-        healthiness: ["Caffeine-Free", "Dairy-Free", "Vegan"],
-        nutrients: ["Vitamin C", "Electrolytes"],
-        useCases: ["Deep Hydration"],
-        primaryTaste: "Creamy & Indulgent",
-        season: "Summer",
-        style: "Agua Fresca",
-        prepTime: "Quick",
-        description: "Creamy Colombian limeade blending rich coconut milk with fresh lime juice over crushed ice.",
-        ingredients: ["coconut milk", "lime juice", "crushed ice", "simple syrup"]
-      }
-    ];
-
-    // MULTI-SELECT STATE MAP (Supports selecting multiple tags per category)
-    let selectedFilters = {
-      temperature: [],
-      color: [],
-      healthiness: [],
-      nutrients: [],
-      useCases: [],
-      primaryTaste: [],
-      season: [],
-      style: [],
-      prepTime: []
-    };
-
-    let favorites = JSON.parse(localStorage.getItem('cozy_favorites') || '[]');
-    let shoppingList = JSON.parse(localStorage.getItem('cozy_shopping_list') || '[]');
-
-    // INITIALIZATION
     document.addEventListener('DOMContentLoaded', () => {
-      renderRecipeCatalog(ALL_RECIPES);
-      updateShoppingBadge();
-    });
-
-    // TOGGLE FILTER SELECTION
-    function toggleFilter(category, value, buttonEl) {
-      const index = selectedFilters[category].indexOf(value);
-
-      if (index > -1) {
-        selectedFilters[category].splice(index, 1);
-        buttonEl.classList.remove('active');
-      } else {
-        selectedFilters[category].push(value);
-        buttonEl.classList.add('active');
-      }
-
-      filterRecipes();
-    }
-
-    // FILTER ENGINE
-    function filterRecipes() {
-      const query = document.getElementById('search-input').value.toLowerCase().trim();
-
-      const filtered = ALL_RECIPES.filter(recipe => {
-        // 1. Text Search Query
-        const matchesQuery = query === '' || 
-          recipe.name.toLowerCase().includes(query) ||
-          recipe.ingredients.some(ing => ing.toLowerCase().includes(query)) ||
-          recipe.style.toLowerCase().includes(query);
-
-        if (!matchesQuery) return false;
-
-        // 2. Category Filters (OR logic within same category, AND logic across categories)
-        for (const [catKey, selectedValues] of Object.entries(selectedFilters)) {
-          if (selectedValues.length === 0) continue; // Skip empty filter categories
-
-          const recipeVal = recipe[catKey];
-
-          if (Array.isArray(recipeVal)) {
-            // Recipe has multiple tags (e.g. healthiness, nutrients, useCases)
-            const hasMatch = selectedValues.some(val => recipeVal.includes(val));
-            if (!hasMatch) return false;
-          } else {
-            // Recipe has single tag (e.g. temperature, color, style)
-            const hasMatch = selectedValues.includes(recipeVal);
-            if (!hasMatch) return false;
-          }
-        }
-
-        return true;
-      });
-
-      renderRecipeCatalog(filtered);
-      renderActiveBadges();
-    }
-
-    // RESET ALL FILTERS
-    function resetAllFilters() {
-      selectedFilters = {
-        temperature: [], color: [], healthiness: [], nutrients: [],
-        useCases: [], primaryTaste: [], season: [], style: [], prepTime: []
-      };
-
-      document.getElementById('search-input').value = '';
-      document.querySelectorAll('.filter-chip').forEach(btn => btn.classList.remove('active'));
-
-      filterRecipes();
-    }
-
-    // RENDER RECIPE GRID CARDS
-    function renderRecipeCatalog(recipes) {
-      const grid = document.getElementById('recipe-grid');
-      const emptyState = document.getElementById('empty-state');
-      const countLabel = document.getElementById('recipe-count');
-
-      countLabel.innerText = `Showing ${recipes.length} ${recipes.length === 1 ? 'recipe' : 'recipes'}`;
-
-      if (recipes.length === 0) {
-        grid.innerHTML = '';
-        emptyState.classList.remove('hidden');
-        return;
-      }
-
-      emptyState.classList.add('hidden');
-      grid.innerHTML = recipes.map(recipe => {
-        const isFav = favorites.includes(recipe.id);
-
-        return `
-          <div class="cozy-card rounded-cozy p-5 flex flex-col justify-between hover:-translate-y-1 transition-all duration-200">
-            <div>
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-semibold text-cozy-terracotta bg-cozy-terracotta/10 px-2.5 py-0.5 rounded-full">${recipe.style}</span>
-                <div class="flex items-center gap-2">
-                  <span class="text-xs text-cozy-muted font-medium">⚡ ${recipe.prepTime}</span>
-                  <button onclick="toggleFav('${recipe.id}', event)" class="text-sm hover:scale-110 transition">
-                    ${isFav ? '❤️' : '🤍'}
-                  </button>
-                </div>
-              </div>
-
-              <a href="recipe.html?id=${recipe.id}" class="group">
-                <h3 class="font-serif-heading font-bold text-lg text-cozy-text group-hover:text-cozy-terracotta transition mb-1.5">
-                  ${recipe.name}
-                </h3>
-              </a>
-
-              <p class="text-xs text-cozy-muted leading-relaxed line-clamp-2 mb-3">
-                ${recipe.description}
-              </p>
-
-              <!-- Functional Badges -->
-              <div class="flex flex-wrap gap-1 mb-4">
-                ${recipe.useCases.map(uc => `<span class="text-[10px] bg-cozy-sage/15 text-[#3D4D3A] px-2 py-0.5 rounded-md font-medium">${uc}</span>`).join('')}
-                ${recipe.nutrients.map(n => `<span class="text-[10px] bg-amber-50 text-amber-900 border border-amber-200 px-2 py-0.5 rounded-md font-medium">${n}</span>`).join('')}
-              </div>
-            </div>
-
-            <a href="recipe.html?id=${recipe.id}" class="w-full py-2 rounded-xl border border-cozy-border bg-cozy-bg text-center font-medium text-xs text-cozy-text hover:bg-cozy-terracotta hover:text-white hover:border-cozy-terracotta transition flex items-center justify-center gap-1">
-              <span>View Recipe</span>
-              <span>→</span>
-            </a>
-          </div>
-        `;
-      }).join('');
-    }
-
-    // RENDER ACTIVE BADGES ABOVE GRID
-    function renderActiveBadges() {
-      const container = document.getElementById('active-badges-container');
-      const badgesBox = document.getElementById('active-badges');
-      let activeList = [];
-
-      for (const [cat, vals] of Object.entries(selectedFilters)) {
-        vals.forEach(v => activeList.push({ cat, v }));
-      }
-
-      if (activeList.length === 0) {
-        container.classList.add('hidden');
-        return;
-      }
-
-      container.classList.remove('hidden');
-      badgesBox.innerHTML = activeList.map(item => `
-        <span class="inline-flex items-center gap-1 text-xs bg-cozy-terracotta text-white px-2.5 py-0.5 rounded-full font-medium">
-          ${item.v}
-          <button onclick="removeFilter('${item.cat}', '${item.v}')" class="ml-1 hover:text-black">✕</button>
-        </span>
-      `).join('');
-    }
-
-    function removeFilter(cat, val) {
-      const idx = selectedFilters[cat].indexOf(val);
-      if (idx > -1) selectedFilters[cat].splice(idx, 1);
-
-      // Uncheck corresponding button UI
-      const chipContainer = document.querySelector(`[data-category="${cat}"]`);
-      if (chipContainer) {
-        const buttons = chipContainer.querySelectorAll('.filter-chip');
-        buttons.forEach(btn => {
-          if (btn.innerText.includes(val)) btn.classList.remove('active');
-        });
-      }
-
-      filterRecipes();
-    }
-
-    // FAVORITES TOGGLE
-    function toggleFav(id, event) {
-      event.preventDefault();
-      event.stopPropagation();
-
-      if (favorites.includes(id)) {
-        favorites = favorites.filter(item => item !== id);
-      } else {
-        favorites.push(id);
-      }
-
-      localStorage.setItem('cozy_favorites', JSON.stringify(favorites));
-      filterRecipes();
-    }
-
-    function updateShoppingBadge() {
+      const shoppingList = JSON.parse(localStorage.getItem('cozy_shopping_list') || '[]');
       const count = shoppingList.length;
       const badge = document.getElementById('nav-shopping-count');
       if (count > 0 && badge) {
         badge.innerText = count;
         badge.classList.remove('hidden');
       }
-    }
+    });
   </script>
 </body>
 </html>
