@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Recipe Detail — StillSip</title>
+  <title>All Drink Recipes — StillSip</title>
   
   <!-- Google Fonts: Fraunces (Serif) & Plus Jakarta Sans (Sans) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,6 +57,11 @@
       border: 1px solid rgba(110, 99, 91, 0.12);
       box-shadow: 0 10px 30px -5px rgba(60, 40, 20, 0.04);
     }
+    .filter-chip.active {
+      background-color: #C86D51;
+      color: #FFFFFF;
+      border-color: #C86D51;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -76,14 +81,14 @@
         </svg>
         <div class="flex flex-col">
           <span class="font-serif-heading font-bold text-lg leading-none text-cozy-text">StillSip</span>
-          <span class="text-[10px] tracking-wider uppercase text-cozy-muted font-semibold">Pantry Drinks</span>
+          <span class="text-[10px] tracking-wider uppercase text-cozy-muted font-semibold">The Daily Infusion</span>
         </div>
       </a>
 
       <!-- Navigation Links -->
       <nav class="hidden md:flex items-center gap-1 bg-white/60 p-1.5 rounded-full border border-cozy-border shadow-sm">
         <a href="index.html" class="px-4 py-1.5 rounded-full text-sm font-medium text-cozy-muted hover:text-cozy-text transition">Home</a>
-        <a href="recipes.html" class="px-4 py-1.5 rounded-full text-sm font-medium bg-cozy-terracotta text-white shadow-sm">Recipes</a>
+        <a href="recipes.html" class="px-4 py-1.5 rounded-full text-sm font-medium bg-cozy-terracotta text-white shadow-sm">All Recipes</a>
         <a href="pantry.html" class="px-4 py-1.5 rounded-full text-sm font-medium text-cozy-muted hover:text-cozy-text transition">Pantry</a>
         <a href="shopping-list.html" class="px-4 py-1.5 rounded-full text-sm font-medium text-cozy-muted hover:text-cozy-text transition flex items-center gap-1.5">
           Shopping List
@@ -94,135 +99,69 @@
         </a>
       </nav>
 
-      <!-- Mobile Navigation Buttons -->
+      <!-- Mobile Nav Icons -->
       <div class="flex md:hidden items-center gap-2">
+        <a href="pantry.html" class="p-2 text-cozy-text bg-white rounded-full border border-cozy-border">🧺</a>
         <a href="shopping-list.html" class="p-2 text-cozy-text bg-white rounded-full border border-cozy-border">🛒</a>
-        <a href="favorites.html" class="p-2 text-cozy-text bg-white rounded-full border border-cozy-border">❤️</a>
       </div>
     </div>
   </header>
 
-  <!-- ================= MAIN RECIPE CONTAINER ================= -->
-  <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6 md:py-10">
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-8">
     
-    <!-- Top Breadcrumb & Actions -->
-    <div class="flex items-center justify-between mb-6">
-      <a href="recipes.html" class="inline-flex items-center gap-2 text-sm font-medium text-cozy-muted hover:text-cozy-terracotta transition">
-        <span>←</span> Back to all recipes
-      </a>
-      
-      <!-- Favorite Button -->
-      <button id="favorite-btn" onclick="toggleFavorite()" class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cozy-border bg-white text-sm font-medium text-cozy-text hover:border-cozy-terracotta transition shadow-sm">
-        <span id="fav-icon">🤍</span>
-        <span id="fav-text">Save to Favorites</span>
-      </button>
-    </div>
-
-    <!-- RECIPE HEADER HERO -->
-    <div class="cozy-card rounded-cozy p-6 md:p-8 mb-8">
-      <div class="flex flex-wrap items-center gap-2 mb-3">
-        <span id="recipe-style" class="px-3 py-1 rounded-full text-xs font-semibold bg-cozy-terracotta/10 text-cozy-terracotta">Style</span>
-        <span id="recipe-temp" class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">Cold</span>
-        <span id="recipe-time" class="px-3 py-1 rounded-full text-xs font-semibold bg-cozy-honey/20 text-yellow-900">⚡ 5 mins</span>
-      </div>
-
-      <h1 id="recipe-title" class="font-serif-heading text-3xl md:text-5xl font-bold text-cozy-text mb-4">Loading Recipe...</h1>
-      <p id="recipe-description" class="text-cozy-muted text-base md:text-lg max-w-3xl leading-relaxed mb-6">
-        Detailed drink description will appear here.
+    <!-- HEADER HERO SECTION -->
+    <div class="text-center max-w-2xl mx-auto mb-10">
+      <h1 class="font-serif-heading text-3xl md:text-5xl font-bold text-cozy-text mb-3">All Drink Recipes</h1>
+      <p class="text-cozy-muted text-base md:text-lg">
+        Explore non-alcoholic, non-sparkling beverages crafted from fresh herbs, teas, juices, and plant milks.
       </p>
-
-      <!-- Health / Functional Tags -->
-      <div id="recipe-usecases" class="flex flex-wrap gap-2 pt-4 border-t border-cozy-border">
-        <!-- Dynamic Badges -->
-      </div>
     </div>
 
-    <!-- TWO-COLUMN MAIN CONTENT GRID -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <!-- SEARCH & FILTER BAR -->
+    <div class="cozy-card rounded-cozy p-4 md:p-6 mb-8 space-y-4">
       
-      <!-- LEFT COLUMN: Ingredients & Scaler (5 cols) -->
-      <div class="lg:col-span-5 space-y-6">
-        
-        <div class="cozy-card rounded-cozy p-6">
-          
-          <!-- Serving Size Scaler -->
-          <div class="flex items-center justify-between mb-6 pb-4 border-b border-cozy-border">
-            <div>
-              <h2 class="font-serif-heading font-bold text-xl text-cozy-text">Ingredients</h2>
-              <p class="text-xs text-cozy-muted">Adjust scale to recalculate</p>
-            </div>
-            
-            <div class="flex items-center gap-1 bg-cozy-bg p-1 rounded-xl border border-cozy-border">
-              <button onclick="updateServings(1)" class="servings-btn w-8 h-8 rounded-lg text-xs font-bold transition bg-cozy-terracotta text-white" data-scale="1">1x</button>
-              <button onclick="updateServings(2)" class="servings-btn w-8 h-8 rounded-lg text-xs font-bold transition text-cozy-muted hover:text-cozy-text" data-scale="2">2x</button>
-              <button onclick="updateServings(4)" class="servings-btn w-8 h-8 rounded-lg text-xs font-bold transition text-cozy-muted hover:text-cozy-text" data-scale="4">4x</button>
-            </div>
-          </div>
-
-          <!-- Ingredient Checklist -->
-          <ul id="ingredients-list" class="space-y-3 mb-6">
-            <!-- Rendered dynamically -->
-          </ul>
-
-          <!-- Add Missing Items to Shopping List Button -->
-          <button id="add-missing-btn" onclick="addMissingToShoppingList()" class="w-full py-3 px-4 rounded-xl bg-cozy-sage text-white font-medium text-sm hover:bg-opacity-90 transition flex items-center justify-center gap-2 shadow-sm">
-            <span>🛒</span> Add Missing Items to Shopping List
-          </button>
-        </div>
-
-        <!-- Equipment & Nutrients Box -->
-        <div class="cozy-card rounded-cozy p-6 space-y-4">
-          <h3 class="font-serif-heading font-bold text-lg text-cozy-text">Equipment & Key Nutrients</h3>
-          
-          <div>
-            <span class="text-xs font-semibold text-cozy-muted uppercase tracking-wider block mb-1">Equipment Needed:</span>
-            <div id="equipment-list" class="flex flex-wrap gap-1.5"></div>
-          </div>
-
-          <div class="pt-3 border-t border-cozy-border">
-            <span class="text-xs font-semibold text-cozy-muted uppercase tracking-wider block mb-1">Key Nutrients / Actives:</span>
-            <div id="nutrients-list" class="flex flex-wrap gap-1.5"></div>
-          </div>
-        </div>
-
+      <!-- Live Search Input -->
+      <div class="relative">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-cozy-muted">🔍</span>
+        <input 
+          type="text" 
+          id="search-input" 
+          placeholder="Search by recipe name or ingredient (e.g. mint, turmeric, lime)..." 
+          class="w-full pl-11 pr-4 py-3 bg-cozy-bg rounded-xl border border-cozy-border text-cozy-text text-sm focus:outline-none focus:border-cozy-terracotta transition"
+          oninput="filterRecipes()"
+        />
       </div>
 
-      <!-- RIGHT COLUMN: Instructions & Steps (7 cols) -->
-      <div class="lg:col-span-7 space-y-6">
+      <!-- Quick Filter Chips -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
         
-        <div class="cozy-card rounded-cozy p-6 md:p-8">
-          <div class="flex items-center justify-between mb-6 pb-4 border-b border-cozy-border">
-            <h2 class="font-serif-heading font-bold text-2xl text-cozy-text">Preparation Steps</h2>
-            <span class="text-xs text-cozy-muted">Check off steps as you go</span>
-          </div>
-
-          <!-- Step-by-Step Instructions -->
-          <ol id="instructions-list" class="space-y-6">
-            <!-- Rendered dynamically -->
-          </ol>
+        <!-- Category Chips -->
+        <div class="flex flex-wrap items-center gap-2" id="filter-chips">
+          <button onclick="setFilter('all', this)" class="filter-chip active px-3.5 py-1.5 rounded-full border border-cozy-border text-xs font-medium bg-white text-cozy-text transition">All Drinks</button>
+          <button onclick="setFilter('Cold', this)" class="filter-chip px-3.5 py-1.5 rounded-full border border-cozy-border text-xs font-medium bg-white text-cozy-text transition">🧊 Cold Only</button>
+          <button onclick="setFilter('Agua Fresca', this)" class="filter-chip px-3.5 py-1.5 rounded-full border border-cozy-border text-xs font-medium bg-white text-cozy-text transition">🍉 Agua Fresca</button>
+          <button onclick="setFilter('Spiced Latte', this)" class="filter-chip px-3.5 py-1.5 rounded-full border border-cozy-border text-xs font-medium bg-white text-cozy-text transition">☕ Lattes & Teas</button>
+          <button onclick="setFilter('Smoothie / Lassi', this)" class="filter-chip px-3.5 py-1.5 rounded-full border border-cozy-border text-xs font-medium bg-white text-cozy-text transition">🥭 Lassis</button>
         </div>
 
-        <!-- Pro Tip Box -->
-        <div class="bg-cozy-sage/10 border border-cozy-sage/30 rounded-cozy p-6 flex gap-4 items-start">
-          <span class="text-2xl">💡</span>
-          <div>
-            <h4 class="font-serif-heading font-bold text-cozy-text text-base mb-1">Cozy Mixologist Tip</h4>
-            <p id="pro-tip" class="text-sm text-cozy-muted leading-relaxed">
-              Always use cold still water or fresh ice cubes to maintain crisp flavors without diluting the botanicals.
-            </p>
-          </div>
-        </div>
-
+        <!-- Recipe Count Indicator -->
+        <span id="recipe-count" class="text-xs font-semibold text-cozy-muted">Showing 0 recipes</span>
       </div>
     </div>
 
-    <!-- YOU MIGHT ALSO LIKE (RECOMMENDED DRINKS) -->
-    <section class="mt-16 pt-10 border-t border-cozy-border">
-      <h2 class="font-serif-heading font-bold text-2xl text-cozy-text mb-6">You Might Also Like</h2>
-      <div id="recommendations-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Rendered dynamically -->
-      </div>
-    </section>
+    <!-- RECIPE CATALOG GRID -->
+    <div id="recipe-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Recipe Cards Rendered Dynamically -->
+    </div>
+
+    <!-- EMPTY STATE (WHEN NO MATCHES FOUND) -->
+    <div id="empty-state" class="hidden text-center py-16 cozy-card rounded-cozy">
+      <span class="text-4xl block mb-3">🫖</span>
+      <h3 class="font-serif-heading font-bold text-xl text-cozy-text mb-1">No recipes found</h3>
+      <p class="text-cozy-muted text-sm max-w-sm mx-auto mb-4">Try searching for a different ingredient or clearing your filters.</p>
+      <button onclick="resetFilters()" class="px-4 py-2 bg-cozy-terracotta text-white rounded-full text-xs font-semibold hover:bg-cozy-terracotta-hover transition">Reset All Filters</button>
+    </div>
 
   </main>
 
@@ -233,8 +172,8 @@
 
   <!-- ================= JAVASCRIPT LOGIC ================= -->
   <script>
-    // SAMPLE DATABASE (In production, load from recipes.json)
-    const SAMPLE_RECIPES = [
+    // FULL RECIPE DATABASE CATALOG
+    const ALL_RECIPES = [
       {
         id: "cucumber-mint-agua-fresca",
         name: "Cucumber Mint Agua Fresca",
@@ -242,23 +181,8 @@
         temperature: "Cold",
         prepTime: "5 mins",
         description: "A classic Mexican still-water refresher that is deeply hydrating, light, and balanced between tart lime and cool herbal mint notes.",
-        useCases: ["💧 Deep Hydration", "🍃 Gut & Digestion", "🌿 Anti-Inflammatory"],
-        equipment: ["Blender", "Fine-Mesh Strainer", "Pitcher"],
-        nutrients: ["Vitamin C", "Potassium", "Hydrating Electrolytes"],
-        tip: "Keep the cucumber peel on if you prefer a vibrant emerald green color!",
-        ingredients: [
-          { name: "English Cucumber (chopped)", amount: 1, unit: "large" },
-          { name: "Fresh Lime Juice", amount: 0.5, unit: "cup" },
-          { name: "Fresh Mint Leaves", amount: 0.25, unit: "cup" },
-          { name: "Still Water", amount: 3, unit: "cups" },
-          { name: "Agave Nectar or Honey", amount: 3, unit: "tbsp" }
-        ],
-        instructions: [
-          "Add chopped cucumber, mint leaves, fresh lime juice, agave nectar, and 1 cup of still water to a blender.",
-          "Blend on high speed for 45 seconds until completely smooth.",
-          "Pour through a fine-mesh strainer into a glass pitcher to remove solid pulp.",
-          "Stir in the remaining 2 cups of still water, adjust sweetness to taste, and serve over ice."
-        ]
+        useCases: ["💧 Deep Hydration", "🍃 Gut & Digestion"],
+        ingredients: ["cucumber", "lime juice", "mint leaves", "water", "agave nectar"]
       },
       {
         id: "iced-golden-milk",
@@ -267,24 +191,8 @@
         temperature: "Cold",
         prepTime: "10 mins",
         description: "An earthy, warming caffeine-free beverage built on creamy oat milk and anti-inflammatory spices, chilled over ice.",
-        useCases: ["🌿 Anti-Inflammatory", "🧘 Stress & Relaxation", "😴 Sleep Aid"],
-        equipment: ["Small Saucepan", "Whisk", "Strainer"],
-        nutrients: ["Curcumin", "Gingerol", "Magnesium"],
-        tip: "Never skip the pinch of black pepper—it boosts curcumin absorption by up to 2,000%!",
-        ingredients: [
-          { name: "Oat Milk or Almond Milk", amount: 2, unit: "cups" },
-          { name: "Ground Turmeric", amount: 0.5, unit: "tsp" },
-          { name: "Ground Cinnamon", amount: 0.25, unit: "tsp" },
-          { name: "Black Pepper", amount: 1, unit: "pinch" },
-          { name: "Finely Grated Fresh Ginger", amount: 1, unit: "tsp" },
-          { name: "Pure Maple Syrup", amount: 1, unit: "tbsp" }
-        ],
-        instructions: [
-          "Add oat milk, turmeric, cinnamon, black pepper, grated ginger, and maple syrup to a small saucepan.",
-          "Warm over low heat for 3 to 5 minutes, whisking continuously until fragrant (do not boil).",
-          "Remove from heat, strain out ginger bits, and let cool for 10 minutes.",
-          "Pour over a tall glass packed with large ice cubes."
-        ]
+        useCases: ["🌿 Anti-Inflammatory", "🧘 Stress & Relaxation"],
+        ingredients: ["oat milk", "turmeric", "cinnamon", "black pepper", "ginger", "maple syrup"]
       },
       {
         id: "mango-cardamom-lassi",
@@ -292,196 +200,176 @@
         style: "Smoothie / Lassi",
         temperature: "Cold",
         prepTime: "5 mins",
-        description: "A velvety, Indian yogurt beverage balancing sweet tropical mango with fragrant ground cardamom.",
-        useCases: ["🍃 Gut & Digestion", "⚡ Sustained Energy", "✨ Skin Glow"],
-        equipment: ["Blender"],
-        nutrients: ["Probiotics", "Vitamin A", "Vitamin C"],
-        tip: "Use frozen mango chunks to get a thick, chilled texture without needing extra ice.",
-        ingredients: [
-          { name: "Ripe Mango Chunks", amount: 1.5, unit: "cups" },
-          { name: "Plain Whole-Milk Yogurt", amount: 1, unit: "cup" },
-          { name: "Milk or Oat Milk", amount: 0.5, unit: "cup" },
-          { name: "Ground Cardamom", amount: 0.25, unit: "tsp" },
-          { name: "Honey or Agave", amount: 1, unit: "tbsp" }
-        ],
-        instructions: [
-          "Combine mango chunks, yogurt, milk, ground cardamom, and honey in a blender.",
-          "Puree on high speed for 60 seconds until smooth and creamy.",
-          "Pour into glasses and sprinkle a extra pinch of cardamom or crushed pistachios on top."
-        ]
+        description: "A velvety Indian yogurt beverage balancing sweet tropical mango with fragrant ground cardamom.",
+        useCases: ["🍃 Gut & Digestion", "⚡ Sustained Energy"],
+        ingredients: ["mango", "yogurt", "milk", "cardamom", "honey"]
+      },
+      {
+        id: "hibiscus-ginger-iced-tea",
+        name: "Hibiscus Ginger Iced Tea",
+        style: "Herbal Tea",
+        temperature: "Cold",
+        prepTime: "15 mins",
+        description: "Visually striking ruby red still infusion delivering bold cranberry tartness, softened by warm ginger heat.",
+        useCases: ["🛡️ Immune Boost", "🌿 Anti-Inflammatory"],
+        ingredients: ["dried hibiscus flowers", "fresh ginger", "water", "honey", "lime"]
+      },
+      {
+        id: "mexican-rice-horchata",
+        name: "Mexican Rice Horchata",
+        style: "Agua Fresca",
+        temperature: "Cold",
+        prepTime: "5 mins + Soak",
+        description: "A smooth, creamy sweet cinnamon-infused rice drink served cold over ice.",
+        useCases: ["😴 Comforting", "🌾 Grain-Based"],
+        ingredients: ["white rice", "cinnamon stick", "water", "milk", "sweetened condensed milk", "vanilla"]
+      },
+      {
+        id: "limonada-de-coco",
+        name: "Limonada de Coco",
+        style: "Creamy Limeade",
+        temperature: "Cold",
+        prepTime: "5 mins",
+        description: "Creamy Colombian limeade blending rich coconut milk with fresh lime juice over crushed ice.",
+        useCases: ["🌴 Tropical", "💧 Hydrating"],
+        ingredients: ["coconut milk", "lime juice", "crushed ice", "simple syrup"]
       }
     ];
 
     // STATE VARIABLES
-    let currentRecipe = null;
-    let currentServingsScale = 1;
-    let pantryItems = JSON.parse(localStorage.getItem('cozy_pantry') || '[]');
-    let shoppingList = JSON.parse(localStorage.getItem('cozy_shopping_list') || '[]');
+    let activeFilterTag = 'all';
     let favorites = JSON.parse(localStorage.getItem('cozy_favorites') || '[]');
+    let shoppingList = JSON.parse(localStorage.getItem('cozy_shopping_list') || '[]');
 
     // INITIALIZATION
     document.addEventListener('DOMContentLoaded', () => {
-      // Get URL params (e.g. recipe.html?id=iced-golden-milk)
-      const urlParams = new URLSearchParams(window.location.search);
-      const recipeId = urlParams.get('id') || 'cucumber-mint-agua-fresca';
-
-      currentRecipe = SAMPLE_RECIPES.find(r => r.id === recipeId) || SAMPLE_RECIPES[0];
-
-      renderRecipeDetails();
-      renderRecommendations();
-      updateShoppingListBadgeCount();
+      renderRecipeCatalog(ALL_RECIPES);
+      updateShoppingBadge();
     });
 
-    // RENDER MAIN RECIPE CONTENT
-    function renderRecipeDetails() {
-      // Set Metadata
-      document.title = `${currentRecipe.name} — StillSip`;
-      document.getElementById('recipe-title').innerText = currentRecipe.name;
-      document.getElementById('recipe-style').innerText = currentRecipe.style;
-      document.getElementById('recipe-temp').innerText = currentRecipe.temperature;
-      document.getElementById('recipe-time').innerText = `⚡ ${currentRecipe.prepTime}`;
-      document.getElementById('recipe-description').innerText = currentRecipe.description;
-      document.getElementById('pro-tip').innerText = currentRecipe.tip;
+    // RENDER RECIPE CARDS IN GRID
+    function renderRecipeCatalog(recipes) {
+      const grid = document.getElementById('recipe-grid');
+      const emptyState = document.getElementById('empty-state');
+      const countLabel = document.getElementById('recipe-count');
 
-      // Update Favorite Button State
-      updateFavoriteButtonUI();
+      countLabel.innerText = `Showing ${recipes.length} ${recipes.length === 1 ? 'recipe' : 'recipes'}`;
 
-      // Render Badges
-      const useCasesContainer = document.getElementById('recipe-usecases');
-      useCasesContainer.innerHTML = currentRecipe.useCases.map(tag => 
-        `<span class="text-xs bg-cozy-sage/15 text-[#3D4D3A] px-3 py-1 rounded-full font-medium">${tag}</span>`
-      ).join('');
+      if (recipes.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
 
-      // Equipment & Nutrients
-      document.getElementById('equipment-list').innerHTML = currentRecipe.equipment.map(e => 
-        `<span class="text-xs bg-gray-100 text-cozy-text px-2.5 py-1 rounded-lg border border-cozy-border">${e}</span>`
-      ).join('');
-
-      document.getElementById('nutrients-list').innerHTML = currentRecipe.nutrients.map(n => 
-        `<span class="text-xs bg-amber-50 text-amber-900 px-2.5 py-1 rounded-lg border border-amber-200">${n}</span>`
-      ).join('');
-
-      // Render Ingredients List
-      renderIngredients();
-
-      // Render Steps
-      const stepsContainer = document.getElementById('instructions-list');
-      stepsContainer.innerHTML = currentRecipe.instructions.map((step, idx) => `
-        <li class="flex items-start gap-4 group">
-          <input type="checkbox" id="step-${idx}" class="mt-1 w-5 h-5 rounded border-cozy-border text-cozy-terracotta focus:ring-cozy-terracotta cursor-pointer" />
-          <label for="step-${idx}" class="text-cozy-text leading-relaxed cursor-pointer select-none group-hover:text-cozy-terracotta transition">
-            <strong class="text-cozy-terracotta">Step ${idx + 1}:</strong> ${step}
-          </label>
-        </li>
-      `).join('');
-    }
-
-    // RENDER INGREDIENTS WITH SCALING & PANTRY CHECK
-    function renderIngredients() {
-      const listContainer = document.getElementById('ingredients-list');
-      
-      listContainer.innerHTML = currentRecipe.ingredients.map((ing, idx) => {
-        const scaledAmount = ing.amount * currentServingsScale;
-        const formattedAmount = Number.isInteger(scaledAmount) ? scaledAmount : scaledAmount.toFixed(2).replace(/\.00$/, '');
-        const inPantry = pantryItems.some(p => p.toLowerCase() === ing.name.toLowerCase());
+      emptyState.classList.add('hidden');
+      grid.innerHTML = recipes.map(recipe => {
+        const isFav = favorites.includes(recipe.id);
 
         return `
-          <li class="flex items-center justify-between p-2.5 rounded-xl border ${inPantry ? 'bg-cozy-sage/10 border-cozy-sage/30' : 'bg-white border-cozy-border'}">
-            <div class="flex items-center gap-3">
-              <span class="w-2 h-2 rounded-full ${inPantry ? 'bg-cozy-sage' : 'bg-cozy-terracotta'}"></span>
-              <span class="text-sm font-medium text-cozy-text">${ing.name}</span>
+          <div class="cozy-card rounded-cozy p-6 flex flex-col justify-between hover:-translate-y-1 transition-all duration-200">
+            <div>
+              <!-- Card Header Badges -->
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-semibold text-cozy-terracotta bg-cozy-terracotta/10 px-3 py-1 rounded-full">${recipe.style}</span>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs text-cozy-muted font-medium">⚡ ${recipe.prepTime}</span>
+                  <button onclick="toggleFav('${recipe.id}', event)" class="text-sm hover:scale-110 transition">
+                    ${isFav ? '❤️' : '🤍'}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Title & Link -->
+              <a href="recipe.html?id=${recipe.id}" class="group">
+                <h3 class="font-serif-heading font-bold text-xl text-cozy-text group-hover:text-cozy-terracotta transition mb-2">
+                  ${recipe.name}
+                </h3>
+              </a>
+
+              <!-- Description -->
+              <p class="text-xs text-cozy-muted leading-relaxed line-clamp-3 mb-4">
+                ${recipe.description}
+              </p>
+
+              <!-- Tags -->
+              <div class="flex flex-wrap gap-1.5 mb-6">
+                ${recipe.useCases.map(uc => `<span class="text-[10px] bg-cozy-sage/15 text-[#3D4D3A] px-2 py-0.5 rounded-md font-medium">${uc}</span>`).join('')}
+              </div>
             </div>
-            <span class="text-sm font-bold text-cozy-terracotta bg-cozy-bg px-2.5 py-1 rounded-lg border border-cozy-border">
-              ${formattedAmount} ${ing.unit}
-            </span>
-          </li>
+
+            <!-- View Recipe Action Button -->
+            <a href="recipe.html?id=${recipe.id}" class="w-full py-2.5 rounded-xl border border-cozy-border bg-cozy-bg text-center font-medium text-xs text-cozy-text hover:bg-cozy-terracotta hover:text-white hover:border-cozy-terracotta transition flex items-center justify-center gap-1.5">
+              <span>View Recipe & Ingredients</span>
+              <span>→</span>
+            </a>
+          </div>
         `;
       }).join('');
     }
 
-    // SERVING SIZE SCALER
-    function updateServings(scale) {
-      currentServingsScale = scale;
-      document.querySelectorAll('.servings-btn').forEach(btn => {
-        const btnScale = parseInt(btn.getAttribute('data-scale'));
-        if (btnScale === scale) {
-          btn.className = "servings-btn w-8 h-8 rounded-lg text-xs font-bold transition bg-cozy-terracotta text-white shadow-sm";
-        } else {
-          btn.className = "servings-btn w-8 h-8 rounded-lg text-xs font-bold transition text-cozy-muted hover:text-cozy-text";
-        }
+    // SEARCH & FILTER LOGIC
+    function filterRecipes() {
+      const query = document.getElementById('search-input').value.toLowerCase().trim();
+
+      const filtered = ALL_RECIPES.filter(recipe => {
+        // Match Search Query
+        const matchesQuery = query === '' || 
+          recipe.name.toLowerCase().includes(query) ||
+          recipe.ingredients.some(ing => ing.toLowerCase().includes(query)) ||
+          recipe.style.toLowerCase().includes(query);
+
+        // Match Filter Chip
+        const matchesTag = activeFilterTag === 'all' || 
+          recipe.temperature === activeFilterTag || 
+          recipe.style === activeFilterTag;
+
+        return matchesQuery && matchesTag;
       });
-      renderIngredients();
+
+      renderRecipeCatalog(filtered);
     }
 
-    // FAVORITES TOGGLE (LOCALSTORAGE)
-    function toggleFavorite() {
-      if (favorites.includes(currentRecipe.id)) {
-        favorites = favorites.filter(id => id !== currentRecipe.id);
+    // FILTER CHIP TOGGLE
+    function setFilter(tag, btnElement) {
+      activeFilterTag = tag;
+
+      // Update chip styling
+      document.querySelectorAll('.filter-chip').forEach(btn => btn.classList.remove('active'));
+      btnElement.classList.add('active');
+
+      filterRecipes();
+    }
+
+    function resetFilters() {
+      document.getElementById('search-input').value = '';
+      activeFilterTag = 'all';
+      
+      const firstChip = document.querySelector('.filter-chip');
+      if (firstChip) setFilter('all', firstChip);
+    }
+
+    // FAVORITES TOGGLE
+    function toggleFav(id, event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (favorites.includes(id)) {
+        favorites = favorites.filter(item => item !== id);
       } else {
-        favorites.push(currentRecipe.id);
+        favorites.push(id);
       }
+
       localStorage.setItem('cozy_favorites', JSON.stringify(favorites));
-      updateFavoriteButtonUI();
+      filterRecipes(); // Re-render to update heart icons
     }
 
-    function updateFavoriteButtonUI() {
-      const isFav = favorites.includes(currentRecipe.id);
-      document.getElementById('fav-icon').innerText = isFav ? '❤️' : '🤍';
-      document.getElementById('fav-text').innerText = isFav ? 'Saved in Favorites' : 'Save to Favorites';
-    }
-
-    // SHOPPING LIST INTEGRATION
-    function addMissingToShoppingList() {
-      let addedCount = 0;
-      currentRecipe.ingredients.forEach(ing => {
-        const inPantry = pantryItems.some(p => p.toLowerCase() === ing.name.toLowerCase());
-        const inList = shoppingList.some(item => item.name.toLowerCase() === ing.name.toLowerCase());
-
-        if (!inPantry && !inList) {
-          shoppingList.push({ name: ing.name, amount: `${ing.amount * currentServingsScale} ${ing.unit}` });
-          addedCount++;
-        }
-      });
-
-      localStorage.setItem('cozy_shopping_list', JSON.stringify(shoppingList));
-      updateShoppingListBadgeCount();
-
-      const btn = document.getElementById('add-missing-btn');
-      btn.innerHTML = `<span>✓</span> ${addedCount > 0 ? `Added ${addedCount} Items!` : 'All Items Already in List'}`;
-      btn.classList.replace('bg-cozy-sage', 'bg-emerald-700');
-
-      setTimeout(() => {
-        btn.innerHTML = `<span>🛒</span> Add Missing Items to Shopping List`;
-        btn.classList.replace('bg-emerald-700', 'bg-cozy-sage');
-      }, 2500);
-    }
-
-    function updateShoppingListBadgeCount() {
+    function updateShoppingBadge() {
       const count = shoppingList.length;
       const badge = document.getElementById('nav-shopping-count');
-      if (count > 0) {
+      if (count > 0 && badge) {
         badge.innerText = count;
         badge.classList.remove('hidden');
-      } else {
-        badge.classList.add('hidden');
       }
-    }
-
-    // RECOMMENDATIONS GENERATOR
-    function renderRecommendations() {
-      const recs = SAMPLE_RECIPES.filter(r => r.id !== currentRecipe.id).slice(0, 3);
-      const container = document.getElementById('recommendations-grid');
-
-      container.innerHTML = recs.map(rec => `
-        <a href="recipe.html?id=${rec.id}" class="cozy-card rounded-cozy p-5 hover:-translate-y-1 transition-all duration-200 block">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-xs font-semibold text-cozy-terracotta bg-cozy-terracotta/10 px-2.5 py-0.5 rounded-full">${rec.style}</span>
-            <span class="text-xs text-cozy-muted">⚡ ${rec.prepTime}</span>
-          </div>
-          <h3 class="font-serif-heading font-bold text-lg text-cozy-text mb-2">${rec.name}</h3>
-          <p class="text-xs text-cozy-muted line-clamp-2 leading-relaxed">${rec.description}</p>
-        </a>
-      `).join('');
     }
   </script>
 </body>
