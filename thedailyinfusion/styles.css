@@ -1,0 +1,39 @@
+body {
+  background-color: #F1F5DC;
+  color: #2C221E;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.font-serif-heading {
+  font-family: 'Fraunces', serif;
+}
+
+.cozy-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(110, 99, 91, 0.12);
+  box-shadow: 0 10px 30px -5px rgba(60, 40, 20, 0.04);
+}
+
+.filter-chip {
+  transition: all 0.15s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.filter-chip.active {
+  background-color: #8F9B5F !important;
+  color: #FFFFFF !important;
+  border-color: #8F9B5F !important;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F5DC;
+}
+::-webkit-scrollbar-thumb {
+  background: #8F9B5F;
+  border-radius: 10px;
+}
