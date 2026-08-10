@@ -34,16 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
     headerEl.innerHTML = `
       <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
         <a href="index.html" class="flex items-center gap-2.5 group">
-          <svg class="w-8 h-8 transition-transform group-hover:scale-105" viewBox="0 0 100 100" fill="none">
-            <circle cx="50" cy="50" r="46" fill="#F1F5DC" stroke="#E6DED5" stroke-width="2"/>
-            <path d="M34 48 C40 45, 60 51, 66 48 L63 74 C63 76, 60 78, 50 78 C40 78, 37 76, 37 74 Z" fill="#8F9B5F" opacity="0.25"/>
-            <path d="M32 38 L37 74 C37 77, 41 80, 50 80 C59 80, 63 77, 63 74 L68 38" stroke="#2C221E" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <ellipse cx="50" cy="38" rx="18" ry="4" stroke="#2C221E" stroke-width="3.5"/>
-            <path d="M50 40 Q40 25 54 22 Q58 32 50 40 Z" fill="#8A9A86" stroke="#2C221E" stroke-width="2.5" stroke-linejoin="round"/>
-          </svg>
+          <img 
+            src="images/icon.png" 
+            alt="The Daily Infusion Logo" 
+            class="w-8 h-8 object-contain transition-transform group-hover:scale-105" 
+          />
           <div class="flex flex-col">
-            <span class="font-serif-heading font-bold text-lg leading-none text-cozy-text">StillSip</span>
-            <span class="text-[10px] tracking-wider uppercase text-cozy-muted font-semibold">The Daily Infusion</span>
+            <span class="font-serif-heading font-bold text-lg leading-none text-cozy-text">The Daily Infusion</span>
           </div>
         </a>
 
@@ -72,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const footerEl = document.getElementById('site-footer');
   if (footerEl) {
     footerEl.className = "mt-auto border-t border-cozy-border bg-white/40 py-8 text-center text-sm text-cozy-muted";
-    footerEl.innerHTML = `<p>© StillSip — Non-Alcoholic & Non-Sparkling Pantry Drink Recipes.</p>`;
+    footerEl.innerHTML = `<p>© The Daily Infusion — Non-Alcoholic & Non-Sparkling Pantry Drink Recipes.</p>`;
   }
 
   State.updateShoppingBadge();
