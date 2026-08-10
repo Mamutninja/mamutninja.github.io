@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>All Drink Recipes — StillSip</title>
+  <title>All Drink Recipes — The Daily Infusion</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   
+  <link rel="icon" type="image/png" href="images/icon.png" />
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="theme.js"></script>
   <link rel="stylesheet" href="styles.css">
@@ -30,8 +32,12 @@
     </div>
 
     <div class="flex flex-col lg:flex-row gap-8 items-start">
+      
+      <!-- SIDEBAR WITH ALL 9 CATEGORIES -->
       <aside class="w-full lg:w-80 shrink-0 lg:sticky lg:top-20 max-h-[85vh] overflow-y-auto pr-1">
         <div class="cozy-card rounded-cozy p-5 space-y-6">
+          
+          <!-- SEARCH KEYWORD -->
           <div>
             <label for="search-input" class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">Search Keyword</label>
             <div class="relative">
@@ -42,58 +48,121 @@
 
           <hr class="border-cozy-border" />
 
-          <!-- Category Filters -->
+          <!-- 1. TEMPERATURE -->
           <div>
             <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">1. Temperature</label>
             <div class="flex flex-wrap gap-1.5" data-category="temperature">
               <button onclick="toggleFilter('temperature', 'Cold', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🧊 Cold</button>
               <button onclick="toggleFilter('temperature', 'Warm', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">☕ Warm / Hot</button>
+              <button onclick="toggleFilter('temperature', 'Room Temp', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🌡️ Room Temp</button>
             </div>
           </div>
 
+          <!-- 2. COLOR -->
           <div>
             <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">2. Color</label>
             <div class="flex flex-wrap gap-1.5" data-category="color">
-              <button onclick="toggleFilter('color', 'Green', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">Green</button>
-              <button onclick="toggleFilter('color', 'Yellow', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">Yellow</button>
-              <button onclick="toggleFilter('color', 'Red', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">Red</button>
-              <button onclick="toggleFilter('color', 'White', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">White</button>
+              <button onclick="toggleFilter('color', 'Green', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🟢 Green</button>
+              <button onclick="toggleFilter('color', 'Yellow', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🟡 Yellow</button>
+              <button onclick="toggleFilter('color', 'Red', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🔴 Red</button>
+              <button onclick="toggleFilter('color', 'Purple', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🟣 Purple</button>
+              <button onclick="toggleFilter('color', 'White', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">⚪ White</button>
+              <button onclick="toggleFilter('color', 'Brown', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🟤 Brown</button>
             </div>
           </div>
 
+          <!-- 3. HEALTHINESS & DIETARY -->
           <div>
             <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">3. Healthiness & Dietary</label>
             <div class="flex flex-wrap gap-1.5" data-category="healthiness">
               <button onclick="toggleFilter('healthiness', 'Caffeine-Free', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🌱 Caffeine-Free</button>
               <button onclick="toggleFilter('healthiness', 'Dairy-Free', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🥛 Dairy-Free</button>
               <button onclick="toggleFilter('healthiness', 'Vegan', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🍃 Vegan</button>
+              <button onclick="toggleFilter('healthiness', 'Refined Sugar-Free', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🍯 Sugar-Free</button>
+              <button onclick="toggleFilter('healthiness', 'Nut-Free', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🥜 Nut-Free</button>
+              <button onclick="toggleFilter('healthiness', 'Low-Calorie', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">✨ Low-Calorie</button>
             </div>
           </div>
 
+          <!-- 4. NUTRIENTS & ACTIVES -->
           <div>
             <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">4. Nutrients & Actives</label>
             <div class="flex flex-wrap gap-1.5" data-category="nutrients">
               <button onclick="toggleFilter('nutrients', 'Vitamin C', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🍋 Vitamin C</button>
               <button onclick="toggleFilter('nutrients', 'Curcumin', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">✨ Curcumin</button>
               <button onclick="toggleFilter('nutrients', 'Gingerol', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🫚 Gingerol</button>
+              <button onclick="toggleFilter('nutrients', 'Anthocyanins', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🍇 Anthocyanins</button>
+              <button onclick="toggleFilter('nutrients', 'Electrolytes', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">⚡ Electrolytes</button>
+              <button onclick="toggleFilter('nutrients', 'Probiotics', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🦠 Probiotics</button>
+              <button onclick="toggleFilter('nutrients', 'Antioxidants', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🛡️ Antioxidants</button>
             </div>
           </div>
 
+          <!-- 5. USE / FUNCTIONAL GOAL -->
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">5. Style</label>
+            <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">5. Use / Functional Goal</label>
+            <div class="flex flex-wrap gap-1.5" data-category="useCases">
+              <button onclick="toggleFilter('useCases', 'Deep Hydration', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">💧 Hydration</button>
+              <button onclick="toggleFilter('useCases', 'Gut & Digestion', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🍃 Gut Health</button>
+              <button onclick="toggleFilter('useCases', 'Anti-Inflammatory', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🌿 Anti-Inflammatory</button>
+              <button onclick="toggleFilter('useCases', 'Stress & Relaxation', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🧘 Relaxation</button>
+              <button onclick="toggleFilter('useCases', 'Immune Boost', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🛡️ Immune Boost</button>
+              <button onclick="toggleFilter('useCases', 'Sustained Energy', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">⚡ Sustained Energy</button>
+            </div>
+          </div>
+
+          <!-- 6. PRIMARY TASTE -->
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">6. Primary Taste</label>
+            <div class="flex flex-wrap gap-1.5" data-category="primaryTaste">
+              <button onclick="toggleFilter('primaryTaste', 'Citrusy & Tart', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🍋 Citrusy & Tart</button>
+              <button onclick="toggleFilter('primaryTaste', 'Sweet & Fruity', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🍓 Sweet & Fruity</button>
+              <button onclick="toggleFilter('primaryTaste', 'Herbal & Fresh', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🌿 Herbal & Fresh</button>
+              <button onclick="toggleFilter('primaryTaste', 'Creamy & Indulgent', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🥛 Creamy</button>
+              <button onclick="toggleFilter('primaryTaste', 'Spiced & Earthy', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🌶️ Spiced & Earthy</button>
+            </div>
+          </div>
+
+          <!-- 7. SEASON -->
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">7. Season</label>
+            <div class="flex flex-wrap gap-1.5" data-category="season">
+              <button onclick="toggleFilter('season', 'Summer', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">☀️ Summer</button>
+              <button onclick="toggleFilter('season', 'Autumn', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🍂 Autumn</button>
+              <button onclick="toggleFilter('season', 'All-Year', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🔄 All-Year</button>
+            </div>
+          </div>
+
+          <!-- 8. STYLE -->
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">8. Drink Style</label>
             <div class="flex flex-wrap gap-1.5" data-category="style">
               <button onclick="toggleFilter('style', 'Agua Fresca', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🍉 Agua Fresca</button>
               <button onclick="toggleFilter('style', 'Spiced Latte', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">☕ Latte</button>
               <button onclick="toggleFilter('style', 'Smoothie / Lassi', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🥭 Lassi</button>
+              <button onclick="toggleFilter('style', 'Herbal Tea', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🫖 Herbal Tea</button>
+            </div>
+          </div>
+
+          <!-- 9. PREP TIME -->
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">9. Prep Time</label>
+            <div class="flex flex-wrap gap-1.5" data-category="prepTime">
+              <button onclick="toggleFilter('prepTime', 'Instant', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">⚡ Instant (<2m)</button>
+              <button onclick="toggleFilter('prepTime', 'Quick', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">⏱️ Quick (<5m)</button>
+              <button onclick="toggleFilter('prepTime', 'Steep / Cook', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">🍳 Steep / Cook</button>
+              <button onclick="toggleFilter('prepTime', 'Advance Prep', this)" class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text">❄️ Advance Prep</button>
             </div>
           </div>
 
           <div class="pt-3 border-t border-cozy-border flex items-center justify-between">
             <span id="recipe-count" class="text-xs font-semibold text-cozy-muted">Showing 0 recipes</span>
           </div>
+
         </div>
       </aside>
 
+      <!-- RIGHT COLUMN: RECIPE GRID -->
       <div class="flex-1 w-full">
         <div id="active-badges-container" class="hidden mb-4 flex flex-wrap items-center gap-2">
           <span class="text-xs text-cozy-muted font-medium">Active Filters:</span>
@@ -105,9 +174,11 @@
         <div id="empty-state" class="hidden text-center py-16 cozy-card rounded-cozy">
           <span class="text-4xl block mb-3">🫖</span>
           <h3 class="font-serif-heading font-bold text-xl text-cozy-text mb-1">No matching recipes</h3>
-          <button onclick="resetAllFilters()" class="mt-4 px-4 py-2 bg-cozy-olivegreen text-white rounded-full text-xs font-semibold hover:bg-cozy-olivegreen-hover transition">Reset Filters</button>
+          <p class="text-cozy-muted text-sm max-w-sm mx-auto mb-4">Try clearing some filters to broaden your search.</p>
+          <button onclick="resetAllFilters()" class="px-4 py-2 bg-cozy-olivegreen text-white rounded-full text-xs font-semibold hover:bg-cozy-olivegreen-hover transition">Reset All Filters</button>
         </div>
       </div>
+
     </div>
   </main>
 
@@ -115,7 +186,19 @@
 
   <script src="recipes.js"></script>
   <script>
-    let selectedFilters = { temperature: [], color: [], healthiness: [], nutrients: [], style: [] };
+    // Selected filters tracking map across all 9 categories
+    let selectedFilters = {
+      temperature: [],
+      color: [],
+      healthiness: [],
+      nutrients: [],
+      useCases: [],
+      primaryTaste: [],
+      season: [],
+      style: [],
+      prepTime: []
+    };
+
     let favorites = State.getFavorites();
 
     document.addEventListener('DOMContentLoaded', () => filterRecipes());
@@ -136,32 +219,85 @@
       const query = document.getElementById('search-input').value.toLowerCase().trim();
 
       const filtered = ALL_RECIPES.filter(recipe => {
-        const matchesQuery = query === '' || recipe.name.toLowerCase().includes(query) || recipe.ingredients.some(i => i.name.toLowerCase().includes(query));
+        // Text Search Match
+        const matchesQuery = query === '' || 
+          recipe.name.toLowerCase().includes(query) || 
+          recipe.ingredients.some(i => i.name.toLowerCase().includes(query)) ||
+          recipe.description.toLowerCase().includes(query);
+
         if (!matchesQuery) return false;
 
+        // Category Filter Matches
         for (const [catKey, selectedValues] of Object.entries(selectedFilters)) {
           if (selectedValues.length === 0) continue;
+          
           const recipeVal = recipe[catKey];
-          const hasMatch = Array.isArray(recipeVal) ? selectedValues.some(val => recipeVal.includes(val)) : selectedValues.includes(recipeVal);
+          if (!recipeVal) return false;
+
+          const hasMatch = Array.isArray(recipeVal) 
+            ? selectedValues.some(val => recipeVal.includes(val)) 
+            : selectedValues.includes(recipeVal);
+
           if (!hasMatch) return false;
         }
+
         return true;
       });
 
       renderGrid(filtered);
+      renderActiveBadges();
     }
 
     function resetAllFilters() {
-      selectedFilters = { temperature: [], color: [], healthiness: [], nutrients: [], style: [] };
+      selectedFilters = {
+        temperature: [], color: [], healthiness: [], nutrients: [],
+        useCases: [], primaryTaste: [], season: [], style: [], prepTime: []
+      };
       document.getElementById('search-input').value = '';
       document.querySelectorAll('.filter-chip').forEach(btn => btn.classList.remove('active'));
+      filterRecipes();
+    }
+
+    function renderActiveBadges() {
+      const container = document.getElementById('active-badges-container');
+      const badgesBox = document.getElementById('active-badges');
+      let activeList = [];
+
+      for (const [cat, vals] of Object.entries(selectedFilters)) {
+        vals.forEach(v => activeList.push({ cat, v }));
+      }
+
+      if (activeList.length === 0) {
+        container.classList.add('hidden');
+        return;
+      }
+
+      container.classList.remove('hidden');
+      badgesBox.innerHTML = activeList.map(item => `
+        <span class="inline-flex items-center gap-1 text-xs bg-cozy-olivegreen text-white px-2.5 py-0.5 rounded-full font-medium">
+          ${item.v}
+          <button onclick="removeFilter('${item.cat}', '${item.v}')" class="ml-1 hover:text-black font-bold">✕</button>
+        </span>
+      `).join('');
+    }
+
+    function removeFilter(cat, val) {
+      const idx = selectedFilters[cat].indexOf(val);
+      if (idx > -1) selectedFilters[cat].splice(idx, 1);
+
+      const chipContainer = document.querySelector(`[data-category="${cat}"]`);
+      if (chipContainer) {
+        chipContainer.querySelectorAll('.filter-chip').forEach(btn => {
+          if (btn.innerText.includes(val)) btn.classList.remove('active');
+        });
+      }
       filterRecipes();
     }
 
     function renderGrid(recipes) {
       const grid = document.getElementById('recipe-grid');
       const emptyState = document.getElementById('empty-state');
-      document.getElementById('recipe-count').innerText = `Showing ${recipes.length} recipes`;
+      document.getElementById('recipe-count').innerText = `Showing ${recipes.length} ${recipes.length === 1 ? 'recipe' : 'recipes'}`;
 
       if (recipes.length === 0) {
         grid.innerHTML = '';
@@ -171,13 +307,15 @@
 
       emptyState.classList.add('hidden');
       grid.innerHTML = recipes.map(r => `
-        <div class="cozy-card rounded-cozy p-5 flex flex-col justify-between hover:-translate-y-1 transition-all">
+        <div class="cozy-card rounded-cozy p-5 flex flex-col justify-between hover:-translate-y-1 transition-all duration-200">
           <div>
             <div class="flex items-center justify-between mb-2">
               <span class="text-xs font-semibold text-cozy-olivegreen bg-cozy-olivegreen/10 px-2.5 py-0.5 rounded-full">${r.style}</span>
-              <button onclick="toggleFav('${r.id}', event)" class="text-sm">${favorites.includes(r.id) ? '❤️' : '🤍'}</button>
+              <button onclick="toggleFav('${r.id}', event)" class="text-sm hover:scale-110 transition">${favorites.includes(r.id) ? '❤️' : '🤍'}</button>
             </div>
-            <a href="recipe.html?id=${r.id}"><h3 class="font-serif-heading font-bold text-lg text-cozy-text hover:text-cozy-olivegreen transition mb-1">${r.name}</h3></a>
+            <a href="recipe.html?id=${r.id}">
+              <h3 class="font-serif-heading font-bold text-lg text-cozy-text hover:text-cozy-olivegreen transition mb-1">${r.name}</h3>
+            </a>
             <p class="text-xs text-cozy-muted line-clamp-2 mb-3">${r.description}</p>
           </div>
           <a href="recipe.html?id=${r.id}" class="w-full py-2 rounded-xl border border-cozy-border bg-cozy-bg text-center text-xs font-medium text-cozy-text hover:bg-cozy-olivegreen hover:text-white transition">View Recipe →</a>
