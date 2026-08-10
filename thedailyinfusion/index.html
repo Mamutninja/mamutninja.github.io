@@ -5,139 +5,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Daily Infusion — StillSip</title>
   
-  <!-- Google Fonts: Fraunces (Serif) & Plus Jakarta Sans (Sans) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            cozy: {
-              bg: '#F1F5DC',
-              card: '#FFFFFF',
-              text: '#2C221E',
-              muted: '#6E6A66',
-              olivegreen: '#8F9B5F',
-              'olivegreen': '#7E8952',
-              sage: '#8A9A86',
-              'sage-light': 'rgba(138, 154, 134, 0.15)',
-              honey: '#EBB059',
-              border: 'rgba(110, 99, 91, 0.12)'
-            }
-          },
-          fontFamily: {
-            serif: ['Fraunces', 'serif'],
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-          },
-          borderRadius: {
-            'cozy': '20px',
-          }
-        }
-      }
-    }
-  </script>
-
-  <style>
-    body {
-      background-color: #F1F5DC;
-      color: #2C221E;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-    .font-serif-heading {
-      font-family: 'Fraunces', serif;
-    }
-    .cozy-card {
-      background: #FFFFFF;
-      border: 1px solid rgba(110, 99, 91, 0.12);
-      box-shadow: 0 10px 30px -5px rgba(60, 40, 20, 0.04);
-    }
-  </style>
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="common.js"></script>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-  <!-- ================= NAVIGATION HEADER ================= -->
-  <header class="sticky top-0 z-30 bg-[#FAF6F0]/90 backdrop-blur-md border-b border-cozy-border">
-    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-      
-      <!-- Brand Logo -->
-      <a href="index.html" class="flex items-center gap-2.5 group">
-        <svg class="w-8 h-8 transition-transform group-hover:scale-105" viewBox="0 0 100 100" fill="none">
-          <circle cx="50" cy="50" r="46" fill="#FAF6F0" stroke="#E6DED5" stroke-width="2"/>
-          <path d="M34 48 C40 45, 60 51, 66 48 L63 74 C63 76, 60 78, 50 78 C40 78, 37 76, 37 74 Z" fill="#C86D51" opacity="0.25"/>
-          <path d="M32 38 L37 74 C37 77, 41 80, 50 80 C59 80, 63 77, 63 74 L68 38" stroke="#2C221E" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <ellipse cx="50" cy="38" rx="18" ry="4" stroke="#2C221E" stroke-width="3.5"/>
-          <path d="M50 40 Q40 25 54 22 Q58 32 50 40 Z" fill="#8A9A86" stroke="#2C221E" stroke-width="2.5" stroke-linejoin="round"/>
-        </svg>
-        <div class="flex flex-col">
-          <span class="font-serif-heading font-bold text-lg leading-none text-cozy-text">StillSip</span>
-          <span class="text-[10px] tracking-wider uppercase text-cozy-muted font-semibold">The Daily Infusion</span>
-        </div>
-      </a>
+  <header id="site-header"></header>
 
-      <!-- Navigation Links -->
-      <nav class="hidden md:flex items-center gap-1 bg-white/60 p-1.5 rounded-full border border-cozy-border shadow-sm">
-        <a href="index.html" class="px-4 py-1.5 rounded-full text-sm font-medium bg-cozy-terracotta text-white shadow-sm">Home</a>
-        <a href="recipes.html" class="px-4 py-1.5 rounded-full text-sm font-medium text-cozy-muted hover:text-cozy-text transition">All Recipes</a>
-        <a href="pantry.html" class="px-4 py-1.5 rounded-full text-sm font-medium text-cozy-muted hover:text-cozy-text transition">Pantry</a>
-        <a href="shopping-list.html" class="px-4 py-1.5 rounded-full text-sm font-medium text-cozy-muted hover:text-cozy-text transition flex items-center gap-1.5">
-          Shopping List
-          <span id="nav-shopping-count" class="hidden px-1.5 py-0.5 text-xs bg-cozy-sage text-white rounded-full">0</span>
-        </a>
-        <a href="favorites.html" class="px-4 py-1.5 rounded-full text-sm font-medium text-cozy-muted hover:text-cozy-text transition flex items-center gap-1">
-          Favorites ❤️
-        </a>
-      </nav>
-
-      <!-- Mobile Nav Icons -->
-      <div class="flex md:hidden items-center gap-2">
-        <a href="pantry.html" class="p-2 text-cozy-text bg-white rounded-full border border-cozy-border">🧺</a>
-        <a href="shopping-list.html" class="p-2 text-cozy-text bg-white rounded-full border border-cozy-border">🛒</a>
-      </div>
-    </div>
-  </header>
-
-  <!-- ================= HERO SECTION (CENTERED TITLE & CTA) ================= -->
   <main class="flex-1 flex flex-col justify-center items-center text-center px-4 py-12 md:py-20 max-w-4xl mx-auto my-auto">
-    
-    <!-- Subtitle Badge -->
     <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cozy-sage/15 border border-cozy-sage/30 text-cozy-text text-xs md:text-sm font-semibold mb-6">
       <span>🌿</span> Non-Alcoholic & Non-Sparkling Pantry Drinks
     </div>
 
-    <!-- Main Title -->
     <h1 class="font-serif-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold text-cozy-text tracking-tight leading-tight mb-6">
       The Daily Infusion
     </h1>
 
-    <!-- Cozy Description -->
     <p class="text-cozy-muted text-base sm:text-lg md:text-xl max-w-2xl leading-relaxed mb-10">
       Turn what you already have in your kitchen into comforting herbal teas, fruit agua frescas, creamy lassis, and botanical mocktails.
     </p>
 
-    <!-- Centered Call to Action Buttons -->
     <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
-      <a href="pantry.html" class="w-full sm:w-auto px-8 py-4 rounded-full bg-cozy-terracotta text-white font-semibold text-base hover:bg-cozy-terracotta-hover transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+      <a href="pantry.html" class="w-full sm:w-auto px-8 py-4 rounded-full bg-cozy-olivegreen text-white font-semibold text-base hover:bg-cozy-olivegreen-hover transition-all duration-200 shadow-md flex items-center justify-center gap-2">
         <span>🧺 Check Your Pantry</span>
         <span>→</span>
       </a>
       
-      <a href="recipes.html" class="w-full sm:w-auto px-8 py-4 rounded-full bg-white text-cozy-text border border-cozy-border font-semibold text-base hover:border-cozy-terracotta hover:text-cozy-terracotta transition-all duration-200 shadow-sm flex items-center justify-center gap-2">
+      <a href="recipes.html" class="w-full sm:w-auto px-8 py-4 rounded-full bg-white text-cozy-text border border-cozy-border font-semibold text-base hover:border-cozy-olivegreen hover:text-cozy-olivegreen transition-all duration-200 shadow-sm flex items-center justify-center gap-2">
         <span>Browse All Recipes</span>
       </a>
     </div>
 
-    <!-- Features Overview -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-16 text-left w-full pt-12 border-t border-cozy-border">
       <div class="cozy-card rounded-cozy p-5">
         <span class="text-2xl mb-2 block">🥑</span>
         <h3 class="font-serif-heading font-bold text-base text-cozy-text mb-1">Pantry Matching</h3>
-        <p class="text-xs text-cozy-muted leading-relaxed">Check off what ingredients you own and see what delicious drinks you can mix right now.</p>
+        <p class="text-xs text-cozy-muted leading-relaxed">Check off your ingredients and see what delicious drinks you can mix right now.</p>
       </div>
 
       <div class="cozy-card rounded-cozy p-5">
@@ -149,28 +58,11 @@
       <div class="cozy-card rounded-cozy p-5">
         <span class="text-2xl mb-2 block">🛒</span>
         <h3 class="font-serif-heading font-bold text-base text-cozy-text mb-1">Smart Shopping List</h3>
-        <p class="text-xs text-cozy-muted leading-relaxed">Missing a couple of items? Add them directly to your personal built-in shopping list.</p>
+        <p class="text-xs text-cozy-muted leading-relaxed">Missing an item? Add missing ingredients directly to your personal built-in list.</p>
       </div>
     </div>
-
   </main>
 
-  <!-- ================= FOOTER ================= -->
-  <footer class="border-t border-cozy-border bg-white/40 py-8 text-center text-sm text-cozy-muted">
-    <p>© StillSip — Non-Alcoholic & Non-Sparkling Pantry Drink Recipes.</p>
-  </footer>
-
-  <!-- ================= JAVASCRIPT LOGIC ================= -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const shoppingList = JSON.parse(localStorage.getItem('cozy_shopping_list') || '[]');
-      const count = shoppingList.length;
-      const badge = document.getElementById('nav-shopping-count');
-      if (count > 0 && badge) {
-        badge.innerText = count;
-        badge.classList.remove('hidden');
-      }
-    });
-  </script>
+  <footer id="site-footer"></footer>
 </body>
 </html>
