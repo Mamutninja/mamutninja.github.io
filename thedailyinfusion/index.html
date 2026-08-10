@@ -57,6 +57,10 @@
       border: 1px solid rgba(110, 99, 91, 0.12);
       box-shadow: 0 10px 30px -5px rgba(60, 40, 20, 0.04);
     }
+    .filter-chip {
+      text-align: left;
+      width: 100%;
+    }
     .filter-chip.active {
       background-color: #C86D51;
       color: #FFFFFF;
@@ -68,7 +72,7 @@
 
   <!-- ================= NAVIGATION HEADER ================= -->
   <header class="sticky top-0 z-30 bg-[#FAF6F0]/90 backdrop-blur-md border-b border-cozy-border">
-    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
       
       <!-- Brand Logo -->
       <a href="index.html" class="flex items-center gap-2.5 group">
@@ -108,59 +112,96 @@
   </header>
 
   <!-- ================= MAIN CONTENT ================= -->
-  <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-8">
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-8">
     
     <!-- HEADER HERO SECTION -->
-    <div class="text-center max-w-2xl mx-auto mb-10">
-      <h1 class="font-serif-heading text-3xl md:text-5xl font-bold text-cozy-text mb-3">All Drink Recipes</h1>
-      <p class="text-cozy-muted text-base md:text-lg">
+    <div class="text-left mb-8 border-b border-cozy-border pb-6">
+      <h1 class="font-serif-heading text-3xl md:text-4xl font-bold text-cozy-text mb-2">All Drink Recipes</h1>
+      <p class="text-cozy-muted text-base">
         Explore non-alcoholic, non-sparkling beverages crafted from fresh herbs, teas, juices, and plant milks.
       </p>
     </div>
 
-    <!-- SEARCH & FILTER BAR -->
-    <div class="cozy-card rounded-cozy p-4 md:p-6 mb-8 space-y-4">
-      
-      <!-- Live Search Input -->
-      <div class="relative">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-cozy-muted">🔍</span>
-        <input 
-          type="text" 
-          id="search-input" 
-          placeholder="Search by recipe name or ingredient (e.g. mint, turmeric, lime)..." 
-          class="w-full pl-11 pr-4 py-3 bg-cozy-bg rounded-xl border border-cozy-border text-cozy-text text-sm focus:outline-none focus:border-cozy-terracotta transition"
-          oninput="filterRecipes()"
-        />
-      </div>
+    <!-- MAIN TWO-COLUMN LAYOUT -->
+    <div class="flex flex-col lg:flex-row gap-8 items-start">
 
-      <!-- Quick Filter Chips -->
-      <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+      <!-- ================= LEFT SIDEBAR (FILTERS & SEARCH) ================= -->
+      <aside class="w-full lg:w-72 shrink-0 lg:sticky lg:top-24">
+        <div class="cozy-card rounded-cozy p-5 space-y-6">
+          
+          <!-- Search Box -->
+          <div>
+            <label for="search-input" class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">
+              Search Recipes
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-cozy-muted text-sm">🔍</span>
+              <input 
+                type="text" 
+                id="search-input" 
+                placeholder="Mint, turmeric, lime..." 
+                class="w-full pl-9 pr-3 py-2.5 bg-cozy-bg rounded-xl border border-cozy-border text-cozy-text text-sm focus:outline-none focus:border-cozy-terracotta transition"
+                oninput="filterRecipes()"
+              />
+            </div>
+          </div>
+
+          <!-- Category Filters -->
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-3">
+              Filter by Category
+            </label>
+            <div class="flex flex-col gap-2" id="filter-chips">
+              <button onclick="setFilter('all', this)" class="filter-chip active px-4 py-2 rounded-xl border border-cozy-border text-xs font-medium bg-white text-cozy-text transition flex items-center justify-between">
+                <span>All Drinks</span>
+                <span>✨</span>
+              </button>
+              <button onclick="setFilter('Cold', this)" class="filter-chip px-4 py-2 rounded-xl border border-cozy-border text-xs font-medium bg-white text-cozy-text transition flex items-center justify-between">
+                <span>Cold Only</span>
+                <span>🧊</span>
+              </button>
+              <button onclick="setFilter('Agua Fresca', this)" class="filter-chip px-4 py-2 rounded-xl border border-cozy-border text-xs font-medium bg-white text-cozy-text transition flex items-center justify-between">
+                <span>Agua Fresca</span>
+                <span>🍉</span>
+              </button>
+              <button onclick="setFilter('Spiced Latte', this)" class="filter-chip px-4 py-2 rounded-xl border border-cozy-border text-xs font-medium bg-white text-cozy-text transition flex items-center justify-between">
+                <span>Lattes & Teas</span>
+                <span>☕</span>
+              </button>
+              <button onclick="setFilter('Smoothie / Lassi', this)" class="filter-chip px-4 py-2 rounded-xl border border-cozy-border text-xs font-medium bg-white text-cozy-text transition flex items-center justify-between">
+                <span>Lassis</span>
+                <span>🥭</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Actions / Reset -->
+          <div class="pt-2 border-t border-cozy-border flex items-center justify-between">
+            <span id="recipe-count" class="text-xs font-semibold text-cozy-muted">Showing 0 recipes</span>
+            <button onclick="resetFilters()" class="text-xs font-medium text-cozy-terracotta hover:underline">Reset</button>
+          </div>
+
+        </div>
+      </aside>
+
+      <!-- ================= RIGHT COLUMN (RECIPE GRID) ================= -->
+      <div class="flex-1 w-full">
         
-        <!-- Category Chips -->
-        <div class="flex flex-wrap items-center gap-2" id="filter-chips">
-          <button onclick="setFilter('all', this)" class="filter-chip active px-3.5 py-1.5 rounded-full border border-cozy-border text-xs font-medium bg-white text-cozy-text transition">All Drinks</button>
-          <button onclick="setFilter('Cold', this)" class="filter-chip px-3.5 py-1.5 rounded-full border border-cozy-border text-xs font-medium bg-white text-cozy-text transition">🧊 Cold Only</button>
-          <button onclick="setFilter('Agua Fresca', this)" class="filter-chip px-3.5 py-1.5 rounded-full border border-cozy-border text-xs font-medium bg-white text-cozy-text transition">🍉 Agua Fresca</button>
-          <button onclick="setFilter('Spiced Latte', this)" class="filter-chip px-3.5 py-1.5 rounded-full border border-cozy-border text-xs font-medium bg-white text-cozy-text transition">☕ Lattes & Teas</button>
-          <button onclick="setFilter('Smoothie / Lassi', this)" class="filter-chip px-3.5 py-1.5 rounded-full border border-cozy-border text-xs font-medium bg-white text-cozy-text transition">🥭 Lassis</button>
+        <!-- RECIPE CATALOG GRID -->
+        <div id="recipe-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+          <!-- Recipe Cards Rendered Dynamically -->
         </div>
 
-        <!-- Recipe Count Indicator -->
-        <span id="recipe-count" class="text-xs font-semibold text-cozy-muted">Showing 0 recipes</span>
+        <!-- EMPTY STATE (WHEN NO MATCHES FOUND) -->
+        <div id="empty-state" class="hidden text-center py-16 cozy-card rounded-cozy">
+          <span class="text-4xl block mb-3">🫖</span>
+          <h3 class="font-serif-heading font-bold text-xl text-cozy-text mb-1">No recipes found</h3>
+          <p class="text-cozy-muted text-sm max-w-sm mx-auto mb-4">Try searching for a different ingredient or clearing your filters.</p>
+          <button onclick="resetFilters()" class="px-4 py-2 bg-cozy-terracotta text-white rounded-full text-xs font-semibold hover:bg-cozy-terracotta-hover transition">Reset All Filters</button>
+        </div>
+
       </div>
-    </div>
 
-    <!-- RECIPE CATALOG GRID -->
-    <div id="recipe-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Recipe Cards Rendered Dynamically -->
-    </div>
-
-    <!-- EMPTY STATE (WHEN NO MATCHES FOUND) -->
-    <div id="empty-state" class="hidden text-center py-16 cozy-card rounded-cozy">
-      <span class="text-4xl block mb-3">🫖</span>
-      <h3 class="font-serif-heading font-bold text-xl text-cozy-text mb-1">No recipes found</h3>
-      <p class="text-cozy-muted text-sm max-w-sm mx-auto mb-4">Try searching for a different ingredient or clearing your filters.</p>
-      <button onclick="resetFilters()" class="px-4 py-2 bg-cozy-terracotta text-white rounded-full text-xs font-semibold hover:bg-cozy-terracotta-hover transition">Reset All Filters</button>
     </div>
 
   </main>
