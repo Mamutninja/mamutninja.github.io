@@ -74,3 +74,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   State.updateShoppingBadge();
 });
+
+// EXPORT ALL RECIPES (DEFAULT + USER CUSTOM) TO A UPDATED recipes.js FILE
+function exportRecipesJS() {
+  const allRecipes = typeof getCombinedRecipes === 'function' ? getCombinedRecipes() : ALL_RECIPES;
+  
+  const fileContent = `const ALL_RECIPES = ${JSON.stringify(allRecipes, null, 2)};\n\n// HELPER TO FETCH BOTH BUILT-IN & USER-ADDED RECIPES\nfunction getCombinedRecipes() {\n  const customRecipes = JSON.parse(localStorage.getItem('cozy_custom_recipes') || '[]');\n  return [...ALL_RECIPES, ...customRecipes];\n}`;
+
+  const blob = new Blob([fileContent], { type: 'text/javascript' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'recipes.js';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
