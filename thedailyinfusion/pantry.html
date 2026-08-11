@@ -6,7 +6,7 @@
   <title>Kitchen Pantry — StillSip</title>
   
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="images/logo.png" />
+  <link rel="icon" type="image/png" href="images/icon.png" />
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -125,55 +125,7 @@
   <script src="recipes.js"></script>
   
   <script>
-  const INGREDIENT_CATEGORIES = [
-    {
-      name: "🍓 Fresh Fruit & Herbs",
-      items: [
-        "Cucumber", "Lime", "Lemon", "Orange", "Blood Orange", 
-        "Strawberries", "Blackberries", "Blueberries", "Watermelon", 
-        "Mango", "Peach", "Avocado", "Fresh Mint", "Fresh Basil", 
-        "Fresh Ginger", "Fresh Rosemary", "Fresh Thyme"
-      ]
-    },
-    {
-      name: "❄️ Frozen Fruit & Ice",
-      items: [
-        "Ice", "Frozen Mango", "Frozen Strawberries", 
-        "Frozen Berries", "Frozen Peaches"
-      ]
-    },
-    {
-      name: "🧃 Fruit Juices & Nectars",
-      items: [
-        "Lime Juice", "Lemon Juice", "Orange Juice", "Pineapple Juice", 
-        "Cranberry Juice", "Pomegranate Juice", "Grapefruit Juice", 
-        "Passionfruit Nectar", "Mango Puree", "Tamarind Pulp"
-      ]
-    },
-    {
-      name: "🥛 Milks, Dairy & Bases",
-      items: [
-        "Oat Milk", "Almond Milk", "Whole Milk", "Coconut Milk", 
-        "Yogurt", "Sweetened Condensed Milk", "Evaporated Milk", "Coconut Water"
-      ]
-    },
-    {
-      name: "🍫 Sweeteners, Spices & Cocoa",
-      items: [
-        "Honey", "Agave Nectar", "Maple Syrup", "Simple Syrup", "Sugar", 
-        "Cocoa Powder", "Ground Turmeric", "Ground Cinnamon", "Cinnamon Stick", 
-        "Black Pepper", "Ground Cardamom", "Vanilla Extract"
-      ]
-    },
-    {
-      name: "🫖 Teas, Grains & Staples",
-      items: [
-        "Water", "Green Tea", "Matcha Powder", "Black Tea", 
-        "White Tea", "Hojicha Powder", "Hibiscus Flowers", 
-        "White Rice", "Purple Corn"
-      ]
-    }
-  ];
+  const INGREDIENT_CATEGORIES = TAXONOMY.INGREDIENT_CATEGORIES;
 
   let pantry = State.getPantry();
   let favorites = State.getFavorites();
