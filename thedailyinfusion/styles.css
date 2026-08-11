@@ -1,13 +1,25 @@
+/* Load Maghelia Custom Font */
+@font-face {
+  font-family: 'Maghelia';
+  src: url('fonts/Maghelia.ttf') format('truetype'); /* Or format('opentype') if using .otf */
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Base Body Styling */
 body {
   background-color: #F1F5DC;
   color: #2C221E;
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
+/* Headings Class — Now using Maghelia */
 .font-serif-heading {
-  font-family: 'Fraunces', serif;
+  font-family: 'Maghelia', serif;
+  font-weight: normal; /* Maghelia is a decorative font, so standard weight looks best */
 }
 
+/* Reusable Cozy Card Component */
 .cozy-card {
   background: #FFFFFF;
   border: 1px solid rgba(110, 99, 91, 0.12);
