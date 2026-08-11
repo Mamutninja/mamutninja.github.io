@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add New Recipe — StillSip</title>
+  
+  <link rel="icon" type="image/png" href="images/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="common.js"></script>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <header id="site-header"></header>
+
+  <main class="flex-1 max-w-4xl w-full mx-auto px-4 py-8">
+    
+    <!-- Top Back Link -->
+    <div class="mb-6">
+      <a href="recipes.html" class="inline-flex items-center gap-2 text-sm font-medium text-cozy-muted hover:text-cozy-olivegreen transition">
+        ← Back to all recipes
+      </a>
+    </div>
+
+    <div class="cozy-card rounded-cozy p-6 md:p-8">
+      
+      <div class="border-b border-cozy-border pb-6 mb-6">
+        <h1 class="font-serif-heading text-3xl font-bold text-cozy-text mb-2">Create New Drink Recipe</h1>
+        <p class="text-cozy-muted text-sm">Add a custom non-alcoholic still beverage to your personal library.</p>
+      </div>
+
+      <form id="add-recipe-form" onsubmit="handleSaveRecipe(event)" class="space-y-8">
+        
+        <!-- BASIC INFO -->
+        <div class="space-y-4">
+          <h2 class="font-serif-heading font-bold text-lg text-cozy-text">1. Basic Details</h2>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-1">Drink Name *</label>
+              <input type="text" id="recipe-name" required placeholder="e.g. Peach Basil Still Tea" class="w-full px-3.5 py-2.5 bg-cozy-bg rounded-xl border border-cozy-border text-cozy-text text-sm focus:outline-none focus:border-cozy-olivegreen" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-1">Drink Style *</label>
+              <select id="recipe-style" required class="w-full px-3.5 py-2.5 bg-cozy-bg rounded-xl border border-cozy-border text-cozy-text text-sm focus:outline-none focus:border-cozy-olivegreen">
+                <option value="Agua Fresca">Agua Fresca</option>
+                <option value="Herbal Tea">Herbal Tea</option>
+                <option value="Spiced Latte">Spiced Latte</option>
+                <option value="Smoothie / Lassi">Smoothie / Lassi</option>
+                <option value="Fruit Infusion">Fruit Infusion</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-1">Short Description *</label>
+            <textarea id="recipe-description" required rows="2" placeholder="Briefly describe the flavor and feel of this drink..." class="w-full px-3.5 py-2.5 bg-cozy-bg rounded-xl border border-cozy-border text-cozy-text text-sm focus:outline-none focus:border-cozy-olivegreen"></textarea>
+          </div>
+        </div>
+
+        <hr class="border-cozy-border" />
+
+        <!-- 9 CATEGORY TAGS -->
+        <div class="space-y-4">
+          <h2 class="font-serif-heading font-bold text-lg text-cozy-text">2. Attributes & Tags</h2>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-1">Temperature</label>
+              <select id="recipe-temp" class="w-full px-3 py-2 bg-cozy-bg rounded-xl border border-cozy-border text-xs font-medium">
+                <option value="Cold">Cold</option>
+                <option value="Warm">Warm / Hot</option>
+                <option value="Room Temp">Room Temp</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-1">Drink Color</label>
+              <select id="recipe-color" class="w-full px-3 py-2 bg-cozy-bg rounded-xl border border-cozy-border text-xs font-medium">
+                <option value="Green">Green</option>
+                <option value="Yellow">Yellow</option>
+                <option value="Red">Red</option>
+                <option value="Purple">Purple</option>
+                <option value="White">White</option>
+                <option value="Brown">Brown</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-1">Primary Taste</label>
+              <select id="recipe-taste" class="w-full px-3 py-2 bg-cozy-bg rounded-xl border border-cozy-border text-xs font-medium">
+                <option value="Citrusy & Tart">Citrusy & Tart</option>
+                <option value="Sweet & Fruity">Sweet & Fruity</option>
+                <option value="Herbal & Fresh">Herbal & Fresh</option>
+                <option value="Creamy & Indulgent">Creamy & Indulgent</option>
+                <option value="Spiced & Earthy">Spiced & Earthy</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-1">Season</label>
+              <select id="recipe-season" class="w-full px-3 py-2 bg-cozy-bg rounded-xl border border-cozy-border text-xs font-medium">
+                <option value="Summer">Summer</option>
+                <option value="Autumn">Autumn</option>
+                <option value="All-Year">All-Year</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-1">Prep Time</label>
+              <select id="recipe-preptime" class="w-full px-3 py-2 bg-cozy-bg rounded-xl border border-cozy-border text-xs font-medium">
+                <option value="Instant">Instant (<2m)</option>
+                <option value="Quick">Quick (<5m)</option>
+                <option value="Steep / Cook">Steep / Cook</option>
+                <option value="Advance Prep">Advance Prep</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-1">Prep Duration Label</label>
+              <input type="text" id="recipe-minutes" placeholder="e.g. 10 mins" class="w-full px-3 py-2 bg-cozy-bg rounded-xl border border-cozy-border text-xs font-medium" />
+            </div>
+          </div>
+        </div>
+
+        <hr class="border-cozy-border" />
+
+        <!-- INGREDIENTS LIST -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="font-serif-heading font-bold text-lg text-cozy-text">3. Ingredients</h2>
+            <button type="button" onclick="addIngredientRow()" class="text-xs font-semibold text-cozy-olivegreen bg-cozy-olivegreen/10 px-3 py-1.5 rounded-full hover:bg-cozy-olivegreen hover:text-white transition">
+              + Add Ingredient
+            </button>
+          </div>
+
+          <div id="ingredients-inputs-container" class="space-y-3">
+            <!-- Dynamic ingredient rows -->
+          </div>
+        </div>
+
+        <hr class="border-cozy-border" />
+
+        <!-- INSTRUCTIONS STEPS -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="font-serif-heading font-bold text-lg text-cozy-text">4. Preparation Steps</h2>
+            <button type="button" onclick="addInstructionRow()" class="text-xs font-semibold text-cozy-olivegreen bg-cozy-olivegreen/10 px-3 py-1.5 rounded-full hover:bg-cozy-olivegreen hover:text-white transition">
+              + Add Step
+            </button>
+          </div>
+
+          <div id="instructions-inputs-container" class="space-y-3">
+            <!-- Dynamic step rows -->
+          </div>
+        </div>
+
+        <hr class="border-cozy-border" />
+
+        <!-- SUBMIT BUTTON -->
+        <div class="pt-4 flex items-center justify-end gap-3">
+          <a href="recipes.html" class="px-6 py-3 rounded-full border border-cozy-border text-cozy-muted text-sm font-semibold hover:text-cozy-text transition">
+            Cancel
+          </a>
+          <button type="submit" class="px-8 py-3 rounded-full bg-cozy-olivegreen text-white font-semibold text-sm hover:bg-cozy-olivegreen-hover transition shadow-md">
+            Save Recipe ✨
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="recipes.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize with 2 ingredient rows & 2 step rows
+      addIngredientRow();
+      addIngredientRow();
+      addInstructionRow();
+      addInstructionRow();
+    });
+
+    function addIngredientRow() {
+      const container = document.getElementById('ingredients-inputs-container');
+      const row = document.createElement('div');
+      row.className = 'flex items-center gap-2 ingredient-row';
+      row.innerHTML = `
+        <input type="text" placeholder="Ingredient (e.g. Fresh Mint)" class="ing-name flex-1 px-3 py-2 bg-cozy-bg rounded-xl border border-cozy-border text-xs focus:outline-none focus:border-cozy-olivegreen" required />
+        <input type="number" step="0.1" placeholder="Amount (1)" class="ing-amount w-24 px-3 py-2 bg-cozy-bg rounded-xl border border-cozy-border text-xs focus:outline-none focus:border-cozy-olivegreen" required />
+        <input type="text" placeholder="Unit (cup/tbsp)" class="ing-unit w-28 px-3 py-2 bg-cozy-bg rounded-xl border border-cozy-border text-xs focus:outline-none focus:border-cozy-olivegreen" required />
+        <button type="button" onclick="this.parentElement.remove()" class="p-2 text-cozy-muted hover:text-red-600 text-xs font-bold">✕</button>
+      `;
+      container.appendChild(row);
+    }
+
+    function addInstructionRow() {
+      const container = document.getElementById('instructions-inputs-container');
+      const stepNumber = container.children.length + 1;
+      const row = document.createElement('div');
+      row.className = 'flex items-center gap-2 instruction-row';
+      row.innerHTML = `
+        <span class="text-xs font-bold text-cozy-olivegreen w-12">Step ${stepNumber}:</span>
+        <input type="text" placeholder="Describe this step..." class="step-desc flex-1 px-3 py-2 bg-cozy-bg rounded-xl border border-cozy-border text-xs focus:outline-none focus:border-cozy-olivegreen" required />
+        <button type="button" onclick="this.parentElement.remove()" class="p-2 text-cozy-muted hover:text-red-600 text-xs font-bold">✕</button>
+      `;
+      container.appendChild(row);
+    }
+
+    function handleSaveRecipe(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('recipe-name').value.trim();
+      const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + Date.now().toString().slice(-4);
+
+      // Collect Ingredients
+      const ingRows = document.querySelectorAll('.ingredient-row');
+      const ingredients = Array.from(ingRows).map(row => ({
+        name: row.querySelector('.ing-name').value.trim(),
+        amount: parseFloat(row.querySelector('.ing-amount').value) || 1,
+        unit: row.querySelector('.ing-unit').value.trim()
+      }));
+
+      // Collect Steps
+      const stepRows = document.querySelectorAll('.instruction-row');
+      const instructions = Array.from(stepRows).map(row => row.querySelector('.step-desc').value.trim());
+
+      const newRecipe = {
+        id,
+        name,
+        style: document.getElementById('recipe-style').value,
+        description: document.getElementById('recipe-description').value.trim(),
+        temperature: document.getElementById('recipe-temp').value,
+        color: document.getElementById('recipe-color').value,
+        primaryTaste: document.getElementById('recipe-taste').value,
+        season: document.getElementById('recipe-season').value,
+        prepTime: document.getElementById('recipe-preptime').value,
+        prepMinutes: document.getElementById('recipe-minutes').value.trim() || '5 mins',
+        healthiness: ["Caffeine-Free", "Homemade"],
+        nutrients: ["Fresh Botanicals"],
+        useCases: ["Custom Drink"],
+        equipment: ["Standard Utensils"],
+        tip: "Enjoy your custom homemade creation!",
+        ingredients,
+        instructions
+      };
+
+      // Save to LocalStorage
+      const customRecipes = JSON.parse(localStorage.getItem('cozy_custom_recipes') || '[]');
+      customRecipes.push(newRecipe);
+      localStorage.setItem('cozy_custom_recipes', JSON.stringify(customRecipes));
+
+      // Redirect to new recipe page
+      window.location.href = `recipe.html?id=${id}`;
+    }
+  </script>
+</body>
+</html>
