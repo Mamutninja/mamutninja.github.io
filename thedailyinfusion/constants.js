@@ -115,18 +115,26 @@ const TAXONOMY = {
     { label: "🔄 All-Year", value: "All-Year" }
   ],
 
+  // EXPANDED DRINK STYLES
   STYLES: [
     { label: "🍉 Agua Fresca", value: "Agua Fresca" },
-    { label: "🫖 Herbal Tea", value: "Herbal Tea" },
-    { label: "☕ Latte", value: "Spiced Latte" },
-    { label: "🥭 Lassi", value: "Smoothie / Lassi" },
-    { label: "🍓 Infusion", value: "Fruit Infusion" },
-    { label: "🍋 Limeade", value: "Lemonade / Limeade" },
-    { label: "🍸 Mocktail", value: "Mocktail / Zero-Proof" },
-    { label: "🏺 Shrub", value: "Shrub / Vinegar Drink" },
-    { label: "✨ Tonic", value: "Tonic / Elixir" },
-    { label: "🍫 Cocoa", value: "Cocoa / Hot Chocolate" },
-    { label: "🧊 Cold Brew", value: "Cold Brew Tea" }
+    { label: "🫖 Herbal Tea & Infusion", value: "Herbal Tea" },
+    { label: "🍃 Green Tea & Matcha", value: "Green Tea & Matcha" },
+    { label: "🍂 Black Tea & Chai", value: "Black Tea & Chai" },
+    { label: "🧋 Boba & Bubble Tea", value: "Boba & Bubble Tea" },
+    { label: "☕ Spiced Latte & Milk Tea", value: "Spiced Latte" },
+    { label: "🥤 Fruit Smoothie", value: "Fruit Smoothie" },
+    { label: "🥬 Green & Veggie Smoothie", value: "Green Smoothie" },
+    { label: "🥭 Lassi & Yogurt Drink", value: "Smoothie / Lassi" },
+    { label: "🍓 Fruit Infusion & Water", value: "Fruit Infusion" },
+    { label: "🍋 Lemonade & Limeade", value: "Lemonade / Limeade" },
+    { label: "🍸 Mocktail / Zero-Proof", value: "Mocktail / Zero-Proof" },
+    { label: "🏺 Shrub & Fruit Vinegar", value: "Shrub / Vinegar Drink" },
+    { label: "✨ Tonic & Functional Elixir", value: "Tonic / Elixir" },
+    { label: "🍫 Cocoa & Hot Chocolate", value: "Cocoa / Hot Chocolate" },
+    { label: "🧊 Cold Brew Tea", value: "Cold Brew Tea" },
+    { label: "🍾 Kombucha & Fermented", value: "Kombucha & Fermented" },
+    { label: "🍧 Slushie & Frozen Drink", value: "Slushie & Frozen" }
   ],
 
   PREP_TIMES: [
