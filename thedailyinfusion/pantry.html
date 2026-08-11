@@ -125,235 +125,246 @@
   <script src="recipes.js"></script>
   
   <script>
-    // SIMPLIFIED & EXPANDED CATEGORIES
-    const INGREDIENT_CATEGORIES = [
-      {
-        name: "🍓 Fresh Fruit & Herbs",
-        items: [
-          "Cucumber", "Lime", "Lemon", "Orange", "Blood Orange", 
-          "Strawberries", "Blackberries", "Blueberries", "Watermelon", 
-          "Mango", "Peach", "Avocado", "Fresh Mint", "Fresh Basil", 
-          "Fresh Ginger", "Fresh Rosemary", "Fresh Thyme"
-        ]
-      },
-      {
-        name: "❄️ Frozen Fruit & Ice",
-        items: [
-          "Ice", "Frozen Mango", "Frozen Strawberries", 
-          "Frozen Berries", "Frozen Peaches"
-        ]
-      },
-      {
-        name: "🧃 Fruit Juices & Nectars",
-        items: [
-          "Lime Juice", "Lemon Juice", "Orange Juice", "Pineapple Juice", 
-          "Cranberry Juice", "Pomegranate Juice", "Grapefruit Juice", 
-          "Passionfruit Nectar", "Mango Puree", "Tamarind Pulp"
-        ]
-      },
-      {
-        name: "🥛 Milks, Dairy & Bases",
-        items: [
-          "Oat Milk", "Almond Milk", "Whole Milk", "Coconut Milk", 
-          "Yogurt", "Sweetened Condensed Milk", "Evaporated Milk", "Coconut Water"
-        ]
-      },
-      {
-        name: "🍫 Sweeteners, Spices & Cocoa",
-        items: [
-          "Honey", "Agave Nectar", "Maple Syrup", "Simple Syrup", "Sugar", 
-          "Cocoa Powder", "Ground Turmeric", "Ground Cinnamon", "Cinnamon Stick", 
-          "Black Pepper", "Ground Cardamom", "Vanilla Extract"
-        ]
-      },
-      {
-        name: "🫖 Teas, Grains & Staples",
-        items: [
-          "Water", "Green Tea", "Matcha Powder", "Black Tea", 
-          "White Tea", "Hojicha Powder", "Hibiscus Flowers", 
-          "White Rice", "Purple Corn"
-        ]
+  const INGREDIENT_CATEGORIES = [
+    {
+      name: "🍓 Fresh Fruit & Herbs",
+      items: [
+        "Cucumber", "Lime", "Lemon", "Orange", "Blood Orange", 
+        "Strawberries", "Blackberries", "Blueberries", "Watermelon", 
+        "Mango", "Peach", "Avocado", "Fresh Mint", "Fresh Basil", 
+        "Fresh Ginger", "Fresh Rosemary", "Fresh Thyme"
+      ]
+    },
+    {
+      name: "❄️ Frozen Fruit & Ice",
+      items: [
+        "Ice", "Frozen Mango", "Frozen Strawberries", 
+        "Frozen Berries", "Frozen Peaches"
+      ]
+    },
+    {
+      name: "🧃 Fruit Juices & Nectars",
+      items: [
+        "Lime Juice", "Lemon Juice", "Orange Juice", "Pineapple Juice", 
+        "Cranberry Juice", "Pomegranate Juice", "Grapefruit Juice", 
+        "Passionfruit Nectar", "Mango Puree", "Tamarind Pulp"
+      ]
+    },
+    {
+      name: "🥛 Milks, Dairy & Bases",
+      items: [
+        "Oat Milk", "Almond Milk", "Whole Milk", "Coconut Milk", 
+        "Yogurt", "Sweetened Condensed Milk", "Evaporated Milk", "Coconut Water"
+      ]
+    },
+    {
+      name: "🍫 Sweeteners, Spices & Cocoa",
+      items: [
+        "Honey", "Agave Nectar", "Maple Syrup", "Simple Syrup", "Sugar", 
+        "Cocoa Powder", "Ground Turmeric", "Ground Cinnamon", "Cinnamon Stick", 
+        "Black Pepper", "Ground Cardamom", "Vanilla Extract"
+      ]
+    },
+    {
+      name: "🫖 Teas, Grains & Staples",
+      items: [
+        "Water", "Green Tea", "Matcha Powder", "Black Tea", 
+        "White Tea", "Hojicha Powder", "Hibiscus Flowers", 
+        "White Rice", "Purple Corn"
+      ]
+    }
+  ];
+
+  let pantry = State.getPantry();
+  let favorites = State.getFavorites();
+
+  document.addEventListener('DOMContentLoaded', () => {
+    renderIngredientPills();
+    calculateMatches();
+  });
+
+  function renderIngredientPills() {
+    const container = document.getElementById('pantry-categories-container');
+    const searchTerm = document.getElementById('pantry-search').value.toLowerCase().trim();
+
+    container.innerHTML = INGREDIENT_CATEGORIES.map(cat => {
+      const matchingItems = cat.items.filter(item => item.toLowerCase().includes(searchTerm));
+      if (matchingItems.length === 0) return '';
+
+      return `
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2.5">${cat.name}</h4>
+          <div class="flex flex-wrap gap-1.5">
+            ${matchingItems.map(item => {
+              // Case-insensitive check for active pill state
+              const isSelected = pantry.some(p => p.trim().toLowerCase() === item.trim().toLowerCase());
+              return `
+                <button 
+                  onclick="togglePantryItem('${item}')" 
+                  class="filter-chip px-3 py-1.5 rounded-full border text-xs font-medium flex items-center gap-1.5 ${
+                    isSelected 
+                      ? 'bg-cozy-olivegreen text-white border-cozy-olivegreen shadow-sm' 
+                      : 'bg-cozy-bg text-cozy-text border-cozy-border hover:border-cozy-olivegreen'
+                  }"
+                >
+                  <span>${isSelected ? '✓' : '+'}</span>
+                  <span>${item}</span>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function togglePantryItem(item) {
+    const normalizedItem = item.trim().toLowerCase();
+    const exists = pantry.some(p => p.trim().toLowerCase() === normalizedItem);
+
+    if (exists) {
+      pantry = pantry.filter(i => i.trim().toLowerCase() !== normalizedItem);
+    } else {
+      pantry.push(item);
+    }
+
+    State.savePantry(pantry);
+    renderIngredientPills();
+    calculateMatches();
+  }
+
+  function selectAllPantry() {
+    pantry = INGREDIENT_CATEGORIES.flatMap(cat => cat.items);
+    State.savePantry(pantry);
+    renderIngredientPills();
+    calculateMatches();
+  }
+
+  function clearAllPantry() {
+    pantry = [];
+    localStorage.removeItem('cozy_pantry'); // Clears old cache
+    State.savePantry(pantry);
+    renderIngredientPills();
+    calculateMatches();
+  }
+
+  function filterIngredientPills() {
+    renderIngredientPills();
+  }
+
+  // CASE-INSENSITIVE & TRIMMED MATCHING ENGINE
+  function calculateMatches() {
+    const maxMissingAllowed = parseInt(document.getElementById('missing-tolerance').value);
+    
+    const recipeMatches = ALL_RECIPES.map(recipe => {
+      // Robust case-insensitive check
+      const missing = recipe.ingredients.filter(ing => 
+        !pantry.some(p => p.trim().toLowerCase() === ing.name.trim().toLowerCase())
+      );
+
+      return {
+        ...recipe,
+        missing,
+        missingCount: missing.length,
+        isExactMatch: missing.length === 0
+      };
+    })
+    .filter(recipe => recipe.missingCount <= maxMissingAllowed)
+    .sort((a, b) => a.missingCount - b.missingCount);
+
+    renderMatchedRecipes(recipeMatches);
+  }
+
+  function renderMatchedRecipes(recipes) {
+    const grid = document.getElementById('matched-recipes-grid');
+    const emptyState = document.getElementById('pantry-empty-state');
+    const summaryText = document.getElementById('match-summary-text');
+
+    summaryText.innerText = `${pantry.length} items checked in pantry — Found ${recipes.length} matching drinks`;
+
+    if (recipes.length === 0) {
+      grid.innerHTML = '';
+      emptyState.classList.remove('hidden');
+      return;
+    }
+
+    emptyState.classList.add('hidden');
+    grid.innerHTML = recipes.map(r => {
+      const isFav = favorites.includes(r.id);
+
+      return `
+        <div class="cozy-card rounded-cozy p-5 flex flex-col justify-between hover:-translate-y-1 transition-all duration-200">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold text-cozy-olivegreen bg-cozy-olivegreen/10 px-2.5 py-0.5 rounded-full">${r.style}</span>
+              <button onclick="toggleFav('${r.id}', event)" class="text-sm hover:scale-110 transition">${isFav ? '❤️' : '🤍'}</button>
+            </div>
+
+            <a href="recipe.html?id=${r.id}">
+              <h3 class="font-serif-heading font-bold text-lg text-cozy-text hover:text-cozy-olivegreen transition mb-1">${r.name}</h3>
+            </a>
+
+            <p class="text-xs text-cozy-muted line-clamp-2 mb-3">${r.description}</p>
+
+            <div class="mb-4">
+              ${r.isExactMatch 
+                ? `<span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-200 px-2.5 py-1 rounded-full">
+                     🟢 100% In Stock!
+                   </span>`
+                : `<div class="bg-amber-50 border border-amber-200 text-amber-900 rounded-xl p-2.5 text-xs">
+                     <span class="font-bold block mb-1">🟡 Missing ${r.missingCount} Item:</span>
+                     <ul class="list-disc list-inside text-[11px] text-amber-800 space-y-0.5">
+                       ${r.missing.map(m => `<li>${m.name}</li>`).join('')}
+                     </ul>
+                   </div>`
+              }
+            </div>
+          </div>
+
+          <div class="space-y-2 pt-2 border-t border-cozy-border">
+            ${!r.isExactMatch 
+              ? `<button onclick="addMissingToShopping('${r.id}')" class="w-full py-1.5 rounded-lg text-xs font-semibold text-cozy-text bg-cozy-bg border border-cozy-border hover:border-cozy-olivegreen transition">
+                   + Add Missing to Shopping List
+                 </button>` 
+              : ''
+            }
+            <a href="recipe.html?id=${r.id}" class="w-full py-2 rounded-xl border border-cozy-olivegreen bg-cozy-olivegreen text-center text-xs font-semibold text-white hover:bg-cozy-olivegreen-hover transition block">
+              Make This Drink →
+            </a>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function addMissingToShopping(recipeId) {
+    const recipe = ALL_RECIPES.find(r => r.id === recipeId);
+    if (!recipe) return;
+
+    const shoppingList = State.getShoppingList();
+    let added = 0;
+
+    recipe.ingredients.forEach(ing => {
+      const inPantry = pantry.some(p => p.trim().toLowerCase() === ing.name.trim().toLowerCase());
+      if (!inPantry) {
+        const exists = shoppingList.some(item => item.name.trim().toLowerCase() === ing.name.trim().toLowerCase());
+        if (!exists) {
+          shoppingList.push({ name: ing.name, amount: `${ing.amount} ${ing.unit}` });
+          added++;
+        }
       }
-    ];
-
-    let pantry = State.getPantry();
-    let favorites = State.getFavorites();
-
-    document.addEventListener('DOMContentLoaded', () => {
-      renderIngredientPills();
-      calculateMatches();
     });
 
-    function renderIngredientPills() {
-      const container = document.getElementById('pantry-categories-container');
-      const searchTerm = document.getElementById('pantry-search').value.toLowerCase().trim();
+    State.saveShoppingList(shoppingList);
+    alert(added > 0 ? `Added ${added} missing item(s) to your shopping list!` : 'Items already in your shopping list!');
+  }
 
-      container.innerHTML = INGREDIENT_CATEGORIES.map(cat => {
-        const matchingItems = cat.items.filter(item => item.toLowerCase().includes(searchTerm));
-        if (matchingItems.length === 0) return '';
-
-        return `
-          <div>
-            <h4 class="text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2.5">${cat.name}</h4>
-            <div class="flex flex-wrap gap-1.5">
-              ${matchingItems.map(item => {
-                const isSelected = pantry.includes(item);
-                return `
-                  <button 
-                    onclick="togglePantryItem('${item}')" 
-                    class="filter-chip px-3 py-1.5 rounded-full border text-xs font-medium flex items-center gap-1.5 ${
-                      isSelected 
-                        ? 'bg-cozy-olivegreen text-white border-cozy-olivegreen shadow-sm' 
-                        : 'bg-cozy-bg text-cozy-text border-cozy-border hover:border-cozy-olivegreen'
-                    }"
-                  >
-                    <span>${isSelected ? '✓' : '+'}</span>
-                    <span>${item}</span>
-                  </button>
-                `;
-              }).join('')}
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function togglePantryItem(item) {
-      if (pantry.includes(item)) {
-        pantry = pantry.filter(i => i !== item);
-      } else {
-        pantry.push(item);
-      }
-      State.savePantry(pantry);
-      renderIngredientPills();
-      calculateMatches();
-    }
-
-    function selectAllPantry() {
-      pantry = INGREDIENT_CATEGORIES.flatMap(cat => cat.items);
-      State.savePantry(pantry);
-      renderIngredientPills();
-      calculateMatches();
-    }
-
-    function clearAllPantry() {
-      pantry = [];
-      State.savePantry(pantry);
-      renderIngredientPills();
-      calculateMatches();
-    }
-
-    function filterIngredientPills() {
-      renderIngredientPills();
-    }
-
-    function calculateMatches() {
-      const maxMissingAllowed = parseInt(document.getElementById('missing-tolerance').value);
-      
-      const recipeMatches = ALL_RECIPES.map(recipe => {
-        const missing = recipe.ingredients.filter(ing => !pantry.includes(ing.name));
-        return {
-          ...recipe,
-          missing,
-          missingCount: missing.length,
-          isExactMatch: missing.length === 0
-        };
-      })
-      .filter(recipe => recipe.missingCount <= maxMissingAllowed)
-      .sort((a, b) => a.missingCount - b.missingCount);
-
-      renderMatchedRecipes(recipeMatches);
-    }
-
-    function renderMatchedRecipes(recipes) {
-      const grid = document.getElementById('matched-recipes-grid');
-      const emptyState = document.getElementById('pantry-empty-state');
-      const summaryText = document.getElementById('match-summary-text');
-
-      summaryText.innerText = `${pantry.length} items checked in pantry — Found ${recipes.length} matching drinks`;
-
-      if (recipes.length === 0) {
-        grid.innerHTML = '';
-        emptyState.classList.remove('hidden');
-        return;
-      }
-
-      emptyState.classList.add('hidden');
-      grid.innerHTML = recipes.map(r => {
-        const isFav = favorites.includes(r.id);
-
-        return `
-          <div class="cozy-card rounded-cozy p-5 flex flex-col justify-between hover:-translate-y-1 transition-all duration-200">
-            <div>
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-semibold text-cozy-olivegreen bg-cozy-olivegreen/10 px-2.5 py-0.5 rounded-full">${r.style}</span>
-                <button onclick="toggleFav('${r.id}', event)" class="text-sm hover:scale-110 transition">${isFav ? '❤️' : '🤍'}</button>
-              </div>
-
-              <a href="recipe.html?id=${r.id}">
-                <h3 class="font-serif-heading font-bold text-lg text-cozy-text hover:text-cozy-olivegreen transition mb-1">${r.name}</h3>
-              </a>
-
-              <p class="text-xs text-cozy-muted line-clamp-2 mb-3">${r.description}</p>
-
-              <div class="mb-4">
-                ${r.isExactMatch 
-                  ? `<span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-200 px-2.5 py-1 rounded-full">
-                       🟢 100% In Stock!
-                     </span>`
-                  : `<div class="bg-amber-50 border border-amber-200 text-amber-900 rounded-xl p-2.5 text-xs">
-                       <span class="font-bold block mb-1">🟡 Missing ${r.missingCount} Item:</span>
-                       <ul class="list-disc list-inside text-[11px] text-amber-800 space-y-0.5">
-                         ${r.missing.map(m => `<li>${m.name}</li>`).join('')}
-                       </ul>
-                     </div>`
-                }
-              </div>
-            </div>
-
-            <div class="space-y-2 pt-2 border-t border-cozy-border">
-              ${!r.isExactMatch 
-                ? `<button onclick="addMissingToShopping('${r.id}')" class="w-full py-1.5 rounded-lg text-xs font-semibold text-cozy-text bg-cozy-bg border border-cozy-border hover:border-cozy-olivegreen transition">
-                     + Add Missing to Shopping List
-                   </button>` 
-                : ''
-              }
-              <a href="recipe.html?id=${r.id}" class="w-full py-2 rounded-xl border border-cozy-olivegreen bg-cozy-olivegreen text-center text-xs font-semibold text-white hover:bg-cozy-olivegreen-hover transition block">
-                Make This Drink →
-              </a>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function addMissingToShopping(recipeId) {
-      const recipe = ALL_RECIPES.find(r => r.id === recipeId);
-      if (!recipe) return;
-
-      const shoppingList = State.getShoppingList();
-      let added = 0;
-
-      recipe.ingredients.forEach(ing => {
-        if (!pantry.includes(ing.name)) {
-          const exists = shoppingList.some(item => item.name.toLowerCase() === ing.name.toLowerCase());
-          if (!exists) {
-            shoppingList.push({ name: ing.name, amount: `${ing.amount} ${ing.unit}` });
-            added++;
-          }
-        }
-      });
-
-      State.saveShoppingList(shoppingList);
-      alert(added > 0 ? `Added ${added} missing item(s) to your shopping list!` : 'Items already in your shopping list!');
-    }
-
-    function toggleFav(id, event) {
-      event.preventDefault();
-      favorites = favorites.includes(id) ? favorites.filter(item => item !== id) : [...favorites, id];
-      State.saveFavorites(favorites);
-      calculateMatches();
-    }
-  </script>
+  function toggleFav(id, event) {
+    event.preventDefault();
+    favorites = favorites.includes(id) ? favorites.filter(item => item !== id) : [...favorites, id];
+    State.saveFavorites(favorites);
+    calculateMatches();
+  }
+</script>
 </body>
 </html>
