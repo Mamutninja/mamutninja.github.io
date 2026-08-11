@@ -1,6 +1,6 @@
 /* Load Maghelia Custom Font */
 @font-face {
-  font-family: 'Maghelia';
+  font-family: 'Super Bouncer';
   src: url('fonts/Super Bouncer.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
@@ -13,10 +13,9 @@ body {
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-/* Headings Class — Now using Maghelia */
 .font-serif-heading {
-  font-family: 'Maghelia', serif;
-  font-weight: normal; /* Maghelia is a decorative font, so standard weight looks best */
+  font-family: 'Super Bouncer', serif;
+  font-weight: normal; 
 }
 
 /* Reusable Cozy Card Component */
