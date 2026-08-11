@@ -1,7 +1,7 @@
 /* Load Maghelia Custom Font */
 @font-face {
   font-family: 'Maghelia';
-  src: url('fonts/Maghelia.ttf') format('truetype'); /* Or format('opentype') if using .otf */
+  src: url('fonts/Maghelia.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
 }
