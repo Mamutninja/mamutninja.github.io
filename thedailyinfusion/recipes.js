@@ -176,3 +176,9 @@ const ALL_RECIPES = [
     ]
   }
 ];
+
+// HELPER TO FETCH BOTH BUILT-IN & USER-ADDED RECIPES
+function getCombinedRecipes() {
+  const customRecipes = JSON.parse(localStorage.getItem('cozy_custom_recipes') || '[]');
+  return [...ALL_RECIPES, ...customRecipes];
+}

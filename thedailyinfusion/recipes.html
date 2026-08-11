@@ -19,7 +19,21 @@
 <body class="min-h-screen flex flex-col">
 
   <header id="site-header"></header>
-
+  <!-- FLOATING ADD RECIPE BUTTON -->
+  <a 
+    href="add-recipe.html" 
+    title="Add New Recipe" 
+    class="fixed bottom-8 right-8 z-40 w-14 h-14 rounded-full bg-cozy-olivegreen text-white flex items-center justify-center shadow-lg hover:bg-cozy-olivegreen-hover hover:scale-110 active:scale-95 transition-all duration-200 group"
+>
+    <svg class="w-8 h-8 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+    </svg>
+  
+    <!-- Tooltip on hover -->
+    <span class="absolute right-16 bg-cozy-text text-white text-xs font-semibold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-150 whitespace-nowrap shadow-md pointer-events-none">
+      Add New Recipe
+    </span>
+  </a>
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-8">
     <div class="text-left mb-8 border-b border-cozy-border pb-6 flex flex-wrap items-end justify-between gap-4">
       <div>
