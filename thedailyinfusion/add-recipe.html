@@ -5,15 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Add New Recipe — StillSip</title>
   
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="images/icon.png" />
-
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- Shared Theme & Styles -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="theme.js"></script>
   <link rel="stylesheet" href="styles.css">
@@ -22,13 +18,10 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
-  <!-- DYNAMIC NAVIGATION HEADER -->
   <header id="site-header"></header>
 
-  <!-- SEARCHABLE INGREDIENT DATALIST (POPULATED VIA CONSTANTS.JS) -->
   <datalist id="pantry-ingredients-list"></datalist>
 
-  <!-- MAIN FORM CONTAINER -->
   <main class="flex-1 max-w-4xl w-full mx-auto px-4 py-8">
     
     <div class="mb-6">
@@ -57,7 +50,7 @@
                 type="text" 
                 id="recipe-name" 
                 required 
-                placeholder="e.g. Peach Basil Still Tea" 
+                placeholder="e.g. Mango Matcha Layered Latte" 
                 class="w-full px-3.5 py-2.5 bg-cozy-bg rounded-xl border border-cozy-border text-cozy-text text-sm focus:outline-none focus:border-cozy-olivegreen" 
               />
             </div>
@@ -78,22 +71,25 @@
 
         <hr class="border-cozy-border" />
 
-        <!-- 2. ATTRIBUTES & TAGS -->
-        <div class="space-y-4">
+        <!-- 2. MULTI-COLOR & ATTRIBUTES -->
+        <div class="space-y-5">
           <h2 class="font-serif-heading font-bold text-lg text-cozy-text">2. Attributes & Tags</h2>
           
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          <!-- MULTI-SELECT DRINK COLORS -->
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">
+              Drink Color(s) <span class="text-cozy-muted font-normal">(Select 1 or more for multi-colored/layered drinks)</span>
+            </label>
+            <div id="recipe-color-checkboxes" class="flex flex-wrap gap-2">
+              <!-- Dynamically populated multi-select checkboxes -->
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pt-2">
             <div>
               <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-1">Temperature</label>
               <select id="recipe-temp" class="w-full px-3 py-2 bg-cozy-bg rounded-xl border border-cozy-border text-xs font-medium">
                 <!-- TAXONOMY.TEMPERATURES -->
-              </select>
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-1">Drink Color</label>
-              <select id="recipe-color" class="w-full px-3 py-2 bg-cozy-bg rounded-xl border border-cozy-border text-xs font-medium">
-                <!-- TAXONOMY.COLORS -->
               </select>
             </div>
 
@@ -117,17 +113,17 @@
                 <!-- TAXONOMY.PREP_TIMES -->
               </select>
             </div>
+          </div>
 
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-1">Prep Duration Text</label>
-              <input type="text" id="recipe-minutes" placeholder="e.g. 5 mins" class="w-full px-3 py-2 bg-cozy-bg rounded-xl border border-cozy-border text-xs font-medium" />
-            </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-1">Prep Duration Label</label>
+            <input type="text" id="recipe-minutes" placeholder="e.g. 5 mins" class="w-full max-w-xs px-3 py-2 bg-cozy-bg rounded-xl border border-cozy-border text-xs font-medium" />
           </div>
         </div>
 
         <hr class="border-cozy-border" />
 
-        <!-- 3. INGREDIENTS WITH AUTOCOMPLETE SEARCH -->
+        <!-- 3. INGREDIENTS WITH SEARCH AUTOCOMPLETE -->
         <div class="space-y-4">
           <div class="flex items-center justify-between">
             <div>
@@ -178,44 +174,38 @@
 
   </main>
 
-  <!-- DYNAMIC FOOTER -->
   <footer id="site-footer"></footer>
 
-  <!-- RECIPE DATABASE & LOGIC -->
   <script src="recipes.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       populateFormDropdowns();
       
-      // Default initial rows
       addIngredientRow();
       addIngredientRow();
       addInstructionRow();
       addInstructionRow();
     });
 
-    // POPULATE ALL DROPDOWNS & AUTOCOMPLETE DIRECTLY FROM TAXONOMY IN CONSTANTS.JS
     function populateFormDropdowns() {
-      // 1. Ingredient Datalist
+      // Datalist for ingredient search
       const datalist = document.getElementById('pantry-ingredients-list');
       datalist.innerHTML = TAXONOMY.getAllIngredients().map(ing => `<option value="${ing}">`).join('');
 
-      // 2. Style Select
+      // Render Multi-Select Color Checkboxes
+      const colorContainer = document.getElementById('recipe-color-checkboxes');
+      colorContainer.innerHTML = TAXONOMY.COLORS.map(c => `
+        <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-cozy-border bg-cozy-bg text-xs font-medium text-cozy-text hover:border-cozy-olivegreen transition select-none">
+          <input type="checkbox" name="recipe-color-option" value="${c.value}" class="color-checkbox accent-[#8F9B5F] rounded" />
+          <span>${c.label}</span>
+        </label>
+      `).join('');
+
+      // Dropdowns
       document.getElementById('recipe-style').innerHTML = TAXONOMY.STYLES.map(s => `<option value="${s.value}">${s.label}</option>`).join('');
-
-      // 3. Temp Select
       document.getElementById('recipe-temp').innerHTML = TAXONOMY.TEMPERATURES.map(t => `<option value="${t.value}">${t.label}</option>`).join('');
-
-      // 4. Color Select
-      document.getElementById('recipe-color').innerHTML = TAXONOMY.COLORS.map(c => `<option value="${c.value}">${c.label}</option>`).join('');
-
-      // 5. Taste Select
       document.getElementById('recipe-taste').innerHTML = TAXONOMY.TASTES.map(t => `<option value="${t.value}">${t.label}</option>`).join('');
-
-      // 6. Season Select
       document.getElementById('recipe-season').innerHTML = TAXONOMY.SEASONS.map(s => `<option value="${s.value}">${s.label}</option>`).join('');
-
-      // 7. Prep Time Select
       document.getElementById('recipe-preptime').innerHTML = TAXONOMY.PREP_TIMES.map(p => `<option value="${p.value}">${p.label}</option>`).join('');
     }
 
@@ -257,6 +247,12 @@
       const name = document.getElementById('recipe-name').value.trim();
       const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + Date.now().toString().slice(-4);
 
+      // Collect Multi-Selected Colors into an Array
+      const checkedColorEls = document.querySelectorAll('.color-checkbox:checked');
+      const selectedColors = Array.from(checkedColorEls).map(cb => cb.value);
+      const color = selectedColors.length > 0 ? selectedColors : ["Clear"];
+
+      // Collect Ingredients
       const ingRows = document.querySelectorAll('.ingredient-row');
       const ingredients = Array.from(ingRows).map(row => ({
         name: row.querySelector('.ing-name').value.trim(),
@@ -264,6 +260,7 @@
         unit: row.querySelector('.ing-unit').value.trim()
       }));
 
+      // Collect Steps
       const stepRows = document.querySelectorAll('.instruction-row');
       const instructions = Array.from(stepRows).map(row => row.querySelector('.step-desc').value.trim());
 
@@ -273,7 +270,7 @@
         style: document.getElementById('recipe-style').value,
         description: document.getElementById('recipe-description').value.trim(),
         temperature: document.getElementById('recipe-temp').value,
-        color: document.getElementById('recipe-color').value,
+        color, // Saved as array e.g. ["Green", "Yellow"]
         primaryTaste: document.getElementById('recipe-taste').value,
         season: document.getElementById('recipe-season').value,
         prepTime: document.getElementById('recipe-preptime').value,
