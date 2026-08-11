@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shopping List — StillSip</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="images/icon.png" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Shared Theme & Styles -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="constants.js"></script>
+  <script src="common.js"></script>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- DYNAMIC NAVIGATION HEADER -->
+  <header id="site-header"></header>
+
+  <!-- SEARCHABLE INGREDIENT DATALIST FOR AUTOCOMPLETE -->
+  <datalist id="pantry-ingredients-list"></datalist>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 max-w-4xl w-full mx-auto px-4 py-8">
+    
+    <!-- HERO HEADER -->
+    <div class="text-left mb-8 border-b border-cozy-border pb-6 flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <h1 class="font-serif-heading text-3xl md:text-4xl font-bold text-cozy-text mb-2">Grocery & Shopping List</h1>
+        <p class="text-cozy-muted text-base">Keep track of missing ingredients for your next trip to the store.</p>
+      </div>
+      
+      <div class="flex items-center gap-2">
+        <button onclick="copyListToClipboard()" class="text-xs font-semibold text-cozy-text bg-white border border-cozy-border px-3.5 py-2 rounded-full hover:border-cozy-olivegreen transition flex items-center gap-1.5 shadow-sm">
+          <span>📋</span> Copy List
+        </button>
+        <button onclick="clearShoppingList()" class="text-xs font-semibold text-cozy-muted bg-white border border-cozy-border px-3.5 py-2 rounded-full hover:border-red-400 hover:text-red-600 transition">
+          Clear All
+        </button>
+      </div>
+    </div>
+
+    <!-- ADD CUSTOM ITEM BAR -->
+    <div class="cozy-card rounded-cozy p-5 mb-8">
+      <h2 class="font-serif-heading font-bold text-base text-cozy-text mb-3">Add Custom Item</h2>
+      
+      <form onsubmit="handleManualAdd(event)" class="flex flex-col sm:flex-row gap-3">
+        <div class="flex-1 relative">
+          <input 
+            type="text" 
+            id="manual-item-name" 
+            list="pantry-ingredients-list" 
+            placeholder="Ingredient name (e.g. Lime Juice, Oat Milk)" 
+            class="w-full px-4 py-2.5 bg-cozy-bg rounded-xl border border-cozy-border text-cozy-text text-sm focus:outline-none focus:border-cozy-olivegreen transition"
+            required 
+          />
+        </div>
+        
+        <div class="w-full sm:w-40">
+          <input 
+            type="text" 
+            id="manual-item-amount" 
+            placeholder="Amount / Notes (e.g. 2 cups)" 
+            class="w-full px-4 py-2.5 bg-cozy-bg rounded-xl border border-cozy-border text-cozy-text text-sm focus:outline-none focus:border-cozy-olivegreen transition"
+          />
+        </div>
+
+        <button 
+          type="submit" 
+          class="px-6 py-2.5 rounded-xl bg-cozy-olivegreen text-white font-semibold text-sm hover:bg-cozy-olivegreen-hover transition shadow-sm shrink-0"
+        >
+          + Add Item
+        </button>
+      </form>
+    </div>
+
+    <!-- SHOPPING LIST CONTAINER -->
+    <div class="cozy-card rounded-cozy p-6 md:p-8 space-y-6">
+      
+      <!-- List Controls Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-cozy-border">
+        <div class="flex items-center gap-2">
+          <h2 class="font-serif-heading font-bold text-xl text-cozy-text">Items to Buy</h2>
+          <span id="items-badge-count" class="text-xs font-bold bg-cozy-olivegreen/10 text-cozy-olivegreen px-2.5 py-0.5 rounded-full">0</span>
+        </div>
+
+        <button 
+          id="move-to-pantry-btn" 
+          onclick="moveCheckedToPantry()" 
+          class="text-xs font-semibold text-cozy-olivegreen bg-cozy-olivegreen/10 px-3.5 py-1.5 rounded-full hover:bg-cozy-olivegreen hover:text-white transition flex items-center gap-1.5"
+        >
+          <span>🧺</span> Move Checked to Pantry
+        </button>
+      </div>
+
+      <!-- Item Checklist -->
+      <ul id="shopping-list-items" class="space-y-3">
+        <!-- Dynamically rendered -->
+      </ul>
+
+      <!-- Empty State -->
+      <div id="shopping-empty-state" class="hidden text-center py-12">
+        <span class="text-4xl block mb-3">🛒</span>
+        <h3 class="font-serif-heading font-bold text-xl text-cozy-text mb-1">Your shopping list is empty!</h3>
+        <p class="text-cozy-muted text-sm max-w-sm mx-auto mb-4">
+          Add items manually using the box above, or click "+ Add Missing Items" from any recipe page.
+        </p>
+        <a href="recipes.html" class="inline-block px-5 py-2.5 bg-cozy-olivegreen text-white rounded-full text-xs font-semibold hover:bg-cozy-olivegreen-hover transition shadow-sm">
+          Browse Recipes →
+        </a>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- DYNAMIC FOOTER -->
+  <footer id="site-footer"></footer>
+
+  <script src="recipes.js"></script>
+  <script>
+    let shoppingList = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      populateAutocomplete();
+      loadShoppingList();
+    });
+
+    // Populate Datalist Autocomplete
+    function populateAutocomplete() {
+      const datalist = document.getElementById('pantry-ingredients-list');
+      if (typeof TAXONOMY !== 'undefined') {
+        datalist.innerHTML = TAXONOMY.getAllIngredients().map(ing => `<option value="${ing}">`).join('');
+      }
+    }
+
+    // Load and normalize list from State
+    function loadShoppingList() {
+      const rawList = State.getShoppingList();
+      
+      // Normalize items to ensure standard object shape
+      shoppingList = rawList.map((item, idx) => {
+        if (typeof item === 'string') {
+          return { id: idx + '-' + Date.now(), name: item, amount: '', checked: false };
+        }
+        return {
+          id: item.id || idx + '-' + Date.now(),
+          name: item.name || '',
+          amount: item.amount || '',
+          checked: !!item.checked
+        };
+      });
+
+      renderShoppingList();
+    }
+
+    // Render list HTML
+    function renderShoppingList() {
+      const listContainer = document.getElementById('shopping-list-items');
+      const emptyState = document.getElementById('shopping-empty-state');
+      const badgeCount = document.getElementById('items-badge-count');
+      const moveBtn = document.getElementById('move-to-pantry-btn');
+
+      badgeCount.innerText = shoppingList.length;
+
+      if (shoppingList.length === 0) {
+        listContainer.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        moveBtn.classList.add('opacity-50', 'pointer-events-none');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      moveBtn.classList.remove('opacity-50', 'pointer-events-none');
+
+      listContainer.innerHTML = shoppingList.map((item, idx) => `
+        <li class="flex items-center justify-between p-3.5 rounded-xl border transition-all duration-150 ${
+          item.checked 
+            ? 'bg-cozy-bg/60 border-cozy-border opacity-60' 
+            : 'bg-white border-cozy-border hover:border-cozy-olivegreen/50'
+        }">
+          
+          <div class="flex items-center gap-3.5 flex-1 cursor-pointer select-none" onclick="toggleCheck(${idx})">
+            <input 
+              type="checkbox" 
+              ${item.checked ? 'checked' : ''} 
+              onclick="event.stopPropagation(); toggleCheck(${idx})"
+              class="w-5 h-5 rounded border-cozy-border text-cozy-olivegreen focus:ring-cozy-olivegreen cursor-pointer accent-[#8F9B5F]" 
+            />
+            
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-sm font-semibold ${item.checked ? 'line-through text-cozy-muted' : 'text-cozy-text'}">
+                ${item.name}
+              </span>
+              
+              ${item.amount ? `
+                <span class="text-xs font-medium text-cozy-olivegreen bg-cozy-olivegreen/10 px-2 py-0.5 rounded-md">
+                  ${item.amount}
+                </span>
+              ` : ''}
+            </div>
+          </div>
+
+          <button 
+            onclick="deleteItem(${idx})" 
+            class="p-1.5 text-cozy-muted hover:text-red-600 transition text-sm font-bold ml-2" 
+            title="Remove Item"
+          >
+            ✕
+          </button>
+        </li>
+      `).join('');
+    }
+
+    // Toggle Item Checked
+    function toggleCheck(index) {
+      shoppingList[index].checked = !shoppingList[index].checked;
+      saveAndRefresh();
+    }
+
+    // Add Manual Item
+    function handleManualAdd(e) {
+      e.preventDefault();
+      const nameInput = document.getElementById('manual-item-name');
+      const amountInput = document.getElementById('manual-item-amount');
+
+      const name = nameInput.value.trim();
+      const amount = amountInput.value.trim();
+
+      if (!name) return;
+
+      shoppingList.push({
+        id: Date.now().toString(),
+        name,
+        amount,
+        checked: false
+      });
+
+      nameInput.value = '';
+      amountInput.value = '';
+      nameInput.focus();
+
+      saveAndRefresh();
+    }
+
+    // Delete single item
+    function deleteItem(index) {
+      shoppingList.splice(index, 1);
+      saveAndRefresh();
+    }
+
+    // Clear entire list
+    function clearShoppingList() {
+      if (shoppingList.length === 0) return;
+      if (confirm("Are you sure you want to clear your shopping list?")) {
+        shoppingList = [];
+        saveAndRefresh();
+      }
+    }
+
+    // Move checked items to Pantry
+    function moveCheckedToPantry() {
+      const checkedItems = shoppingList.filter(item => item.checked);
+      
+      if (checkedItems.length === 0) {
+        alert("Please check off the items you bought first!");
+        return;
+      }
+
+      const currentPantry = State.getPantry();
+      let addedToPantryCount = 0;
+
+      checkedItems.forEach(item => {
+        // Prevent duplicate pantry entries (case-insensitive check)
+        const exists = currentPantry.some(p => p.trim().toLowerCase() === item.name.trim().toLowerCase());
+        if (!exists) {
+          currentPantry.push(item.name);
+          addedToPantryCount++;
+        }
+      });
+
+      // Save updated pantry
+      State.savePantry(currentPantry);
+
+      // Remove checked items from shopping list
+      shoppingList = shoppingList.filter(item => !item.checked);
+      saveAndRefresh();
+
+      alert(`Success! Moved ${checkedItems.length} item(s) to your Pantry.`);
+    }
+
+    // Copy List to Clipboard
+    function copyListToClipboard() {
+      if (shoppingList.length === 0) {
+        alert("Your shopping list is empty!");
+        return;
+      }
+
+      const formattedText = "🛒 STILLSIP SHOPPING LIST:\n" + 
+        shoppingList.map(i => `• ${i.name}${i.amount ? ` (${i.amount})` : ''} ${i.checked ? '[✓]' : ''}`).join('\n');
+
+      navigator.clipboard.writeText(formattedText).then(() => {
+        alert("Shopping list copied to clipboard!");
+      }).catch(() => {
+        alert("Failed to copy list. Please try again.");
+      });
+    }
+
+    // Save state to localStorage and re-render
+    function saveAndRefresh() {
+      State.saveShoppingList(shoppingList);
+      renderShoppingList();
+    }
+  </script>
+</body>
+</html>
