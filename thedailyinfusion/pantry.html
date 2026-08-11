@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kitchen Pantry — StillSip</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="images/logo.png" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Shared Theme & Styles -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="common.js"></script>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- DYNAMIC NAVIGATION HEADER -->
+  <header id="site-header"></header>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-8">
+    
+    <!-- HERO HEADER -->
+    <div class="text-left mb-8 border-b border-cozy-border pb-6 flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <h1 class="font-serif-heading text-3xl md:text-4xl font-bold text-cozy-text mb-2">Your Kitchen Pantry</h1>
+        <p class="text-cozy-muted text-base">Check off the ingredients you have at home to see what drinks you can mix right now.</p>
+      </div>
+      
+      <div class="flex items-center gap-2">
+        <button onclick="clearAllPantry()" class="text-xs font-semibold text-cozy-muted bg-white border border-cozy-border px-3.5 py-2 rounded-full hover:border-cozy-olivegreen hover:text-cozy-text transition">
+          Clear All
+        </button>
+        <button onclick="selectAllPantry()" class="text-xs font-semibold text-cozy-olivegreen bg-cozy-olivegreen/10 px-3.5 py-2 rounded-full hover:bg-cozy-olivegreen hover:text-white transition">
+          Select All
+        </button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- ================= LEFT COLUMN: INGREDIENT CHECKLIST (5 Cols) ================= -->
+      <section class="lg:col-span-5 space-y-6">
+        
+        <div class="cozy-card rounded-cozy p-5 md:p-6 space-y-5">
+          
+          <!-- Ingredient Search Box -->
+          <div>
+            <label for="pantry-search" class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">
+              Search Ingredients
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-cozy-muted text-sm">🔍</span>
+              <input 
+                type="text" 
+                id="pantry-search" 
+                placeholder="Filter spices, milks, fruits..." 
+                class="w-full pl-9 pr-3 py-2 bg-cozy-bg rounded-xl border border-cozy-border text-cozy-text text-sm focus:outline-none focus:border-cozy-olivegreen transition"
+                oninput="filterIngredientPills()"
+              />
+            </div>
+          </div>
+
+          <hr class="border-cozy-border" />
+
+          <!-- Categorized Ingredient Pill Selector -->
+          <div id="pantry-categories-container" class="space-y-5">
+            <!-- Dynamically populated via JavaScript -->
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ================= RIGHT COLUMN: MATCHED RECIPES (7 Cols) ================= -->
+      <section class="lg:col-span-7 space-y-6">
+        
+        <!-- Matching Status Bar -->
+        <div class="flex items-center justify-between bg-white/70 backdrop-blur-sm p-4 rounded-2xl border border-cozy-border shadow-sm">
+          <div>
+            <h2 class="font-serif-heading font-bold text-lg text-cozy-text">Drink Recommendations</h2>
+            <p id="match-summary-text" class="text-xs text-cozy-muted">Updating matches...</p>
+          </div>
+          
+          <!-- Tolerance Selector -->
+          <div class="flex items-center gap-1 text-xs">
+            <span class="text-cozy-muted font-medium hidden sm:inline">Allow missing:</span>
+            <select id="missing-tolerance" onchange="calculateMatches()" class="bg-cozy-bg border border-cozy-border rounded-lg px-2 py-1 text-cozy-text font-semibold focus:outline-none focus:border-cozy-olivegreen">
+              <option value="0">0 (Exact Matches Only)</option>
+              <option value="1" selected>Max 1 Missing</option>
+              <option value="2">Max 2 Missing</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Matched Recipe Cards Grid -->
+        <div id="matched-recipes-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <!-- Rendered Dynamically -->
+        </div>
+
+        <!-- Empty Match State -->
+        <div id="pantry-empty-state" class="hidden text-center py-12 cozy-card rounded-cozy p-6">
+          <span class="text-4xl block mb-3">🧺</span>
+          <h3 class="font-serif-heading font-bold text-xl text-cozy-text mb-1">No drink matches yet</h3>
+          <p class="text-cozy-muted text-sm max-w-sm mx-auto mb-4">Check off a few more ingredients above (like water, lime, mint, or turmeric) to unlock drink recipes!</p>
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- DYNAMIC FOOTER -->
+  <footer id="site-footer"></footer>
+
+  <!-- LOAD RECIPE DATABASE -->
+  <script src="recipes.js"></script>
+  
+  <script>
+    // INGREDIENT CATEGORY MAP FOR CLEAN DISPLAY
+    const INGREDIENT_CATEGORIES = [
+      {
+        name: "🍋 Produce & Citrus",
+        items: ["English Cucumber (chopped)", "Fresh Lime Juice", "Fresh Mint Leaves", "Fresh Ginger (sliced)", "Grated Fresh Ginger", "Fresh Lime Wheels", "Ripe Mango Chunks"]
+      },
+      {
+        name: "🥛 Milks & Cream",
+        items: ["Oat Milk or Almond Milk", "Plain Whole-Milk Yogurt", "Milk or Oat Milk", "Full-Fat Coconut Milk", "Sweetened Condensed Milk"]
+      },
+      {
+        name: "🍯 Sweeteners & Spices",
+        items: ["Agave Nectar or Honey", "Pure Maple Syrup", "Honey or Simple Syrup", "Simple Syrup or Agave", "Ground Turmeric", "Ground Cinnamon", "Cinnamon Stick", "Black Pepper", "Ground Cardamom", "Vanilla Extract"]
+      },
+      {
+        name: "🫖 Botanicals & Staples",
+        items: ["Still Water", "Boiling Water", "Crushed Ice", "Dried Hibiscus Flowers", "Long-Grain White Rice"]
+      }
+    ];
+
+    let pantry = State.getPantry();
+    let favorites = State.getFavorites();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderIngredientPills();
+      calculateMatches();
+    });
+
+    // RENDER CATEGORIZED PILL BUTTONS
+    function renderIngredientPills() {
+      const container = document.getElementById('pantry-categories-container');
+      const searchTerm = document.getElementById('pantry-search').value.toLowerCase().trim();
+
+      container.innerHTML = INGREDIENT_CATEGORIES.map(cat => {
+        // Filter items based on search term
+        const matchingItems = cat.items.filter(item => item.toLowerCase().includes(searchTerm));
+        if (matchingItems.length === 0) return '';
+
+        return `
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2.5">${cat.name}</h4>
+            <div class="flex flex-wrap gap-1.5">
+              ${matchingItems.map(item => {
+                const isSelected = pantry.includes(item);
+                return `
+                  <button 
+                    onclick="togglePantryItem('${item}')" 
+                    class="filter-chip px-3 py-1.5 rounded-full border text-xs font-medium flex items-center gap-1.5 ${
+                      isSelected 
+                        ? 'bg-cozy-olivegreen text-white border-cozy-olivegreen shadow-sm' 
+                        : 'bg-cozy-bg text-cozy-text border-cozy-border hover:border-cozy-olivegreen'
+                    }"
+                  >
+                    <span>${isSelected ? '✓' : '+'}</span>
+                    <span>${item}</span>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // TOGGLE INGREDIENT IN LOCALSTORAGE
+    function togglePantryItem(item) {
+      if (pantry.includes(item)) {
+        pantry = pantry.filter(i => i !== item);
+      } else {
+        pantry.push(item);
+      }
+      State.savePantry(pantry);
+      renderIngredientPills();
+      calculateMatches();
+    }
+
+    function selectAllPantry() {
+      pantry = INGREDIENT_CATEGORIES.flatMap(cat => cat.items);
+      State.savePantry(pantry);
+      renderIngredientPills();
+      calculateMatches();
+    }
+
+    function clearAllPantry() {
+      pantry = [];
+      State.savePantry(pantry);
+      renderIngredientPills();
+      calculateMatches();
+    }
+
+    function filterIngredientPills() {
+      renderIngredientPills();
+    }
+
+    // MATCHING ENGINE
+    function calculateMatches() {
+      const maxMissingAllowed = parseInt(document.getElementById('missing-tolerance').value);
+      
+      const recipeMatches = ALL_RECIPES.map(recipe => {
+        // Find missing ingredients for this recipe
+        const missing = recipe.ingredients.filter(ing => !pantry.includes(ing.name));
+        return {
+          ...recipe,
+          missing,
+          missingCount: missing.length,
+          isExactMatch: missing.length === 0
+        };
+      })
+      .filter(recipe => recipe.missingCount <= maxMissingAllowed)
+      .sort((a, b) => a.missingCount - b.missingCount); // Exact matches first
+
+      renderMatchedRecipes(recipeMatches);
+    }
+
+    // RENDER MATCHED RECIPE CARDS
+    function renderMatchedRecipes(recipes) {
+      const grid = document.getElementById('matched-recipes-grid');
+      const emptyState = document.getElementById('pantry-empty-state');
+      const summaryText = document.getElementById('match-summary-text');
+
+      summaryText.innerText = `${pantry.length} items checked in pantry — Found ${recipes.length} matching drinks`;
+
+      if (recipes.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      grid.innerHTML = recipes.map(r => {
+        const isFav = favorites.includes(r.id);
+
+        return `
+          <div class="cozy-card rounded-cozy p-5 flex flex-col justify-between hover:-translate-y-1 transition-all duration-200">
+            <div>
+              <!-- Header & Badges -->
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-semibold text-cozy-olivegreen bg-cozy-olivegreen/10 px-2.5 py-0.5 rounded-full">${r.style}</span>
+                <button onclick="toggleFav('${r.id}', event)" class="text-sm hover:scale-110 transition">${isFav ? '❤️' : '🤍'}</button>
+              </div>
+
+              <!-- Title -->
+              <a href="recipe.html?id=${r.id}">
+                <h3 class="font-serif-heading font-bold text-lg text-cozy-text hover:text-cozy-olivegreen transition mb-1">${r.name}</h3>
+              </a>
+
+              <p class="text-xs text-cozy-muted line-clamp-2 mb-3">${r.description}</p>
+
+              <!-- Stock Indicator Badge -->
+              <div class="mb-4">
+                ${r.isExactMatch 
+                  ? `<span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-200 px-2.5 py-1 rounded-full">
+                       🟢 100% In Stock!
+                     </span>`
+                  : `<div class="bg-amber-50 border border-amber-200 text-amber-900 rounded-xl p-2.5 text-xs">
+                       <span class="font-bold block mb-1">🟡 Missing ${r.missingCount} Item:</span>
+                       <ul class="list-disc list-inside text-[11px] text-amber-800 space-y-0.5">
+                         ${r.missing.map(m => `<li>${m.name}</li>`).join('')}
+                       </ul>
+                     </div>`
+                }
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="space-y-2 pt-2 border-t border-cozy-border">
+              ${!r.isExactMatch 
+                ? `<button onclick="addMissingToShopping('${r.id}')" class="w-full py-1.5 rounded-lg text-xs font-semibold text-cozy-text bg-cozy-bg border border-cozy-border hover:border-cozy-olivegreen transition">
+                     + Add Missing to Shopping List
+                   </button>` 
+                : ''
+              }
+              <a href="recipe.html?id=${r.id}" class="w-full py-2 rounded-xl border border-cozy-olivegreen bg-cozy-olivegreen text-center text-xs font-semibold text-white hover:bg-cozy-olivegreen-hover transition block">
+                Make This Drink →
+              </a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // SHOPPING LIST ADDITION
+    function addMissingToShopping(recipeId) {
+      const recipe = ALL_RECIPES.find(r => r.id === recipeId);
+      if (!recipe) return;
+
+      const shoppingList = State.getShoppingList();
+      let added = 0;
+
+      recipe.ingredients.forEach(ing => {
+        if (!pantry.includes(ing.name)) {
+          const exists = shoppingList.some(item => item.name.toLowerCase() === ing.name.toLowerCase());
+          if (!exists) {
+            shoppingList.push({ name: ing.name, amount: `${ing.amount} ${ing.unit}` });
+            added++;
+          }
+        }
+      });
+
+      State.saveShoppingList(shoppingList);
+      alert(added > 0 ? `Added ${added} missing item(s) to your shopping list!` : 'Items already in your shopping list!');
+    }
+
+    function toggleFav(id, event) {
+      event.preventDefault();
+      favorites = favorites.includes(id) ? favorites.filter(item => item !== id) : [...favorites, id];
+      State.saveFavorites(favorites);
+      calculateMatches();
+    }
+  </script>
+</body>
+</html>
