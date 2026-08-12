@@ -133,187 +133,130 @@
 
   <!-- RECIPE DATABASE & LOGIC -->
   <script src="recipes.js"></script>
-  <script>
-    // State map for selected filters across all categories
-    let selectedFilters = {
-      temperature: [],
-      color: [],
-      healthiness: [],
-      nutrients: [],
-      useCases: [],
-      primaryTaste: [],
-      season: [],
-      style: [],
-      prepTime: []
-    };
+<script>
+  let currentRecipe = null;
+  let currentServings = 1;
 
-    let favorites = State.getFavorites();
+  document.addEventListener('DOMContentLoaded', () => {
+    loadRecipeDetail();
+  });
 
-    document.addEventListener('DOMContentLoaded', () => {
-      renderSidebarFilters();
-      filterRecipes();
+  function getLatestRecipes() {
+    // 1. Built-in recipes from recipes.js
+    const builtin = (typeof ALL_RECIPES !== 'undefined') ? ALL_RECIPES : [];
+    
+    // 2. Custom recipes stored in browser localStorage
+    let custom = [];
+    try {
+      custom = JSON.parse(localStorage.getItem('cozy_custom_recipes') || '[]');
+    } catch (e) {
+      console.error("Error reading custom recipes:", e);
+    }
+
+    // Combine both (custom recipes take priority if IDs match)
+    const combinedMap = new Map();
+    [...builtin, ...custom].forEach(r => {
+      if (r && r.id) combinedMap.set(r.id.trim().toLowerCase(), r);
     });
 
-    // RENDER ALL 9 FILTER CATEGORIES DYNAMICALLY FROM CONSTANTS.JS
-    function renderSidebarFilters() {
-      const container = document.getElementById('dynamic-filters-container');
-      
-      const categoryDefinitions = [
-        { title: "1. Temperature", key: "temperature", data: TAXONOMY.TEMPERATURES },
-        { title: "2. Color", key: "color", data: TAXONOMY.COLORS },
-        { title: "3. Healthiness & Dietary", key: "healthiness", data: TAXONOMY.HEALTHINESS },
-        { title: "4. Nutrients & Actives", key: "nutrients", data: TAXONOMY.NUTRIENTS },
-        { title: "5. Use / Functional Goal", key: "useCases", data: TAXONOMY.USE_CASES },
-        { title: "6. Primary Taste", key: "primaryTaste", data: TAXONOMY.TASTES },
-        { title: "7. Season", key: "season", data: TAXONOMY.SEASONS },
-        { title: "8. Drink Style", key: "style", data: TAXONOMY.STYLES },
-        { title: "9. Prep Time", key: "prepTime", data: TAXONOMY.PREP_TIMES }
-      ];
+    return Array.from(combinedMap.values());
+  }
 
-      container.innerHTML = categoryDefinitions.map(cat => `
-        <div data-category-group="${cat.key}">
-          <label class="block text-xs font-bold uppercase tracking-wider text-cozy-muted mb-2">${cat.title}</label>
-          <div class="flex flex-wrap gap-1.5">
-            ${cat.data.map(item => `
-              <button 
-                onclick="toggleFilter('${cat.key}', '${item.value}', this)" 
-                class="filter-chip px-3 py-1 rounded-full border border-cozy-border text-xs font-medium bg-cozy-bg text-cozy-text transition"
-              >
-                ${item.label}
-              </button>
-            `).join('')}
-          </div>
-        </div>
-      `).join('');
+  function loadRecipeDetail() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const rawId = urlParams.get('id');
+
+    if (!rawId) {
+      showNotFoundError("No recipe ID provided.");
+      return;
     }
 
-    function toggleFilter(category, value, buttonEl) {
-      const idx = selectedFilters[category].indexOf(value);
-      if (idx > -1) {
-        selectedFilters[category].splice(idx, 1);
-        buttonEl.classList.remove('active');
-      } else {
-        selectedFilters[category].push(value);
-        buttonEl.classList.add('active');
-      }
-      filterRecipes();
+    const targetId = decodeURIComponent(rawId).trim().toLowerCase();
+    const allRecipes = getLatestRecipes();
+
+    // Look for exact ID match
+    currentRecipe = allRecipes.find(r => r.id && r.id.trim().toLowerCase() === targetId);
+
+    if (!currentRecipe) {
+      showNotFoundError(`Recipe "${rawId}" is still syncing or was not found.`);
+      return;
     }
 
-    function filterRecipes() {
-      const query = document.getElementById('search-input').value.toLowerCase().trim();
-      const allRecipes = getCombinedRecipes(); // Combines built-in + user-created drinks
+    renderRecipePage(currentRecipe);
+  }
 
-      const filtered = allRecipes.filter(recipe => {
-        // Keyword Search Match
-        const matchesQuery = query === '' || 
-          recipe.name.toLowerCase().includes(query) || 
-          recipe.ingredients.some(i => i.name.toLowerCase().includes(query)) ||
-          recipe.description.toLowerCase().includes(query);
+  function renderRecipePage(r) {
+    document.title = `${r.name} — StillSip`;
+    
+    document.getElementById('recipe-title').innerText = r.name;
+    document.getElementById('recipe-style').innerText = r.style;
+    document.getElementById('recipe-description').innerText = r.description;
+    document.getElementById('recipe-prep-time').innerText = r.prepMinutes || r.prepTime;
+    
+    const colors = Array.isArray(r.color) ? r.color.join(', ') : r.color;
+    document.getElementById('recipe-color').innerText = colors;
+    
+    document.getElementById('recipe-taste').innerText = r.primaryTaste || 'Fresh';
+    document.getElementById('recipe-tip').innerText = r.tip || 'Enjoy your creation!';
 
-        if (!matchesQuery) return false;
+    renderIngredients();
 
-        // Category Filter Matches
-        for (const [catKey, selectedValues] of Object.entries(selectedFilters)) {
-          if (selectedValues.length === 0) continue;
-          
-          const recipeVal = recipe[catKey];
-          if (!recipeVal) return false;
-
-          const hasMatch = Array.isArray(recipeVal) 
-            ? selectedValues.some(val => recipeVal.includes(val)) 
-            : selectedValues.includes(recipeVal);
-
-          if (!hasMatch) return false;
-        }
-
-        return true;
-      });
-
-      renderGrid(filtered);
-      renderActiveBadges();
-    }
-
-    function resetAllFilters() {
-      selectedFilters = {
-        temperature: [], color: [], healthiness: [], nutrients: [],
-        useCases: [], primaryTaste: [], season: [], style: [], prepTime: []
-      };
-      document.getElementById('search-input').value = '';
-      document.querySelectorAll('.filter-chip').forEach(btn => btn.classList.remove('active'));
-      filterRecipes();
-    }
-
-    function renderActiveBadges() {
-      const container = document.getElementById('active-badges-container');
-      const badgesBox = document.getElementById('active-badges');
-      let activeList = [];
-
-      for (const [cat, vals] of Object.entries(selectedFilters)) {
-        vals.forEach(v => activeList.push({ cat, v }));
-      }
-
-      if (activeList.length === 0) {
-        container.classList.add('hidden');
-        return;
-      }
-
-      container.classList.remove('hidden');
-      badgesBox.innerHTML = activeList.map(item => `
-        <span class="inline-flex items-center gap-1 text-xs bg-cozy-olivegreen text-white px-2.5 py-0.5 rounded-full font-medium shadow-sm">
-          ${item.v}
-          <button onclick="removeFilter('${item.cat}', '${item.v}')" class="ml-1 hover:text-black font-bold">✕</button>
+    const stepsContainer = document.getElementById('recipe-instructions');
+    stepsContainer.innerHTML = r.instructions.map((step, idx) => `
+      <li class="flex items-start gap-3 p-3.5 rounded-xl bg-cozy-bg/50 border border-cozy-border">
+        <span class="font-bold text-xs text-white bg-cozy-olivegreen rounded-full w-6 h-6 flex items-center justify-center shrink-0 mt-0.5">
+          ${idx + 1}
         </span>
-      `).join('');
-    }
+        <p class="text-sm text-cozy-text font-medium leading-relaxed">${step}</p>
+      </li>
+    `).join('');
+  }
 
-    function removeFilter(cat, val) {
-      const idx = selectedFilters[cat].indexOf(val);
-      if (idx > -1) selectedFilters[cat].splice(idx, 1);
+  function renderIngredients() {
+    if (!currentRecipe) return;
+    
+    const ingContainer = document.getElementById('recipe-ingredients');
+    const pantry = (typeof State !== 'undefined' && State.getPantry) ? State.getPantry() : [];
 
-      const groupEl = document.querySelector(`[data-category-group="${cat}"]`);
-      if (groupEl) {
-        groupEl.querySelectorAll('.filter-chip').forEach(btn => {
-          if (btn.innerText.includes(val)) btn.classList.remove('active');
-        });
-      }
-      filterRecipes();
-    }
+    ingContainer.innerHTML = currentRecipe.ingredients.map(ing => {
+      const scaledAmount = (ing.amount * currentServings).toFixed(1).replace(/\.0$/, '');
+      const inPantry = pantry.some(p => p.trim().toLowerCase() === ing.name.trim().toLowerCase());
 
-    function renderGrid(recipes) {
-      const grid = document.getElementById('recipe-grid');
-      const emptyState = document.getElementById('empty-state');
-      document.getElementById('recipe-count').innerText = `Showing ${recipes.length} ${recipes.length === 1 ? 'recipe' : 'recipes'}`;
-
-      if (recipes.length === 0) {
-        grid.innerHTML = '';
-        emptyState.classList.remove('hidden');
-        return;
-      }
-
-      emptyState.classList.add('hidden');
-      grid.innerHTML = recipes.map(r => `
-        <div class="cozy-card rounded-cozy p-5 flex flex-col justify-between hover:-translate-y-1 transition-all duration-200">
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-xs font-semibold text-cozy-olivegreen bg-cozy-olivegreen/10 px-2.5 py-0.5 rounded-full">${r.style}</span>
-              <button onclick="toggleFav('${r.id}', event)" class="text-sm hover:scale-110 transition">${favorites.includes(r.id) ? '❤️' : '🤍'}</button>
-            </div>
-            <a href="recipe.html?id=${r.id}">
-              <h3 class="font-serif-heading font-bold text-lg text-cozy-text hover:text-cozy-olivegreen transition mb-1">${r.name}</h3>
-            </a>
-            <p class="text-xs text-cozy-muted line-clamp-2 mb-3">${r.description}</p>
+      return `
+        <li class="flex items-center justify-between p-3 rounded-xl border border-cozy-border bg-white">
+          <div class="flex items-center gap-2">
+            <span class="text-xs ${inPantry ? 'text-emerald-600 font-bold' : 'text-amber-600 font-medium'}">
+              ${inPantry ? '✓ In Pantry' : '○ Missing'}
+            </span>
+            <span class="text-sm font-semibold text-cozy-text">${ing.name}</span>
           </div>
-          <a href="recipe.html?id=${r.id}" class="w-full py-2 rounded-xl border border-cozy-border bg-cozy-bg text-center text-xs font-medium text-cozy-text hover:bg-cozy-olivegreen hover:text-white transition">View Recipe →</a>
-        </div>
-      `).join('');
-    }
+          <span class="text-xs font-bold text-cozy-olivegreen bg-cozy-olivegreen/10 px-2.5 py-1 rounded-md">
+            ${scaledAmount} ${ing.unit}
+          </span>
+        </li>
+      `;
+    }).join('');
+  }
 
-    function toggleFav(id, event) {
-      event.preventDefault();
-      favorites = favorites.includes(id) ? favorites.filter(item => item !== id) : [...favorites, id];
-      State.saveFavorites(favorites);
-      filterRecipes();
-    }
-  </script>
-</body>
-</html>
+  function updateServings(delta) {
+    currentServings = Math.max(1, currentServings + delta);
+    document.getElementById('servings-count').innerText = currentServings;
+    renderIngredients();
+  }
+
+  function showNotFoundError(message) {
+    const mainContent = document.querySelector('main');
+    if (!mainContent) return;
+
+    mainContent.innerHTML = `
+      <div class="text-center py-20 max-w-md mx-auto">
+        <span class="text-5xl block mb-4">🔍</span>
+        <h1 class="font-serif-heading font-bold text-2xl text-cozy-text mb-2">Recipe Not Found</h1>
+        <p class="text-cozy-muted text-sm mb-6">${message}</p>
+        <a href="recipes.html" class="inline-block px-6 py-3 rounded-full bg-cozy-olivegreen text-white font-semibold text-xs hover:bg-cozy-olivegreen-hover transition shadow-md">
+          ← Return to All Recipes
+        </a>
+      </div>
+    `;
+  }
+</script>
