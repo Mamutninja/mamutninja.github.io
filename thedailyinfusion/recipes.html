@@ -133,130 +133,187 @@
 
   <!-- RECIPE DATABASE & LOGIC -->
   <script src="recipes.js"></script>
-<script>
-  let currentRecipe = null;
-  let currentServings = 1;
+  <script>
+    let currentRecipe = null;
+    let currentServings = 1;
 
-  document.addEventListener('DOMContentLoaded', () => {
-    loadRecipeDetail();
-  });
-
-  function getLatestRecipes() {
-    // 1. Built-in recipes from recipes.js
-    const builtin = (typeof ALL_RECIPES !== 'undefined') ? ALL_RECIPES : [];
-    
-    // 2. Custom recipes stored in browser localStorage
-    let custom = [];
-    try {
-      custom = JSON.parse(localStorage.getItem('cozy_custom_recipes') || '[]');
-    } catch (e) {
-      console.error("Error reading custom recipes:", e);
-    }
-
-    // Combine both (custom recipes take priority if IDs match)
-    const combinedMap = new Map();
-    [...builtin, ...custom].forEach(r => {
-      if (r && r.id) combinedMap.set(r.id.trim().toLowerCase(), r);
+    document.addEventListener('DOMContentLoaded', () => {
+      loadRecipeDetail();
     });
 
-    return Array.from(combinedMap.values());
-  }
-
-  function loadRecipeDetail() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const rawId = urlParams.get('id');
-
-    if (!rawId) {
-      showNotFoundError("No recipe ID provided.");
-      return;
+    // Convert text to a clean slug (e.g. "Blue Cloud!" -> "blue-cloud")
+    function slugify(text) {
+      if (!text) return '';
+      return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/[\s_-]+/g, '-')
+        .replace(/^-+|-+$/g, '');
     }
 
-    const targetId = decodeURIComponent(rawId).trim().toLowerCase();
-    const allRecipes = getLatestRecipes();
+    // Retrieve recipes from recipes.js + all possible localStorage keys
+    function getAllStoredRecipes() {
+      let recipes = [];
 
-    // Look for exact ID match
-    currentRecipe = allRecipes.find(r => r.id && r.id.trim().toLowerCase() === targetId);
+      // 1. If recipes.js has getCombinedRecipes helper
+      if (typeof getCombinedRecipes === 'function') {
+        try { recipes = getCombinedRecipes(); } catch(e) {}
+      }
 
-    if (!currentRecipe) {
-      showNotFoundError(`Recipe "${rawId}" is still syncing or was not found.`);
-      return;
+      // 2. Base array from recipes.js
+      if (!recipes || recipes.length === 0) {
+        recipes = (typeof ALL_RECIPES !== 'undefined') ? [...ALL_RECIPES] : [];
+      }
+
+      // 3. Scan all potential local storage keys
+      const keysToCheck = [
+        'cozy_custom_recipes',
+        'custom_recipes',
+        'customRecipes',
+        'cozy_recipes',
+        'recipes'
+      ];
+
+      keysToCheck.forEach(key => {
+        try {
+          const item = localStorage.getItem(key);
+          if (item) {
+            const parsed = JSON.parse(item);
+            if (Array.isArray(parsed)) {
+              recipes.push(...parsed);
+            }
+          }
+        } catch (e) {}
+      });
+
+      // Deduplicate by ID / Name
+      const uniqueMap = new Map();
+      recipes.forEach(r => {
+        if (!r) return;
+        const key = (r.id || r.name || '').trim().toLowerCase();
+        if (key && !uniqueMap.has(key)) {
+          uniqueMap.set(key, r);
+        }
+      });
+
+      return Array.from(uniqueMap.values());
     }
 
-    renderRecipePage(currentRecipe);
-  }
+    function loadRecipeDetail() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const rawId = urlParams.get('id');
 
-  function renderRecipePage(r) {
-    document.title = `${r.name} — StillSip`;
-    
-    document.getElementById('recipe-title').innerText = r.name;
-    document.getElementById('recipe-style').innerText = r.style;
-    document.getElementById('recipe-description').innerText = r.description;
-    document.getElementById('recipe-prep-time').innerText = r.prepMinutes || r.prepTime;
-    
-    const colors = Array.isArray(r.color) ? r.color.join(', ') : r.color;
-    document.getElementById('recipe-color').innerText = colors;
-    
-    document.getElementById('recipe-taste').innerText = r.primaryTaste || 'Fresh';
-    document.getElementById('recipe-tip').innerText = r.tip || 'Enjoy your creation!';
+      if (!rawId) {
+        showNotFoundError("No recipe ID specified in the URL.");
+        return;
+      }
 
-    renderIngredients();
+      const decodedId = decodeURIComponent(rawId).trim();
+      const targetSlug = slugify(decodedId);
+      const allRecipes = getAllStoredRecipes();
 
-    const stepsContainer = document.getElementById('recipe-instructions');
-    stepsContainer.innerHTML = r.instructions.map((step, idx) => `
-      <li class="flex items-start gap-3 p-3.5 rounded-xl bg-cozy-bg/50 border border-cozy-border">
-        <span class="font-bold text-xs text-white bg-cozy-olivegreen rounded-full w-6 h-6 flex items-center justify-center shrink-0 mt-0.5">
-          ${idx + 1}
-        </span>
-        <p class="text-sm text-cozy-text font-medium leading-relaxed">${step}</p>
-      </li>
-    `).join('');
-  }
+      // Flexible matching: check ID, Name, or slugified match
+      currentRecipe = allRecipes.find(r => {
+        if (!r) return false;
+        const rId = (r.id || '').trim();
+        const rName = (r.name || '').trim();
 
-  function renderIngredients() {
-    if (!currentRecipe) return;
-    
-    const ingContainer = document.getElementById('recipe-ingredients');
-    const pantry = (typeof State !== 'undefined' && State.getPantry) ? State.getPantry() : [];
+        return (
+          rId.toLowerCase() === decodedId.toLowerCase() ||
+          rName.toLowerCase() === decodedId.toLowerCase() ||
+          slugify(rId) === targetSlug ||
+          slugify(rName) === targetSlug
+        );
+      });
 
-    ingContainer.innerHTML = currentRecipe.ingredients.map(ing => {
-      const scaledAmount = (ing.amount * currentServings).toFixed(1).replace(/\.0$/, '');
-      const inPantry = pantry.some(p => p.trim().toLowerCase() === ing.name.trim().toLowerCase());
+      if (!currentRecipe) {
+        showNotFoundError(`Recipe "${decodedId}" could not be found.`);
+        return;
+      }
 
-      return `
-        <li class="flex items-center justify-between p-3 rounded-xl border border-cozy-border bg-white">
-          <div class="flex items-center gap-2">
-            <span class="text-xs ${inPantry ? 'text-emerald-600 font-bold' : 'text-amber-600 font-medium'}">
-              ${inPantry ? '✓ In Pantry' : '○ Missing'}
+      renderRecipePage(currentRecipe);
+    }
+
+    function renderRecipePage(r) {
+      document.title = `${r.name} — StillSip`;
+      
+      document.getElementById('recipe-title').innerText = r.name || 'Untitled Recipe';
+      document.getElementById('recipe-style').innerText = r.style || 'Drink';
+      document.getElementById('recipe-description').innerText = r.description || '';
+      document.getElementById('recipe-prep-time').innerText = r.prepMinutes || r.prepTime || '5 mins';
+      
+      const colors = Array.isArray(r.color) ? r.color.join(', ') : (r.color || 'Custom');
+      document.getElementById('recipe-color').innerText = colors;
+      
+      document.getElementById('recipe-taste').innerText = r.primaryTaste || 'Fresh';
+      document.getElementById('recipe-tip').innerText = r.tip || 'Enjoy your creation!';
+
+      renderIngredients();
+
+      const stepsContainer = document.getElementById('recipe-instructions');
+      if (stepsContainer && Array.isArray(r.instructions)) {
+        stepsContainer.innerHTML = r.instructions.map((step, idx) => `
+          <li class="flex items-start gap-3 p-3.5 rounded-xl bg-cozy-bg/50 border border-cozy-border">
+            <span class="font-bold text-xs text-white bg-cozy-olivegreen rounded-full w-6 h-6 flex items-center justify-center shrink-0 mt-0.5">
+              ${idx + 1}
             </span>
-            <span class="text-sm font-semibold text-cozy-text">${ing.name}</span>
-          </div>
-          <span class="text-xs font-bold text-cozy-olivegreen bg-cozy-olivegreen/10 px-2.5 py-1 rounded-md">
-            ${scaledAmount} ${ing.unit}
-          </span>
-        </li>
+            <p class="text-sm text-cozy-text font-medium leading-relaxed">${step}</p>
+          </li>
+        `).join('');
+      }
+    }
+
+    function renderIngredients() {
+      if (!currentRecipe || !currentRecipe.ingredients) return;
+      
+      const ingContainer = document.getElementById('recipe-ingredients');
+      if (!ingContainer) return;
+
+      const pantry = (typeof State !== 'undefined' && State.getPantry) ? State.getPantry() : [];
+
+      ingContainer.innerHTML = currentRecipe.ingredients.map(ing => {
+        const amt = (typeof ing.amount === 'number') ? ing.amount : parseFloat(ing.amount) || 1;
+        const scaledAmount = (amt * currentServings).toFixed(1).replace(/\.0$/, '');
+        const inPantry = pantry.some(p => p.trim().toLowerCase() === ing.name.trim().toLowerCase());
+
+        return `
+          <li class="flex items-center justify-between p-3 rounded-xl border border-cozy-border bg-white">
+            <div class="flex items-center gap-2">
+              <span class="text-xs ${inPantry ? 'text-emerald-600 font-bold' : 'text-amber-600 font-medium'}">
+                ${inPantry ? '✓ In Pantry' : '○ Missing'}
+              </span>
+              <span class="text-sm font-semibold text-cozy-text">${ing.name}</span>
+            </div>
+            <span class="text-xs font-bold text-cozy-olivegreen bg-cozy-olivegreen/10 px-2.5 py-1 rounded-md">
+              ${scaledAmount} ${ing.unit || ''}
+            </span>
+          </li>
+        `;
+      }).join('');
+    }
+
+    function updateServings(delta) {
+      currentServings = Math.max(1, currentServings + delta);
+      const el = document.getElementById('servings-count');
+      if (el) el.innerText = currentServings;
+      renderIngredients();
+    }
+
+    function showNotFoundError(message) {
+      const mainContent = document.querySelector('main');
+      if (!mainContent) return;
+
+      mainContent.innerHTML = `
+        <div class="text-center py-20 max-w-md mx-auto">
+          <span class="text-5xl block mb-4">🔍</span>
+          <h1 class="font-serif-heading font-bold text-2xl text-cozy-text mb-2">Recipe Not Found</h1>
+          <p class="text-cozy-muted text-sm mb-6">${message}</p>
+          <a href="recipes.html" class="inline-block px-6 py-3 rounded-full bg-cozy-olivegreen text-white font-semibold text-xs hover:bg-cozy-olivegreen-hover transition shadow-md">
+            ← Return to All Recipes
+          </a>
+        </div>
       `;
-    }).join('');
-  }
-
-  function updateServings(delta) {
-    currentServings = Math.max(1, currentServings + delta);
-    document.getElementById('servings-count').innerText = currentServings;
-    renderIngredients();
-  }
-
-  function showNotFoundError(message) {
-    const mainContent = document.querySelector('main');
-    if (!mainContent) return;
-
-    mainContent.innerHTML = `
-      <div class="text-center py-20 max-w-md mx-auto">
-        <span class="text-5xl block mb-4">🔍</span>
-        <h1 class="font-serif-heading font-bold text-2xl text-cozy-text mb-2">Recipe Not Found</h1>
-        <p class="text-cozy-muted text-sm mb-6">${message}</p>
-        <a href="recipes.html" class="inline-block px-6 py-3 rounded-full bg-cozy-olivegreen text-white font-semibold text-xs hover:bg-cozy-olivegreen-hover transition shadow-md">
-          ← Return to All Recipes
-        </a>
-      </div>
-    `;
-  }
-</script>
+    }
+  </script>
