@@ -1,7 +1,7 @@
 /* Load Maghelia Custom Font */
 @font-face {
-  font-family: 'Sweet Cucumber Mocktail';
-  src: url('fonts/Sweet Cucumber Mocktail.ttf') format('truetype');
+  font-family: 'lets get crazy sans';
+  src: url('fonts/lets get crazy sans.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,7 +14,7 @@ body {
 }
 
 .font-serif-heading {
-  font-family: 'Sweet Cucumber Mocktail', serif;
+  font-family: 'lets get crazy sans', serif;
   font-weight: normal; 
 }
 
