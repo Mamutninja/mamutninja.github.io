@@ -1,7 +1,7 @@
 /* Load Maghelia Custom Font */
 @font-face {
-  font-family: 'Super Bouncer';
-  src: url('fonts/Super Bouncer.ttf') format('truetype');
+  font-family: 'Sweet Cucumber Mocktail';
+  src: url('fonts/Sweet Cucumber Mocktail.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,7 +14,7 @@ body {
 }
 
 .font-serif-heading {
-  font-family: 'Super Bouncer', serif;
+  font-family: 'Sweet Cucumber Mocktail', serif;
   font-weight: normal; 
 }
 
