@@ -1,7 +1,7 @@
 /* Load Maghelia Custom Font */
 @font-face {
-  font-family: 'Papernotes';
-  src: url('fonts/Papernotes.ttf') format('truetype');
+  font-family: 'Makcasa';
+  src: url('fonts/Makcasa.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,7 +14,7 @@ body {
 }
 
 .font-serif-heading {
-  font-family: 'Papernotes', serif;
+  font-family: 'Makcasa', serif;
   font-weight: normal; 
 }
 
