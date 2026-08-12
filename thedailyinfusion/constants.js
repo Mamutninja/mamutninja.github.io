@@ -59,6 +59,7 @@ const TAXONOMY = {
     { label: "🟢 Green", value: "Green" },
     { label: "🟡 Yellow", value: "Yellow" },
     { label: "🔴 Red", value: "Red" },
+    { label: "🔵 Blue", value: "Blue" },
     { label: "🟣 Purple", value: "Purple" },
     { label: "⚪ White", value: "White" },
     { label: "🟤 Brown", value: "Brown" },
