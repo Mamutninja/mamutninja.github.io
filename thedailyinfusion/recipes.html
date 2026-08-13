@@ -134,13 +134,12 @@
   <!-- RECIPE DATABASE & LOGIC -->
   <script src="recipes.js"></script>
   <script>
-    // State management for filters
+    // State management for filters (Dietary & Wellness removed)
     const filterState = {
       query: '',
       styles: [],
       temperatures: [],
       colors: [],
-      healthiness: [],
       primaryTastes: [],
       seasons: []
     };
@@ -185,7 +184,7 @@
 
       let html = '';
 
-      // Helper: Renders accordion group with responsive pill tags (NO nested scrollboxes!)
+      // Helper: Renders accordion group with responsive pill tags
       const renderGroup = (title, categoryKey, items, defaultOpen = true) => {
         if (!items || items.length === 0) return '';
         
@@ -224,9 +223,6 @@
 
       if (TAXONOMY.STYLES || TAXONOMY.DRINK_STYLES) {
         html += renderGroup('Drink Style', 'styles', TAXONOMY.STYLES || TAXONOMY.DRINK_STYLES, true);
-      }
-      if (TAXONOMY.HEALTHINESS) {
-        html += renderGroup('Dietary & Wellness', 'healthiness', TAXONOMY.HEALTHINESS, true);
       }
       if (TAXONOMY.TEMPERATURES) {
         html += renderGroup('Temperature', 'temperatures', TAXONOMY.TEMPERATURES, true);
@@ -304,13 +300,6 @@
           if (!hasColor) return false;
         }
 
-        // Healthiness Filter
-        if (filterState.healthiness.length > 0) {
-          const rHealth = Array.isArray(r.healthiness) ? r.healthiness : [r.healthiness];
-          const hasHealth = filterState.healthiness.every(h => rHealth.includes(h));
-          if (!hasHealth) return false;
-        }
-
         // Primary Taste Filter
         if (filterState.primaryTastes.length > 0 && (!r.primaryTaste || !filterState.primaryTastes.includes(r.primaryTaste))) {
           return false;
@@ -332,7 +321,6 @@
     function updateActiveBadges() {
       const container = document.getElementById('active-badges-container');
       const badgesBox = document.getElementById('active-badges');
-      const countEl = document.getElementById('recipe-count');
 
       let activeTags = [];
       Object.keys(filterState).forEach(key => {
