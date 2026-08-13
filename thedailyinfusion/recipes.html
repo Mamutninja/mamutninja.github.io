@@ -178,63 +178,67 @@
       return Array.from(uniqueMap.values());
     }
 
-    // 2. Dynamically build UI from TAXONOMY in constants.js
+    // 2. Dynamically build Pill Accordion UI from TAXONOMY in constants.js
     function buildDynamicFilters() {
       const container = document.getElementById('dynamic-filters-container');
       if (!container || typeof TAXONOMY === 'undefined') return;
 
       let html = '';
 
-      // Helper to build a collapsible or sectioned filter group
-      const renderGroup = (title, categoryKey, items) => {
+      // Helper: Renders accordion group with responsive pill tags (NO nested scrollboxes!)
+      const renderGroup = (title, categoryKey, items, defaultOpen = true) => {
         if (!items || items.length === 0) return '';
         
-        const checkboxes = items.map(item => {
+        const pills = items.map(item => {
           const label = typeof item === 'object' ? item.label : item;
           const val = typeof item === 'object' ? item.value : item;
           
           return `
-            <label class="flex items-center gap-2 text-xs text-cozy-text cursor-pointer hover:text-cozy-olivegreen transition">
+            <label class="cursor-pointer select-none">
               <input 
                 type="checkbox" 
                 data-category="${categoryKey}" 
                 value="${val}" 
                 onchange="handleFilterChange(this)"
-                class="rounded border-cozy-border text-cozy-olivegreen focus:ring-cozy-olivegreen"
+                class="sr-only peer"
               />
-              <span>${label}</span>
+              <span class="inline-block text-xs font-semibold px-3 py-1.5 rounded-full border border-cozy-border bg-cozy-bg text-cozy-text peer-checked:bg-cozy-olivegreen peer-checked:text-white peer-checked:border-cozy-olivegreen hover:border-cozy-olivegreen/60 transition-all duration-150 shadow-sm">
+                ${label}
+              </span>
             </label>
           `;
         }).join('');
 
         return `
-          <div class="space-y-2">
-            <h4 class="text-xs font-bold uppercase tracking-wider text-cozy-muted">${title}</h4>
-            <div class="space-y-1.5 max-h-40 overflow-y-auto pr-1">
-              ${checkboxes}
+          <details class="group border-b border-cozy-border/60 pb-3" ${defaultOpen ? 'open' : ''}>
+            <summary class="flex items-center justify-between cursor-pointer list-none text-xs font-bold uppercase tracking-wider text-cozy-muted py-1 hover:text-cozy-olivegreen transition">
+              <span>${title}</span>
+              <span class="text-cozy-muted group-open:rotate-180 transition-transform duration-200 text-xs">▼</span>
+            </summary>
+            <div class="flex flex-wrap gap-1.5 pt-2.5">
+              ${pills}
             </div>
-          </div>
+          </details>
         `;
       };
 
-      // Build out standard categories if they exist in TAXONOMY
       if (TAXONOMY.STYLES || TAXONOMY.DRINK_STYLES) {
-        html += renderGroup('Drink Style', 'styles', TAXONOMY.STYLES || TAXONOMY.DRINK_STYLES);
-      }
-      if (TAXONOMY.TEMPERATURES) {
-        html += renderGroup('Temperature', 'temperatures', TAXONOMY.TEMPERATURES);
-      }
-      if (TAXONOMY.COLORS) {
-        html += renderGroup('Color', 'colors', TAXONOMY.COLORS);
+        html += renderGroup('Drink Style', 'styles', TAXONOMY.STYLES || TAXONOMY.DRINK_STYLES, true);
       }
       if (TAXONOMY.HEALTHINESS) {
-        html += renderGroup('Dietary & Wellness', 'healthiness', TAXONOMY.HEALTHINESS);
+        html += renderGroup('Dietary & Wellness', 'healthiness', TAXONOMY.HEALTHINESS, true);
+      }
+      if (TAXONOMY.TEMPERATURES) {
+        html += renderGroup('Temperature', 'temperatures', TAXONOMY.TEMPERATURES, true);
+      }
+      if (TAXONOMY.COLORS) {
+        html += renderGroup('Color', 'colors', TAXONOMY.COLORS, false);
       }
       if (TAXONOMY.PRIMARY_TASTES) {
-        html += renderGroup('Taste Profile', 'primaryTastes', TAXONOMY.PRIMARY_TASTES);
+        html += renderGroup('Taste Profile', 'primaryTastes', TAXONOMY.PRIMARY_TASTES, false);
       }
       if (TAXONOMY.SEASONS) {
-        html += renderGroup('Season', 'seasons', TAXONOMY.SEASONS);
+        html += renderGroup('Season', 'seasons', TAXONOMY.SEASONS, false);
       }
 
       container.innerHTML = html;
@@ -254,7 +258,7 @@
       applyFilters();
     }
 
-    // 4. Update filterState when checkboxes are clicked
+    // 4. Update filterState when pills are toggled
     function handleFilterChange(checkbox) {
       const category = checkbox.dataset.category;
       const val = checkbox.value;
@@ -343,10 +347,10 @@
           
           let html = '';
           if (filterState.query) {
-            html += `<span class="bg-cozy-olivegreen/10 text-cozy-text text-xs px-2.5 py-1 rounded-md font-medium">"${filterState.query}"</span>`;
+            html += `<span class="bg-cozy-olivegreen/15 text-cozy-text text-xs px-2.5 py-1 rounded-full font-medium border border-cozy-olivegreen/20">🔍 "${filterState.query}"</span>`;
           }
           activeTags.forEach(tag => {
-            html += `<span class="bg-cozy-olivegreen text-white text-xs px-2.5 py-1 rounded-md font-medium">${tag}</span>`;
+            html += `<span class="bg-cozy-olivegreen text-white text-xs px-2.5 py-1 rounded-full font-medium shadow-sm">${tag}</span>`;
           });
           badgesBox.innerHTML = html;
         } else {
