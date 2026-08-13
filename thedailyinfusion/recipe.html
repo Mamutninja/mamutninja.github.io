@@ -86,6 +86,10 @@
 
   <footer id="site-footer"></footer>
 
+  <script src="constants.js"></script>
+  <script src="common.js"></script>
+  <script src="recipes.js"></script>
+
   <script>
     let currentRecipe = null;
     let currentServings = 1;
@@ -94,12 +98,14 @@
       loadRecipeDetail();
     });
 
-    function slugify(text) {
-      if (!text) return '';
-      return text
+    function normalizeString(str) {
+      if (!str) return '';
+      return str
         .toString()
         .toLowerCase()
         .trim()
+        .replace(/[\u00A0\u1680\u180E\u2000-\u200B\u202F\u205F\u3000]/g, ' ')
+        .replace(/[\u2010-\u2015]/g, '-')
         .replace(/[^\w\s-]/g, '')
         .replace(/[\s_-]+/g, '-')
         .replace(/^-+|-+$/g, '');
@@ -108,30 +114,17 @@
     function getAllStoredRecipes() {
       let recipes = [];
 
-      if (typeof getCombinedRecipes === 'function') {
-        try { recipes = getCombinedRecipes(); } catch(e) {}
+      if (typeof ALL_RECIPES !== 'undefined' && Array.isArray(ALL_RECIPES)) {
+        recipes = [...ALL_RECIPES];
       }
 
-      if (!recipes || recipes.length === 0) {
-        recipes = (typeof ALL_RECIPES !== 'undefined') ? [...ALL_RECIPES] : [];
-      }
-
-      const keysToCheck = [
-        'cozy_custom_recipes',
-        'custom_recipes',
-        'customRecipes',
-        'cozy_recipes',
-        'recipes'
-      ];
-
+      const keysToCheck = ['cozy_custom_recipes', 'custom_recipes', 'customRecipes', 'recipes'];
       keysToCheck.forEach(key => {
         try {
           const item = localStorage.getItem(key);
           if (item) {
             const parsed = JSON.parse(item);
-            if (Array.isArray(parsed)) {
-              recipes.push(...parsed);
-            }
+            if (Array.isArray(parsed)) recipes.push(...parsed);
           }
         } catch (e) {}
       });
@@ -139,7 +132,7 @@
       const uniqueMap = new Map();
       recipes.forEach(r => {
         if (!r) return;
-        const key = (r.id || r.name || '').trim().toLowerCase();
+        const key = normalizeString(r.id || r.name);
         if (key && !uniqueMap.has(key)) {
           uniqueMap.set(key, r);
         }
@@ -157,25 +150,24 @@
         return;
       }
 
-      const decodedId = decodeURIComponent(rawId).trim();
-      const targetSlug = slugify(decodedId);
+      const targetSlug = normalizeString(decodeURIComponent(rawId));
       const allRecipes = getAllStoredRecipes();
 
       currentRecipe = allRecipes.find(r => {
         if (!r) return false;
-        const rId = (r.id || '').trim();
-        const rName = (r.name || '').trim();
+        const rId = normalizeString(r.id);
+        const rName = normalizeString(r.name);
 
         return (
-          rId.toLowerCase() === decodedId.toLowerCase() ||
-          rName.toLowerCase() === decodedId.toLowerCase() ||
-          slugify(rId) === targetSlug ||
-          slugify(rName) === targetSlug
+          rId === targetSlug ||
+          rName === targetSlug ||
+          (rId && targetSlug.includes(rId)) ||
+          (rName && targetSlug.includes(rName))
         );
       });
 
       if (!currentRecipe) {
-        showNotFoundError(`Recipe "${decodedId}" could not be found.`);
+        showNotFoundError(`Recipe "${decodeURIComponent(rawId)}" could not be found.`);
         return;
       }
 
@@ -201,6 +193,7 @@
       setElText('recipe-tip', r.tip || 'Enjoy your creation!');
 
       renderIngredients();
+      updateFavoriteUI(); // Check if this recipe is already favorited
 
       const stepsContainer = document.getElementById('recipe-instructions');
       if (stepsContainer && Array.isArray(r.instructions)) {
@@ -249,6 +242,57 @@
       const el = document.getElementById('servings-count');
       if (el) el.innerText = currentServings;
       renderIngredients();
+    }
+
+    // --- FAVORITES LOGIC ---
+    function getFavorites() {
+      try {
+        return JSON.parse(localStorage.getItem('cozy_favorites') || '[]');
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function isFavorite(recipeId) {
+      const favs = getFavorites();
+      return favs.includes(recipeId);
+    }
+
+    function updateFavoriteUI() {
+      if (!currentRecipe) return;
+      const recipeId = currentRecipe.id || currentRecipe.name;
+      const favIcon = document.getElementById('fav-icon');
+      const favText = document.getElementById('fav-text');
+      const favBtn = document.getElementById('favorite-btn');
+
+      if (isFavorite(recipeId)) {
+        if (favIcon) favIcon.innerText = '❤️';
+        if (favText) favText.innerText = 'Saved in Favorites';
+        if (favBtn) {
+          favBtn.classList.add('border-cozy-olivegreen', 'bg-cozy-olivegreen/10');
+        }
+      } else {
+        if (favIcon) favIcon.innerText = '🤍';
+        if (favText) favText.innerText = 'Save to Favorites';
+        if (favBtn) {
+          favBtn.classList.remove('border-cozy-olivegreen', 'bg-cozy-olivegreen/10');
+        }
+      }
+    }
+
+    function toggleFavorite() {
+      if (!currentRecipe) return;
+      const recipeId = currentRecipe.id || currentRecipe.name;
+      let favs = getFavorites();
+
+      if (favs.includes(recipeId)) {
+        favs = favs.filter(id => id !== recipeId);
+      } else {
+        favs.push(recipeId);
+      }
+
+      localStorage.setItem('cozy_favorites', JSON.stringify(favs));
+      updateFavoriteUI();
     }
 
     function showNotFoundError(message) {
