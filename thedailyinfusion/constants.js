@@ -70,6 +70,14 @@ const TAXONOMY = {
         "Soy Milk", 
         "Coconut Milk", 
         "Coconut Cream", 
+        "Pistachio Cream", 
+        "Cashew Cream", 
+        "Ube Paste", 
+        "Taro Puree", 
+        "Cookie Butter", 
+        "Hazelnut Paste", 
+        "Peanut Butter", 
+        "Almond Butter", 
         "Cashew Milk", 
         "Macadamia Milk", 
         "Pistachio Milk", 
@@ -180,43 +188,6 @@ const TAXONOMY = {
     { label: "🩷 Pink", value: "Pink" },
     { label: "🌾 Amber", value: "Amber" },
     { label: "💧 Clear", value: "Clear" }
-  ],
-
-  HEALTHINESS: [
-    { label: "🌱 Caffeine-Free", value: "Caffeine-Free" },
-    { label: "🥛 Dairy-Free", value: "Dairy-Free" },
-    { label: "🍃 Vegan", value: "Vegan" },
-    { label: "🌾 Gluten-Free", value: "Gluten-Free" },
-    { label: "🍯 Refined Sugar-Free", value: "Refined Sugar-Free" },
-    { label: "🥜 Nut-Free", value: "Nut-Free" },
-    { label: "🫘 Soy-Free", value: "Soy-Free" },
-    { label: "✨ Low-Calorie", value: "Low-Calorie" },
-    { label: "🥑 Keto / Low-Carb", value: "Keto / Low-Carb" },
-    { label: "💪 High-Protein", value: "High-Protein" },
-    { label: "🦴 Paleo-Friendly", value: "Paleo-Friendly" },
-    { label: "🫄 Low-FODMAP", value: "Low-FODMAP" },
-    { label: "🦠 Probiotic-Rich", value: "Probiotic-Rich" },
-    { label: "🌿 Whole30 Approved", value: "Whole30 Approved" },
-    { label: "🌱 Raw & Unprocessed", value: "Raw & Unprocessed" }
-  ],
-
-  NUTRIENTS: [
-    { label: "🍋 Vitamin C", value: "Vitamin C" },
-    { label: "✨ Curcumin", value: "Curcumin" },
-    { label: "🫚 Gingerol", value: "Gingerol" },
-    { label: "🍇 Anthocyanins", value: "Anthocyanins" },
-    { label: "⚡ Electrolytes", value: "Electrolytes" },
-    { label: "🦠 Probiotics", value: "Probiotics" },
-    { label: "🛡️ Antioxidants", value: "Antioxidants" }
-  ],
-
-  USE_CASES: [
-    { label: "💧 Hydration", value: "Deep Hydration" },
-    { label: "🍃 Gut Health", value: "Gut & Digestion" },
-    { label: "🌿 Anti-Inflammatory", value: "Anti-Inflammatory" },
-    { label: "🧘 Relaxation", value: "Stress & Relaxation" },
-    { label: "🛡️ Immune Boost", value: "Immune Boost" },
-    { label: "⚡ Sustained Energy", value: "Sustained Energy" }
   ],
 
   TASTES: [
