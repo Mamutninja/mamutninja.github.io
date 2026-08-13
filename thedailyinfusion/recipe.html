@@ -14,13 +14,16 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="theme.js"></script>
   <link rel="stylesheet" href="styles.css">
+  <script src="constants.js"></script>
   <script src="common.js"></script>
+  <script src="recipes.js"></script> <!-- ADDED CRITICAL RECIPE SCRIPT -->
 </head>
 <body class="min-h-screen flex flex-col">
 
   <header id="site-header"></header>
 
   <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-8">
+    <!-- Top Action Bar -->
     <div class="flex items-center justify-between mb-6">
       <a href="recipes.html" class="inline-flex items-center gap-2 text-sm font-medium text-cozy-muted hover:text-cozy-olivegreen transition">← Back to all recipes</a>
       <button id="favorite-btn" onclick="toggleFavorite()" class="px-4 py-2 rounded-full border border-cozy-border bg-white text-sm font-medium text-cozy-text hover:border-cozy-olivegreen transition shadow-sm flex gap-2">
@@ -28,33 +31,56 @@
       </button>
     </div>
 
+    <!-- Main Header Card -->
     <div class="cozy-card rounded-cozy p-6 md:p-8 mb-8">
-      <span id="recipe-style" class="px-3 py-1 rounded-full text-xs font-semibold bg-cozy-olivegreen/10 text-cozy-olivegreen inline-block mb-3">Style</span>
+      <div class="flex flex-wrap items-center gap-2 mb-3">
+        <span id="recipe-style" class="px-3 py-1 rounded-full text-xs font-semibold bg-cozy-olivegreen/10 text-cozy-olivegreen inline-block">Style</span>
+        <span id="recipe-prep-time" class="px-3 py-1 rounded-full text-xs font-semibold bg-cozy-bg text-cozy-muted border border-cozy-border inline-block">⏱️ 5 mins</span>
+        <span id="recipe-color" class="px-3 py-1 rounded-full text-xs font-semibold bg-cozy-bg text-cozy-muted border border-cozy-border inline-block">🎨 Color</span>
+        <span id="recipe-taste" class="px-3 py-1 rounded-full text-xs font-semibold bg-cozy-bg text-cozy-muted border border-cozy-border inline-block">👅 Taste</span>
+      </div>
       <h1 id="recipe-title" class="font-serif-heading text-3xl md:text-5xl font-bold text-cozy-text mb-4">Recipe Title</h1>
-      <p id="recipe-description" class="text-cozy-muted text-base md:text-lg mb-6"></p>
+      <p id="recipe-description" class="text-cozy-muted text-base md:text-lg mb-4 leading-relaxed"></p>
+      
+      <!-- Pro Tip Box -->
+      <div class="bg-cozy-bg/60 border border-cozy-border/60 rounded-xl p-3.5 text-xs text-cozy-text flex items-start gap-2">
+        <span>💡</span>
+        <p><strong class="font-semibold">Pro Tip:</strong> <span id="recipe-tip">Enjoy your creation!</span></p>
+      </div>
     </div>
 
+    <!-- Recipe Content Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      
+      <!-- Ingredients Column -->
       <div class="lg:col-span-5 space-y-6">
         <div class="cozy-card rounded-cozy p-6">
           <div class="flex items-center justify-between mb-6 pb-4 border-b border-cozy-border">
             <h2 class="font-serif-heading font-bold text-xl text-cozy-text">Ingredients</h2>
-            <div class="flex gap-1 bg-cozy-bg p-1 rounded-xl border border-cozy-border">
-              <button onclick="updateServings(1)" class="servings-btn w-8 h-8 rounded-lg text-xs font-bold bg-cozy-olivegreen text-white" data-scale="1">1x</button>
-              <button onclick="updateServings(2)" class="servings-btn w-8 h-8 rounded-lg text-xs font-bold text-cozy-muted" data-scale="2">2x</button>
+            <div class="flex items-center gap-2 bg-cozy-bg px-2.5 py-1 rounded-xl border border-cozy-border">
+              <button onclick="updateServings(-1)" class="text-xs font-bold text-cozy-muted hover:text-cozy-olivegreen px-1.5 py-0.5">ー</button>
+              <span id="servings-count" class="text-xs font-bold text-cozy-olivegreen">1</span>
+              <span class="text-xs text-cozy-muted font-medium">servings</span>
+              <button onclick="updateServings(1)" class="text-xs font-bold text-cozy-muted hover:text-cozy-olivegreen px-1.5 py-0.5">＋</button>
             </div>
           </div>
-          <ul id="ingredients-list" class="space-y-3 mb-6"></ul>
-          <button id="add-missing-btn" onclick="addMissingToShoppingList()" class="w-full py-3 rounded-xl bg-cozy-sage text-white font-medium text-sm transition">🛒 Add Missing Items to Shopping List</button>
+          
+          <ul id="recipe-ingredients" class="space-y-3 mb-6"></ul>
+          
+          <button id="add-missing-btn" onclick="addMissingToShoppingList()" class="w-full py-3 rounded-xl bg-cozy-olivegreen hover:bg-cozy-olivegreen-hover text-white font-medium text-sm transition shadow-sm">
+            🛒 Add Missing Items to Shopping List
+          </button>
         </div>
       </div>
 
+      <!-- Preparation Steps Column -->
       <div class="lg:col-span-7">
         <div class="cozy-card rounded-cozy p-6 md:p-8">
           <h2 class="font-serif-heading font-bold text-2xl text-cozy-text mb-6 pb-4 border-b border-cozy-border">Preparation Steps</h2>
-          <ol id="instructions-list" class="space-y-6"></ol>
+          <ol id="recipe-instructions" class="space-y-4"></ol>
         </div>
       </div>
+
     </div>
   </main>
 
@@ -68,7 +94,6 @@
       loadRecipeDetail();
     });
 
-    // Convert text to a clean slug (e.g. "Blue Cloud!" -> "blue-cloud")
     function slugify(text) {
       if (!text) return '';
       return text
@@ -80,21 +105,17 @@
         .replace(/^-+|-+$/g, '');
     }
 
-    // Retrieve recipes from recipes.js + all possible localStorage keys
     function getAllStoredRecipes() {
       let recipes = [];
 
-      // 1. If recipes.js has getCombinedRecipes helper
       if (typeof getCombinedRecipes === 'function') {
         try { recipes = getCombinedRecipes(); } catch(e) {}
       }
 
-      // 2. Base array from recipes.js
       if (!recipes || recipes.length === 0) {
         recipes = (typeof ALL_RECIPES !== 'undefined') ? [...ALL_RECIPES] : [];
       }
 
-      // 3. Scan all potential local storage keys
       const keysToCheck = [
         'cozy_custom_recipes',
         'custom_recipes',
@@ -115,7 +136,6 @@
         } catch (e) {}
       });
 
-      // Deduplicate by ID / Name
       const uniqueMap = new Map();
       recipes.forEach(r => {
         if (!r) return;
@@ -141,7 +161,6 @@
       const targetSlug = slugify(decodedId);
       const allRecipes = getAllStoredRecipes();
 
-      // Flexible matching: check ID, Name, or slugified match
       currentRecipe = allRecipes.find(r => {
         if (!r) return false;
         const rId = (r.id || '').trim();
@@ -166,16 +185,20 @@
     function renderRecipePage(r) {
       document.title = `${r.name} — StillSip`;
       
-      document.getElementById('recipe-title').innerText = r.name || 'Untitled Recipe';
-      document.getElementById('recipe-style').innerText = r.style || 'Drink';
-      document.getElementById('recipe-description').innerText = r.description || '';
-      document.getElementById('recipe-prep-time').innerText = r.prepMinutes || r.prepTime || '5 mins';
+      const setElText = (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = text;
+      };
+
+      setElText('recipe-title', r.name || 'Untitled Recipe');
+      setElText('recipe-style', r.style || 'Drink');
+      setElText('recipe-description', r.description || '');
+      setElText('recipe-prep-time', `⏱️ ${r.prepMinutes || r.prepTime || '5 mins'}`);
       
       const colors = Array.isArray(r.color) ? r.color.join(', ') : (r.color || 'Custom');
-      document.getElementById('recipe-color').innerText = colors;
-      
-      document.getElementById('recipe-taste').innerText = r.primaryTaste || 'Fresh';
-      document.getElementById('recipe-tip').innerText = r.tip || 'Enjoy your creation!';
+      setElText('recipe-color', `🎨 ${colors}`);
+      setElText('recipe-taste', `👅 ${r.primaryTaste || 'Fresh'}`);
+      setElText('recipe-tip', r.tip || 'Enjoy your creation!');
 
       renderIngredients();
 
