@@ -134,11 +134,23 @@
   <!-- RECIPE DATABASE & LOGIC -->
   <script src="recipes.js"></script>
   <script>
+    // State management for filters
+    const filterState = {
+      query: '',
+      styles: [],
+      temperatures: [],
+      colors: [],
+      healthiness: [],
+      primaryTastes: [],
+      seasons: []
+    };
+
     document.addEventListener('DOMContentLoaded', () => {
+      buildDynamicFilters();
       initCatalog();
     });
 
-    // Helper: Combines built-in recipes.js with custom browser-saved recipes
+    // 1. Fetch all recipes (built-in + local browser storage)
     function getCombinedRecipes() {
       const builtin = (typeof ALL_RECIPES !== 'undefined') ? ALL_RECIPES : [];
       let custom = [];
@@ -154,7 +166,6 @@
         } catch (e) {}
       });
 
-      // Map to prevent duplicates
       const uniqueMap = new Map();
       [...builtin, ...custom].forEach(r => {
         if (!r) return;
@@ -167,45 +178,202 @@
       return Array.from(uniqueMap.values());
     }
 
-    function initCatalog() {
-      const recipes = getCombinedRecipes();
-      renderRecipeCards(recipes);
+    // 2. Dynamically build UI from TAXONOMY in constants.js
+    function buildDynamicFilters() {
+      const container = document.getElementById('dynamic-filters-container');
+      if (!container || typeof TAXONOMY === 'undefined') return;
 
-      // Search bar listener
-      const searchInput = document.getElementById('search-input');
-      if (searchInput) {
-        searchInput.addEventListener('input', (e) => filterRecipes(e.target.value));
+      let html = '';
+
+      // Helper to build a collapsible or sectioned filter group
+      const renderGroup = (title, categoryKey, items) => {
+        if (!items || items.length === 0) return '';
+        
+        const checkboxes = items.map(item => {
+          const label = typeof item === 'object' ? item.label : item;
+          const val = typeof item === 'object' ? item.value : item;
+          
+          return `
+            <label class="flex items-center gap-2 text-xs text-cozy-text cursor-pointer hover:text-cozy-olivegreen transition">
+              <input 
+                type="checkbox" 
+                data-category="${categoryKey}" 
+                value="${val}" 
+                onchange="handleFilterChange(this)"
+                class="rounded border-cozy-border text-cozy-olivegreen focus:ring-cozy-olivegreen"
+              />
+              <span>${label}</span>
+            </label>
+          `;
+        }).join('');
+
+        return `
+          <div class="space-y-2">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-cozy-muted">${title}</h4>
+            <div class="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+              ${checkboxes}
+            </div>
+          </div>
+        `;
+      };
+
+      // Build out standard categories if they exist in TAXONOMY
+      if (TAXONOMY.STYLES || TAXONOMY.DRINK_STYLES) {
+        html += renderGroup('Drink Style', 'styles', TAXONOMY.STYLES || TAXONOMY.DRINK_STYLES);
       }
+      if (TAXONOMY.TEMPERATURES) {
+        html += renderGroup('Temperature', 'temperatures', TAXONOMY.TEMPERATURES);
+      }
+      if (TAXONOMY.COLORS) {
+        html += renderGroup('Color', 'colors', TAXONOMY.COLORS);
+      }
+      if (TAXONOMY.HEALTHINESS) {
+        html += renderGroup('Dietary & Wellness', 'healthiness', TAXONOMY.HEALTHINESS);
+      }
+      if (TAXONOMY.PRIMARY_TASTES) {
+        html += renderGroup('Taste Profile', 'primaryTastes', TAXONOMY.PRIMARY_TASTES);
+      }
+      if (TAXONOMY.SEASONS) {
+        html += renderGroup('Season', 'seasons', TAXONOMY.SEASONS);
+      }
+
+      container.innerHTML = html;
     }
 
-    function filterRecipes(query = '') {
-      const recipes = getCombinedRecipes();
-      const term = query.toLowerCase().trim();
+    // 3. Initialize search bar and catalog load
+    function initCatalog() {
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) {
+        searchInput.value = '';
+        searchInput.addEventListener('input', (e) => {
+          filterState.query = e.target.value.toLowerCase().trim();
+          applyFilters();
+        });
+      }
 
-      const filtered = recipes.filter(r => {
-        if (!term) return true;
-        const matchName = r.name && r.name.toLowerCase().includes(term);
-        const matchStyle = r.style && r.style.toLowerCase().includes(term);
-        const matchIng = r.ingredients && r.ingredients.some(i => i.name.toLowerCase().includes(term));
-        return matchName || matchStyle || matchIng;
+      applyFilters();
+    }
+
+    // 4. Update filterState when checkboxes are clicked
+    function handleFilterChange(checkbox) {
+      const category = checkbox.dataset.category;
+      const val = checkbox.value;
+
+      if (checkbox.checked) {
+        if (!filterState[category].includes(val)) {
+          filterState[category].push(val);
+        }
+      } else {
+        filterState[category] = filterState[category].filter(v => v !== val);
+      }
+
+      applyFilters();
+    }
+
+    // 5. Multi-criteria filtering logic
+    function applyFilters() {
+      const allRecipes = getCombinedRecipes();
+
+      const filtered = allRecipes.filter(r => {
+        // Keyword Search
+        if (filterState.query) {
+          const nameMatch = r.name && r.name.toLowerCase().includes(filterState.query);
+          const styleMatch = r.style && r.style.toLowerCase().includes(filterState.query);
+          const ingMatch = r.ingredients && r.ingredients.some(i => i.name.toLowerCase().includes(filterState.query));
+          if (!nameMatch && !styleMatch && !ingMatch) return false;
+        }
+
+        // Style Filter
+        if (filterState.styles.length > 0 && (!r.style || !filterState.styles.includes(r.style))) {
+          return false;
+        }
+
+        // Temperature Filter
+        if (filterState.temperatures.length > 0 && (!r.temperature || !filterState.temperatures.includes(r.temperature))) {
+          return false;
+        }
+
+        // Color Filter
+        if (filterState.colors.length > 0) {
+          const rColors = Array.isArray(r.color) ? r.color : [r.color];
+          const hasColor = rColors.some(c => filterState.colors.includes(c));
+          if (!hasColor) return false;
+        }
+
+        // Healthiness Filter
+        if (filterState.healthiness.length > 0) {
+          const rHealth = Array.isArray(r.healthiness) ? r.healthiness : [r.healthiness];
+          const hasHealth = filterState.healthiness.every(h => rHealth.includes(h));
+          if (!hasHealth) return false;
+        }
+
+        // Primary Taste Filter
+        if (filterState.primaryTastes.length > 0 && (!r.primaryTaste || !filterState.primaryTastes.includes(r.primaryTaste))) {
+          return false;
+        }
+
+        // Season Filter
+        if (filterState.seasons.length > 0 && (!r.season || !filterState.seasons.includes(r.season))) {
+          return false;
+        }
+
+        return true;
       });
 
+      updateActiveBadges();
       renderRecipeCards(filtered);
     }
 
+    // 6. Update Active Badges and Count Indicator
+    function updateActiveBadges() {
+      const container = document.getElementById('active-badges-container');
+      const badgesBox = document.getElementById('active-badges');
+      const countEl = document.getElementById('recipe-count');
+
+      let activeTags = [];
+      Object.keys(filterState).forEach(key => {
+        if (key !== 'query' && Array.isArray(filterState[key])) {
+          activeTags.push(...filterState[key]);
+        }
+      });
+
+      if (container && badgesBox) {
+        if (activeTags.length > 0 || filterState.query) {
+          container.classList.remove('hidden');
+          
+          let html = '';
+          if (filterState.query) {
+            html += `<span class="bg-cozy-olivegreen/10 text-cozy-text text-xs px-2.5 py-1 rounded-md font-medium">"${filterState.query}"</span>`;
+          }
+          activeTags.forEach(tag => {
+            html += `<span class="bg-cozy-olivegreen text-white text-xs px-2.5 py-1 rounded-md font-medium">${tag}</span>`;
+          });
+          badgesBox.innerHTML = html;
+        } else {
+          container.classList.add('hidden');
+        }
+      }
+    }
+
+    // 7. Render Recipe Cards Grid
     function renderRecipeCards(recipes) {
       const container = document.getElementById('recipe-grid');
+      const emptyState = document.getElementById('empty-state');
+      const countEl = document.getElementById('recipe-count');
+
+      if (countEl) {
+        countEl.innerText = `Showing ${recipes.length} recipe${recipes.length === 1 ? '' : 's'}`;
+      }
+
       if (!container) return;
 
       if (recipes.length === 0) {
-        container.innerHTML = `
-          <div class="col-span-full text-center py-12 text-cozy-muted">
-            <span class="text-4xl block mb-2">🍵</span>
-            <p class="font-medium text-sm">No recipes found.</p>
-          </div>
-        `;
+        container.innerHTML = '';
+        if (emptyState) emptyState.classList.remove('hidden');
         return;
       }
+
+      if (emptyState) emptyState.classList.add('hidden');
 
       container.innerHTML = recipes.map(r => {
         const recipeId = r.id || r.name;
@@ -239,6 +407,38 @@
           </a>
         `;
       }).join('');
+    }
+
+    // 8. Reset All Filters Action
+    function resetAllFilters() {
+      filterState.query = '';
+      Object.keys(filterState).forEach(k => {
+        if (Array.isArray(filterState[k])) filterState[k] = [];
+      });
+
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) searchInput.value = '';
+
+      const checkboxes = document.querySelectorAll('#dynamic-filters-container input[type="checkbox"]');
+      checkboxes.forEach(cb => cb.checked = false);
+
+      applyFilters();
+    }
+
+    // 9. Export JS File Action
+    function exportRecipesJS() {
+      const recipes = getCombinedRecipes();
+      const jsContent = `const ALL_RECIPES = ${JSON.stringify(recipes, null, 2)};\n\nif (typeof module !== 'undefined') {\n  module.exports = { ALL_RECIPES };\n}`;
+      
+      const blob = new Blob([jsContent], { type: 'text/javascript' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'recipes.js';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
   </script>
 </body>
