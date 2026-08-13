@@ -96,19 +96,31 @@ const TAXONOMY = {
       ]
     },
     {
-      name: "🍫 Sweeteners, Spices & Cocoa",
+      name: "🍫 Sweeteners, Syrups & Powders",
       items: [
         "Honey", 
         "Agave Nectar", 
         "Maple Syrup", 
         "Simple Syrup", 
+        "Grenadine", 
+        "Orgeat Syrup", 
+        "Ginger Syrup", 
+        "Elderflower Syrup", 
+        "Blue Curaçao Syrup", 
+        "Falernum Syrup", 
+        "Brown Sugar Syrup", 
+        "Vanilla Syrup", 
+        "Caramel Syrup", 
+        "Salted Caramel Syrup", 
+        "Hazelnut Syrup", 
+        "Lavender Syrup", 
+        "Mint Syrup", 
+        "Rosemary Syrup", 
         "Sugar", 
         "Brown Sugar", 
         "Coconut Sugar", 
         "Date Syrup", 
         "Monk Fruit Sweetener", 
-        "Vanilla Syrup", 
-        "Lavender Syrup", 
         "Cocoa Powder", 
         "Ground Turmeric", 
         "Ground Cinnamon", 
@@ -131,10 +143,7 @@ const TAXONOMY = {
         "Blue Spirulina", 
         "Collagen Powder", 
         "Protein Powder", 
-        "Maca Powder",
-        "Dark Chocolate",
-        "White Chocolate",
-        "Ruby Chocolate"
+        "Maca Powder"
       ]
     },
     {
