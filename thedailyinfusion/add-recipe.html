@@ -176,199 +176,170 @@
 
   <footer id="site-footer"></footer>
 
+  <script src="constants.js"></script>
+  <script src="common.js"></script>
   <script src="recipes.js"></script>
+
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      populateFormDropdowns();
-      
-      addIngredientRow();
-      addIngredientRow();
-      addInstructionRow();
-      addInstructionRow();
-    });
-
-    function populateFormDropdowns() {
-      // Datalist for ingredient search
-      const datalist = document.getElementById('pantry-ingredients-list');
-      datalist.innerHTML = TAXONOMY.getAllIngredients().map(ing => `<option value="${ing}">`).join('');
-
-      // Render Multi-Select Color Checkboxes
-      const colorContainer = document.getElementById('recipe-color-checkboxes');
-      colorContainer.innerHTML = TAXONOMY.COLORS.map(c => `
-        <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-cozy-border bg-cozy-bg text-xs font-medium text-cozy-text hover:border-cozy-olivegreen transition select-none">
-          <input type="checkbox" name="recipe-color-option" value="${c.value}" class="color-checkbox accent-[#8F9B5F] rounded" />
-          <span>${c.label}</span>
-        </label>
-      `).join('');
-
-      // Dropdowns
-      document.getElementById('recipe-style').innerHTML = TAXONOMY.STYLES.map(s => `<option value="${s.value}">${s.label}</option>`).join('');
-      document.getElementById('recipe-temp').innerHTML = TAXONOMY.TEMPERATURES.map(t => `<option value="${t.value}">${t.label}</option>`).join('');
-      document.getElementById('recipe-taste').innerHTML = TAXONOMY.TASTES.map(t => `<option value="${t.value}">${t.label}</option>`).join('');
-      document.getElementById('recipe-season').innerHTML = TAXONOMY.SEASONS.map(s => `<option value="${s.value}">${s.label}</option>`).join('');
-      document.getElementById('recipe-preptime').innerHTML = TAXONOMY.PREP_TIMES.map(p => `<option value="${p.value}">${p.label}</option>`).join('');
-    }
-
-    function addIngredientRow() {
-      const container = document.getElementById('ingredients-inputs-container');
-      const row = document.createElement('div');
-      row.className = 'flex items-center gap-2 ingredient-row';
-      row.innerHTML = `
-        <input 
-          type="text" 
-          list="pantry-ingredients-list" 
-          placeholder="Search ingredient (e.g. Lime Juice)" 
-          class="ing-name flex-1 px-3 py-2 bg-cozy-bg rounded-xl border border-cozy-border text-xs focus:outline-none focus:border-cozy-olivegreen" 
-          required 
-        />
-        <input type="number" step="0.1" placeholder="Amount" class="ing-amount w-20 px-3 py-2 bg-cozy-bg rounded-xl border border-cozy-border text-xs focus:outline-none focus:border-cozy-olivegreen" required />
-        <input type="text" placeholder="Unit (cup/tbsp)" class="ing-unit w-28 px-3 py-2 bg-cozy-bg rounded-xl border border-cozy-border text-xs focus:outline-none focus:border-cozy-olivegreen" required />
-        <button type="button" onclick="this.parentElement.remove()" class="p-2 text-cozy-muted hover:text-red-600 text-xs font-bold">✕</button>
-      `;
-      container.appendChild(row);
-    }
-
-    function addInstructionRow() {
-      const container = document.getElementById('instructions-inputs-container');
-      const stepNumber = container.children.length + 1;
-      const row = document.createElement('div');
-      row.className = 'flex items-center gap-2 instruction-row';
-      row.innerHTML = `
-        <span class="text-xs font-bold text-cozy-olivegreen w-12">Step ${stepNumber}:</span>
-        <input type="text" placeholder="Describe this step..." class="step-desc flex-1 px-3 py-2 bg-cozy-bg rounded-xl border border-cozy-border text-xs focus:outline-none focus:border-cozy-olivegreen" required />
-        <button type="button" onclick="this.parentElement.remove()" class="p-2 text-cozy-muted hover:text-red-600 text-xs font-bold">✕</button>
-      `;
-      container.appendChild(row);
-    }
-
-    function handleSaveRecipe(e) {
-      e.preventDefault();
-
-      const name = document.getElementById('recipe-name').value.trim();
-      const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + Date.now().toString().slice(-4);
-
-      // Collect Multi-Selected Colors into an Array
-      const checkedColorEls = document.querySelectorAll('.color-checkbox:checked');
-      const selectedColors = Array.from(checkedColorEls).map(cb => cb.value);
-      const color = selectedColors.length > 0 ? selectedColors : ["Clear"];
-
-      // Collect Ingredients
-      const ingRows = document.querySelectorAll('.ingredient-row');
-      const ingredients = Array.from(ingRows).map(row => ({
-        name: row.querySelector('.ing-name').value.trim(),
-        amount: parseFloat(row.querySelector('.ing-amount').value) || 1,
-        unit: row.querySelector('.ing-unit').value.trim()
-      }));
-
-      // Collect Steps
-      const stepRows = document.querySelectorAll('.instruction-row');
-      const instructions = Array.from(stepRows).map(row => row.querySelector('.step-desc').value.trim());
-
-      const newRecipe = {
-        id,
-        name,
-        style: document.getElementById('recipe-style').value,
-        description: document.getElementById('recipe-description').value.trim(),
-        temperature: document.getElementById('recipe-temp').value,
-        color, // Saved as array e.g. ["Green", "Yellow"]
-        primaryTaste: document.getElementById('recipe-taste').value,
-        season: document.getElementById('recipe-season').value,
-        prepTime: document.getElementById('recipe-preptime').value,
-        prepMinutes: document.getElementById('recipe-minutes').value.trim() || '5 mins',
-        healthiness: ["Caffeine-Free", "Homemade"],
-        nutrients: ["Fresh Botanicals"],
-        useCases: ["Custom Drink"],
-        equipment: ["Standard Utensils"],
-        tip: "Enjoy your custom homemade creation!",
-        ingredients,
-        instructions
-      };
-
-      const customRecipes = JSON.parse(localStorage.getItem('cozy_custom_recipes') || '[]');
-      customRecipes.push(newRecipe);
-      localStorage.setItem('cozy_custom_recipes', JSON.stringify(customRecipes));
-
-      window.location.href = `recipe.html?id=${id}`;
-    }
     let editModeId = null;
 
     document.addEventListener('DOMContentLoaded', () => {
       checkForEditMode();
     });
 
+    function normalizeString(str) {
+      if (!str) return '';
+      return str.toString().toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-');
+    }
+
     function checkForEditMode() {
       const urlParams = new URLSearchParams(window.location.search);
       const rawEditId = urlParams.get('edit');
 
-      if (!rawEditId) return; // Normal "Add Recipe" mode
+      if (!rawEditId) return; // Standard "Add Recipe" mode
 
       editModeId = decodeURIComponent(rawEditId).trim();
+      const targetSlug = normalizeString(editModeId);
 
-      // Fetch recipe from recipes.js + localStorage
-      const allRecipes = (typeof getCombinedRecipes === 'function') 
-        ? getCombinedRecipes() 
-        : (typeof ALL_RECIPES !== 'undefined' ? ALL_RECIPES : []);
+      // 1. Fetch recipes from recipes.js + browser localStorage
+      let allRecipes = [];
+      if (typeof getCombinedRecipes === 'function') {
+        try { allRecipes = getCombinedRecipes(); } catch(e) {}
+      }
+      if (!allRecipes || allRecipes.length === 0) {
+        allRecipes = (typeof ALL_RECIPES !== 'undefined') ? [...ALL_RECIPES] : [];
+      }
 
       const recipeToEdit = allRecipes.find(r => {
-        const rId = (r.id || '').toLowerCase();
-        const rName = (r.name || '').toLowerCase();
-        const target = editModeId.toLowerCase();
-        return rId === target || rName === target;
+        if (!r) return false;
+        const rId = normalizeString(r.id);
+        const rName = normalizeString(r.name);
+        return rId === targetSlug || rName === targetSlug;
       });
 
       if (!recipeToEdit) return;
 
-      // 1. Update Page Headings & Button Text
+      // 2. Update Header & Submit Button
       const pageHeading = document.querySelector('h1');
       if (pageHeading) pageHeading.innerText = `Edit "${recipeToEdit.name}"`;
-      
-      const submitBtn = document.querySelector('button[type="submit"]');
+
+      const submitBtn = document.querySelector('button[type="submit"]') || document.getElementById('submit-btn');
       if (submitBtn) submitBtn.innerText = '💾 Save Changes';
 
-      // 2. Pre-fill basic form fields
-      if (document.getElementById('recipe-name')) document.getElementById('recipe-name').value = recipeToEdit.name || '';
-      if (document.getElementById('recipe-style')) document.getElementById('recipe-style').value = recipeToEdit.style || '';
-      if (document.getElementById('recipe-description')) document.getElementById('recipe-description').value = recipeToEdit.description || '';
-      if (document.getElementById('recipe-prep-time')) document.getElementById('recipe-prep-time').value = recipeToEdit.prepMinutes || recipeToEdit.prepTime || '';
-      if (document.getElementById('recipe-taste')) document.getElementById('recipe-taste').value = recipeToEdit.primaryTaste || '';
-      if (document.getElementById('recipe-tip')) document.getElementById('recipe-tip').value = recipeToEdit.tip || '';
+      // 3. Pre-fill standard fields using flexible ID matching
+      setFieldValue(['recipe-name', 'name', 'title'], recipeToEdit.name);
+      setFieldValue(['recipe-style', 'style'], recipeToEdit.style);
+      setFieldValue(['recipe-description', 'description'], recipeToEdit.description);
+      setFieldValue(['recipe-prep-time', 'prep-time', 'prepMinutes', 'prepTime'], recipeToEdit.prepMinutes || recipeToEdit.prepTime);
+      setFieldValue(['recipe-taste', 'primary-taste', 'primaryTaste', 'taste'], recipeToEdit.primaryTaste);
+      setFieldValue(['recipe-temperature', 'temperature'], recipeToEdit.temperature);
+      setFieldValue(['recipe-season', 'season'], recipeToEdit.season);
+      setFieldValue(['recipe-tip', 'tip', 'pro-tip'], recipeToEdit.tip);
 
-      // 3. Pre-fill ingredients & instructions if dynamic input rows are used
-      if (typeof populateIngredientsForm === 'function') {
-        populateIngredientsForm(recipeToEdit.ingredients);
+      // Color field (handles array or string)
+      const colorVal = Array.isArray(recipeToEdit.color) ? recipeToEdit.color.join(', ') : recipeToEdit.color;
+      setFieldValue(['recipe-color', 'color'], colorVal);
+
+      // 4. Pre-fill Ingredients & Instructions
+      if (Array.isArray(recipeToEdit.ingredients)) {
+        populateIngredients(recipeToEdit.ingredients);
       }
-      if (typeof populateInstructionsForm === 'function') {
-        populateInstructionsForm(recipeToEdit.instructions);
+
+      if (Array.isArray(recipeToEdit.instructions)) {
+        populateInstructions(recipeToEdit.instructions);
       }
     }
 
-    // Function to save updated recipe into localStorage
-    function saveRecipe(updatedRecipe) {
-      let customRecipes = JSON.parse(localStorage.getItem('cozy_custom_recipes') || '[]');
-
-      if (editModeId) {
-        // Overwrite existing custom recipe
-        const index = customRecipes.findIndex(r => 
-          (r.id && r.id.toLowerCase() === editModeId.toLowerCase()) ||
-          (r.name && r.name.toLowerCase() === editModeId.toLowerCase())
-        );
-
-        if (index !== -1) {
-          customRecipes[index] = updatedRecipe;
-        } else {
-          // If it was a built-in static recipe being edited, save the override as a custom recipe
-          customRecipes.push(updatedRecipe);
+    // Helper function to try setting a value across multiple potential input IDs
+    function setFieldValue(possibleIds, value) {
+      if (value === undefined || value === null) return;
+      for (const id of possibleIds) {
+        const el = document.getElementById(id);
+        if (el) {
+          if (el.type === 'checkbox') {
+            el.checked = Boolean(value);
+          } else {
+            el.value = value;
+          }
+          el.dispatchEvent(new Event('change', { bubbles: true }));
+          break;
         }
-      } else {
-        // New recipe
-        customRecipes.push(updatedRecipe);
       }
+    }
 
-      localStorage.setItem('cozy_custom_recipes', JSON.stringify(customRecipes));
-      
-      // Redirect back to recipe view
-      const targetId = updatedRecipe.id || updatedRecipe.name;
-      window.location.href = `recipe.html?id=${encodeURIComponent(targetId)}`;
+    // Auto-populates ingredient rows dynamically
+    function populateIngredients(ingredients) {
+      // Find ingredient wrapper/container
+      const container = document.getElementById('ingredients-container') || 
+                        document.getElementById('ingredients-list') || 
+                        document.getElementById('ingredients-wrapper');
+
+      if (!container) return;
+
+      // Clear existing empty default rows
+      container.innerHTML = '';
+
+      ingredients.forEach((ing, index) => {
+        const row = document.createElement('div');
+        row.className = 'flex items-center gap-2 mb-3 ingredient-row';
+        row.innerHTML = `
+          <input 
+            type="text" 
+            name="ingredient_name[]" 
+            placeholder="Ingredient (e.g. Lime Juice)" 
+            value="${ing.name || ''}" 
+            class="flex-1 p-2.5 text-xs bg-cozy-bg border border-cozy-border rounded-xl focus:outline-none focus:border-cozy-olivegreen"
+            required 
+          />
+          <input 
+            type="number" 
+            step="any" 
+            name="ingredient_amount[]" 
+            placeholder="Amount" 
+            value="${ing.amount !== undefined ? ing.amount : ''}" 
+            class="w-20 p-2.5 text-xs bg-cozy-bg border border-cozy-border rounded-xl focus:outline-none focus:border-cozy-olivegreen"
+          />
+          <input 
+            type="text" 
+            name="ingredient_unit[]" 
+            placeholder="Unit (grams, tbsp)" 
+            value="${ing.unit || ''}" 
+            class="w-28 p-2.5 text-xs bg-cozy-bg border border-cozy-border rounded-xl focus:outline-none focus:border-cozy-olivegreen"
+          />
+          <button type="button" onclick="this.parentElement.remove()" class="text-xs text-red-500 hover:text-red-700 px-2 font-bold">✕</button>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    // Auto-populates instruction rows dynamically
+    function populateInstructions(instructions) {
+      // Find instructions wrapper/container
+      const container = document.getElementById('instructions-container') || 
+                        document.getElementById('instructions-list') || 
+                        document.getElementById('instructions-wrapper');
+
+      if (!container) return;
+
+      // Clear existing empty default rows
+      container.innerHTML = '';
+
+      instructions.forEach((stepText, index) => {
+        const row = document.createElement('div');
+        row.className = 'flex items-start gap-2 mb-3 instruction-row';
+        row.innerHTML = `
+          <span class="text-xs font-bold text-cozy-olivegreen bg-cozy-olivegreen/10 rounded-full w-6 h-6 flex items-center justify-center shrink-0 mt-2">${index + 1}</span>
+          <textarea 
+            name="instruction_step[]" 
+            rows="2" 
+            placeholder="Describe this step..." 
+            class="flex-1 p-2.5 text-xs bg-cozy-bg border border-cozy-border rounded-xl focus:outline-none focus:border-cozy-olivegreen"
+            required
+          >${stepText}</textarea>
+          <button type="button" onclick="this.parentElement.remove()" class="text-xs text-red-500 hover:text-red-700 px-2 font-bold mt-2">✕</button>
+        `;
+        container.appendChild(row);
+      });
     }
   </script>
 </body>
