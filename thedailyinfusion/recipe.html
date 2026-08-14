@@ -123,34 +123,39 @@
     }
 
     function getAllStoredRecipes() {
-      let recipes = [];
+    let builtin = (typeof ALL_RECIPES !== 'undefined' && Array.isArray(ALL_RECIPES)) ? ALL_RECIPES : [];
+    let custom = [];
 
-      if (typeof ALL_RECIPES !== 'undefined' && Array.isArray(ALL_RECIPES)) {
-        recipes = [...ALL_RECIPES];
-      }
-
-      const keysToCheck = ['cozy_custom_recipes', 'custom_recipes', 'customRecipes', 'recipes'];
-      keysToCheck.forEach(key => {
-        try {
-          const item = localStorage.getItem(key);
-          if (item) {
-            const parsed = JSON.parse(item);
-            if (Array.isArray(parsed)) recipes.push(...parsed);
-          }
-        } catch (e) {}
-      });
-
-      const uniqueMap = new Map();
-      recipes.forEach(r => {
-        if (!r) return;
-        const key = normalizeString(r.id || r.name);
-        if (key && !uniqueMap.has(key)) {
-          uniqueMap.set(key, r);
+    // Scan browser storage for edited/custom recipes
+    const keysToCheck = ['cozy_custom_recipes', 'custom_recipes', 'customRecipes', 'recipes'];
+    keysToCheck.forEach(key => {
+      try {
+        const item = localStorage.getItem(key);
+        if (item) {
+          const parsed = JSON.parse(item);
+          if (Array.isArray(parsed)) custom.push(...parsed);
         }
-      });
+      } catch (e) {}
+    });
 
-      return Array.from(uniqueMap.values());
-    }
+    const uniqueMap = new Map();
+
+    // 1. Add static built-in recipes first
+    builtin.forEach(r => {
+      if (!r) return;
+      const key = normalizeString(r.id || r.name);
+      if (key) uniqueMap.set(key, r);
+    });
+
+    // 2. Overwrite with custom/edited recipes (Your edits take priority!)
+    custom.forEach(r => {
+      if (!r) return;
+      const key = normalizeString(r.id || r.name);
+      if (key) uniqueMap.set(key, r);
+    });
+
+    return Array.from(uniqueMap.values());
+  }
 
     function loadRecipeDetail() {
       const urlParams = new URLSearchParams(window.location.search);
