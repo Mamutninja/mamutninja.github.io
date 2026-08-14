@@ -24,11 +24,22 @@
 
   <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-8">
     <!-- Top Action Bar -->
-    <div class="flex items-center justify-between mb-6">
-      <a href="recipes.html" class="inline-flex items-center gap-2 text-sm font-medium text-cozy-muted hover:text-cozy-olivegreen transition">← Back to all recipes</a>
-      <button id="favorite-btn" onclick="toggleFavorite()" class="px-4 py-2 rounded-full border border-cozy-border bg-white text-sm font-medium text-cozy-text hover:border-cozy-olivegreen transition shadow-sm flex gap-2">
-        <span id="fav-icon">🤍</span> <span id="fav-text">Save to Favorites</span>
-      </button>
+    <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+      <a href="recipes.html" class="inline-flex items-center gap-2 text-sm font-medium text-cozy-muted hover:text-cozy-olivegreen transition">
+        ← Back to all recipes
+      </a>
+      
+      <div class="flex items-center gap-2">
+        <!-- Modify / Edit Button -->
+        <button id="edit-btn" onclick="editCurrentRecipe()" class="px-4 py-2 rounded-full border border-cozy-border bg-white text-sm font-medium text-cozy-text hover:border-cozy-olivegreen transition shadow-sm flex items-center gap-1.5">
+          ✏️ Edit Recipe
+        </button>
+
+        <!-- Favorites Button -->
+        <button id="favorite-btn" onclick="toggleFavorite()" class="px-4 py-2 rounded-full border border-cozy-border bg-white text-sm font-medium text-cozy-text hover:border-cozy-olivegreen transition shadow-sm flex gap-2">
+          <span id="fav-icon">🤍</span> <span id="fav-text">Save to Favorites</span>
+        </button>
+      </div>
     </div>
 
     <!-- Main Header Card -->
@@ -262,6 +273,12 @@
     } catch (e) {
       return [];
     }
+  }
+
+  function editCurrentRecipe() {
+    if (!currentRecipe) return;
+    const recipeId = currentRecipe.id || currentRecipe.name;
+    window.location.href = `add-recipe.html?edit=${encodeURIComponent(recipeId)}`;
   }
 
   function getRecipeId(r) {

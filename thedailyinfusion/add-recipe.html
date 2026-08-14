@@ -290,6 +290,86 @@
 
       window.location.href = `recipe.html?id=${id}`;
     }
+    let editModeId = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      checkForEditMode();
+    });
+
+    function checkForEditMode() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const rawEditId = urlParams.get('edit');
+
+      if (!rawEditId) return; // Normal "Add Recipe" mode
+
+      editModeId = decodeURIComponent(rawEditId).trim();
+
+      // Fetch recipe from recipes.js + localStorage
+      const allRecipes = (typeof getCombinedRecipes === 'function') 
+        ? getCombinedRecipes() 
+        : (typeof ALL_RECIPES !== 'undefined' ? ALL_RECIPES : []);
+
+      const recipeToEdit = allRecipes.find(r => {
+        const rId = (r.id || '').toLowerCase();
+        const rName = (r.name || '').toLowerCase();
+        const target = editModeId.toLowerCase();
+        return rId === target || rName === target;
+      });
+
+      if (!recipeToEdit) return;
+
+      // 1. Update Page Headings & Button Text
+      const pageHeading = document.querySelector('h1');
+      if (pageHeading) pageHeading.innerText = `Edit "${recipeToEdit.name}"`;
+      
+      const submitBtn = document.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.innerText = '💾 Save Changes';
+
+      // 2. Pre-fill basic form fields
+      if (document.getElementById('recipe-name')) document.getElementById('recipe-name').value = recipeToEdit.name || '';
+      if (document.getElementById('recipe-style')) document.getElementById('recipe-style').value = recipeToEdit.style || '';
+      if (document.getElementById('recipe-description')) document.getElementById('recipe-description').value = recipeToEdit.description || '';
+      if (document.getElementById('recipe-prep-time')) document.getElementById('recipe-prep-time').value = recipeToEdit.prepMinutes || recipeToEdit.prepTime || '';
+      if (document.getElementById('recipe-taste')) document.getElementById('recipe-taste').value = recipeToEdit.primaryTaste || '';
+      if (document.getElementById('recipe-tip')) document.getElementById('recipe-tip').value = recipeToEdit.tip || '';
+
+      // 3. Pre-fill ingredients & instructions if dynamic input rows are used
+      if (typeof populateIngredientsForm === 'function') {
+        populateIngredientsForm(recipeToEdit.ingredients);
+      }
+      if (typeof populateInstructionsForm === 'function') {
+        populateInstructionsForm(recipeToEdit.instructions);
+      }
+    }
+
+    // Function to save updated recipe into localStorage
+    function saveRecipe(updatedRecipe) {
+      let customRecipes = JSON.parse(localStorage.getItem('cozy_custom_recipes') || '[]');
+
+      if (editModeId) {
+        // Overwrite existing custom recipe
+        const index = customRecipes.findIndex(r => 
+          (r.id && r.id.toLowerCase() === editModeId.toLowerCase()) ||
+          (r.name && r.name.toLowerCase() === editModeId.toLowerCase())
+        );
+
+        if (index !== -1) {
+          customRecipes[index] = updatedRecipe;
+        } else {
+          // If it was a built-in static recipe being edited, save the override as a custom recipe
+          customRecipes.push(updatedRecipe);
+        }
+      } else {
+        // New recipe
+        customRecipes.push(updatedRecipe);
+      }
+
+      localStorage.setItem('cozy_custom_recipes', JSON.stringify(customRecipes));
+      
+      // Redirect back to recipe view
+      const targetId = updatedRecipe.id || updatedRecipe.name;
+      window.location.href = `recipe.html?id=${encodeURIComponent(targetId)}`;
+    }
   </script>
 </body>
 </html>
