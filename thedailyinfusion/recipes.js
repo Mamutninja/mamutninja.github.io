@@ -498,11 +498,367 @@ const ALL_RECIPES = [
       "Add chocolate chips and whisk constantly until the chocolate chips melt and distribute evenly into the milk.",
       "Whisk in vanilla extract and a pinch of salt (if desired), serve immediately."
     ]
+  },
+  {
+    "id": "white-hot-chocolate-7319",
+    "name": "White Hot Chocolate",
+    "style": "Cocoa / Hot Chocolate",
+    "description": "A simple recipe for sweet and creamy homemade white hot chocolate.",
+    "temperature": "Warm",
+    "color": [
+      "White"
+    ],
+    "primaryTaste": "Creamy & Indulgent",
+    "season": "Winter",
+    "prepTime": "Quick",
+    "prepMinutes": "5 mins",
+    "healthiness": [
+      "Caffeine-Free",
+      "Homemade"
+    ],
+    "nutrients": [
+      "Fresh Botanicals"
+    ],
+    "useCases": [
+      "Custom Drink"
+    ],
+    "equipment": [
+      "Standard Utensils"
+    ],
+    "tip": "Enjoy your custom homemade creation!",
+    "ingredients": [
+      {
+        "name": "Whole Milk",
+        "amount": 1000,
+        "unit": "grams"
+      },
+      {
+        "name": "White Chocolate",
+        "amount": 160,
+        "unit": "grams"
+      },
+      {
+        "name": "Vanilla Extract",
+        "amount": 5,
+        "unit": "grams"
+      }
+    ],
+    "instructions": [
+      "Place the milk, white chocolate, vanilla and a pinch of salt (if using) in a medium saucepan.",
+      "Whisk continuously over medium-low heat, until the chocolate has melted and the mixture is smooth (do not boil)."
+    ]
+  },
+  {
+    "id": "dream-on-the-beach-9686",
+    "name": "Dream on the Beach",
+    "style": "Mocktail / Zero-Proof",
+    "description": "A tropical drink.",
+    "temperature": "Cold",
+    "color": [
+      "Yellow",
+      "Red"
+    ],
+    "primaryTaste": "Sweet & Fruity",
+    "season": "Summer",
+    "prepTime": "Instant",
+    "prepMinutes": "2 mins",
+    "healthiness": [
+      "Caffeine-Free",
+      "Homemade"
+    ],
+    "nutrients": [
+      "Fresh Botanicals"
+    ],
+    "useCases": [
+      "Custom Drink"
+    ],
+    "equipment": [
+      "Standard Utensils"
+    ],
+    "tip": "Enjoy your custom homemade creation!",
+    "ingredients": [
+      {
+        "name": "Coconut Cream",
+        "amount": 30,
+        "unit": "grams"
+      },
+      {
+        "name": "Pineapple Juice",
+        "amount": 60,
+        "unit": "grams"
+      },
+      {
+        "name": "Orange Juice",
+        "amount": 30,
+        "unit": "grams"
+      },
+      {
+        "name": "Lime Juice",
+        "amount": 15,
+        "unit": "grams"
+      },
+      {
+        "name": "Grenadine",
+        "amount": 10,
+        "unit": "grams"
+      },
+      {
+        "name": "Ice",
+        "amount": 3,
+        "unit": "pieces"
+      }
+    ],
+    "instructions": [
+      "Mix all ingredients, except the grenadine and the ice,",
+      "Add ice and grenadine in your glass, then pour the drink over it."
+    ]
+  },
+  {
+    "id": "blue-cloud-skin-glow-smoothie-2505",
+    "name": "\"Blue Cloud\" Skin Glow Smoothie",
+    "style": "Fruit Smoothie",
+    "description": "Achieve a radiant glow from the inside out with our beautiful \"Blue Cloud\" smoothie! This recipe is more than just a drink; it's a beauty booster packed with ingredients that support healthy, glowing skin.",
+    "temperature": "Cold",
+    "color": [
+      "Blue"
+    ],
+    "primaryTaste": "Sweet & Fruity",
+    "season": "Summer",
+    "prepTime": "Quick",
+    "prepMinutes": "5 mins",
+    "healthiness": [
+      "Caffeine-Free",
+      "Homemade"
+    ],
+    "nutrients": [
+      "Fresh Botanicals"
+    ],
+    "useCases": [
+      "Custom Drink"
+    ],
+    "equipment": [
+      "Standard Utensils"
+    ],
+    "tip": "Enjoy your custom homemade creation!",
+    "ingredients": [
+      {
+        "name": "Frozen Bananas",
+        "amount": 120,
+        "unit": "grams"
+      },
+      {
+        "name": "Frozen Pineapple",
+        "amount": 110,
+        "unit": "grams"
+      },
+      {
+        "name": "Greek Yogurt",
+        "amount": 120,
+        "unit": "grams"
+      },
+      {
+        "name": "Almond Milk",
+        "amount": 120,
+        "unit": "grams"
+      },
+      {
+        "name": "Collagen Powder",
+        "amount": 10,
+        "unit": "grams"
+      },
+      {
+        "name": "Blue Spirulina",
+        "amount": 2,
+        "unit": "grams"
+      }
+    ],
+    "instructions": [
+      "Take 2 tablespoons of Greek Yogurt and use the back of a spoon to smear 3 or 4 dollops around the inside walls of your serving glass (these are your \"clouds\").",
+      "Add the frozen banana, frozen pineapple, remaining Greek yogurt, liquid milk base, collagen powder, and blue spirulina into a high-speed blender.",
+      "Blend on high for 45–60 seconds until thick, velvety, and electric blue.",
+      "Carefully pour the blue smoothie into your prepped glass so the white yogurt clouds stand out against the blue background."
+    ]
+  },
+  {
+    "id": "sunrise-3140",
+    "name": "Sunrise",
+    "style": "Mocktail / Zero-Proof",
+    "description": "A bright, layered tropical mocktail balancing sweet orange, tropical pineapple, citrusy lemon, and rich grenadine for a stunning sunrise gradient.",
+    "temperature": "Cold",
+    "color": [
+      "Yellow",
+      "Red",
+      "Orange"
+    ],
+    "primaryTaste": "Sweet & Fruity",
+    "season": "Summer",
+    "prepTime": "Quick",
+    "prepMinutes": "5 mins",
+    "healthiness": [
+      "Caffeine-Free",
+      "Homemade"
+    ],
+    "nutrients": [
+      "Fresh Botanicals"
+    ],
+    "useCases": [
+      "Custom Drink"
+    ],
+    "equipment": [
+      "Standard Utensils"
+    ],
+    "tip": "Enjoy your custom homemade creation!",
+    "ingredients": [
+      {
+        "name": "Orange Juice",
+        "amount": 80,
+        "unit": "grams"
+      },
+      {
+        "name": "Pineapple Juice",
+        "amount": 80,
+        "unit": "grams"
+      },
+      {
+        "name": "Lemon Juice",
+        "amount": 120,
+        "unit": "grams"
+      },
+      {
+        "name": "Grenadine",
+        "amount": 20,
+        "unit": "grams"
+      },
+      {
+        "name": "Water",
+        "amount": 120,
+        "unit": "grams"
+      },
+      {
+        "name": "Ice",
+        "amount": 3,
+        "unit": "cubes"
+      }
+    ],
+    "instructions": [
+      "Fill a glass with ice cubes.",
+      "Pour in the orange juice, pineapple juice, and lemon juice. Stir gently.",
+      "Slowly pour the grenadine syrup over the back of a spoon to create the sunrise effect.",
+      "Top with water and stir lightly.",
+      "Garnish with an orange slice and cherry. Enjoy!"
+    ]
+  },
+  {
+    "id": "pi-a-colada-mocktail-2333",
+    "name": "Piña Colada Mocktail",
+    "style": "Mocktail / Zero-Proof",
+    "description": "An easy non alcoholic piña colada mocktail for 1 or a crowd.",
+    "temperature": "Cold",
+    "color": [
+      "Yellow"
+    ],
+    "primaryTaste": "Sweet & Fruity",
+    "season": "Summer",
+    "prepTime": "Quick",
+    "prepMinutes": "5 mins",
+    "healthiness": [
+      "Caffeine-Free",
+      "Homemade"
+    ],
+    "nutrients": [
+      "Fresh Botanicals"
+    ],
+    "useCases": [
+      "Custom Drink"
+    ],
+    "equipment": [
+      "Standard Utensils"
+    ],
+    "tip": "Enjoy your custom homemade creation!",
+    "ingredients": [
+      {
+        "name": "Frozen Pineapple",
+        "amount": 145,
+        "unit": "grams"
+      },
+      {
+        "name": "Coconut Cream",
+        "amount": 80,
+        "unit": "grams"
+      },
+      {
+        "name": "Pineapple Juice",
+        "amount": 120,
+        "unit": "grams"
+      }
+    ],
+    "instructions": [
+      "Place all ingredients in a blender and blend until smooth.",
+      "Pour into a glass, garnish with a pineapple wedge and serve immediately."
+    ]
+  },
+  {
+    "id": "vanilla-hibiscus-tea-latte-5492",
+    "name": "Vanilla Hibiscus Tea Latte",
+    "style": "Spiced Latte",
+    "description": "A cozy, vibrant pink latte combining concentrated tart hibiscus tea with fragrant vanilla and silky frothed milk.",
+    "temperature": "Cold",
+    "color": [
+      "Pink"
+    ],
+    "primaryTaste": "Citrusy & Tart",
+    "season": "All-Year",
+    "prepTime": "Steep / Cook",
+    "prepMinutes": "5 mins",
+    "healthiness": [
+      "Caffeine-Free",
+      "Homemade"
+    ],
+    "nutrients": [
+      "Fresh Botanicals"
+    ],
+    "useCases": [
+      "Custom Drink"
+    ],
+    "equipment": [
+      "Standard Utensils"
+    ],
+    "tip": "Enjoy your custom homemade creation!",
+    "ingredients": [
+      {
+        "name": "Hibiscus Flowers",
+        "amount": 4,
+        "unit": "grams"
+      },
+      {
+        "name": "Water",
+        "amount": 120,
+        "unit": "grams"
+      },
+      {
+        "name": "Oat Milk",
+        "amount": 180,
+        "unit": "grams"
+      },
+      {
+        "name": "Vanilla Syrup",
+        "amount": 15,
+        "unit": "grams"
+      },
+      {
+        "name": "Ice",
+        "amount": 3,
+        "unit": "cubes"
+      }
+    ],
+    "instructions": [
+      "Steep hibiscus flowers in 120g of boiling water for 5-7 minutes to create a concentrated brew.",
+      "Put vanilla syrup and ice cubes in a mug.",
+      "Pour in the milk."
+    ]
   }
 ];
 
-// HELPER TO FETCH BOTH BUILT-IN & USER-ADDED RECIPES
-function getCombinedRecipes() {
-  const customRecipes = JSON.parse(localStorage.getItem('cozy_custom_recipes') || '[]');
-  return [...ALL_RECIPES, ...customRecipes];
+if (typeof module !== 'undefined') {
+  module.exports = { ALL_RECIPES };
 }
