@@ -199,39 +199,77 @@
       return str.toString().toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-');
     }
 
-    // 1. Populate all Dropdowns & Color Checkboxes from TAXONOMY in constants.js
-    function initFormTaxonomy() {
-      if (typeof TAXONOMY === 'undefined') return;
+    // Helper to extract a flat list of all ingredients from TAXONOMY
+  function getTaxonomyIngredients() {
+    if (typeof TAXONOMY === 'undefined') return [];
 
-      populateSelect('recipe-style', TAXONOMY.STYLES || TAXONOMY.DRINK_STYLES);
-      populateSelect('recipe-temp', TAXONOMY.TEMPERATURES);
-      populateSelect('recipe-taste', TAXONOMY.PRIMARY_TASTES || TAXONOMY.TASTES);
-      populateSelect('recipe-season', TAXONOMY.SEASONS);
-      populateSelect('recipe-preptime', TAXONOMY.PREP_TIMES);
-
-      // Multi-select Color Pills
-      const colorBox = document.getElementById('recipe-color-checkboxes');
-      if (colorBox && TAXONOMY.COLORS) {
-        colorBox.innerHTML = TAXONOMY.COLORS.map(c => {
-          const val = typeof c === 'object' ? c.value : c;
-          const label = typeof c === 'object' ? c.label : c;
-          return `
-            <label class="cursor-pointer select-none">
-              <input type="checkbox" name="recipe-color" value="${val}" class="sr-only peer" />
-              <span class="inline-block text-xs font-semibold px-3 py-1.5 rounded-full border border-cozy-border bg-cozy-bg text-cozy-text peer-checked:bg-cozy-olivegreen peer-checked:text-white peer-checked:border-cozy-olivegreen hover:border-cozy-olivegreen/60 transition-all duration-150 shadow-sm">
-                ${label}
-              </span>
-            </label>
-          `;
-        }).join('');
-      }
-
-      // Populate Pantry Datalist for Ingredient Autocomplete if available
-      const datalist = document.getElementById('pantry-ingredients-list');
-      if (datalist && typeof TAXONOMY.ALL_INGREDIENTS !== 'undefined') {
-        datalist.innerHTML = TAXONOMY.ALL_INGREDIENTS.map(i => `<option value="${i}">`).join('');
-      }
+    // 1. If explicit ALL_INGREDIENTS array exists, use it
+    if (Array.isArray(TAXONOMY.ALL_INGREDIENTS)) {
+      return TAXONOMY.ALL_INGREDIENTS;
     }
+
+    let ingredients = [];
+
+    // 2. Scan all TAXONOMY categories to pull ingredient lists dynamically
+    Object.keys(TAXONOMY).forEach(key => {
+      const val = TAXONOMY[key];
+      if (Array.isArray(val)) {
+        val.forEach(item => {
+          // If category has nested items array (e.g. { name: "🥛 Milks", items: [...] })
+          if (item && item.items && Array.isArray(item.items)) {
+            ingredients.push(...item.items);
+          } 
+          // If it's a direct array of strings or objects
+          else if (typeof item === 'string') {
+            ingredients.push(item);
+          } else if (item && item.value) {
+            ingredients.push(item.value);
+          }
+        });
+      }
+    });
+
+    // Remove duplicates and filter out non-ingredient attributes like temperatures/seasons
+    const excludedAttributes = ['Cold', 'Warm', 'Hot', 'Summer', 'Winter', 'Spring', 'Autumn', 'All-Year'];
+    const cleanList = ingredients.filter(i => typeof i === 'string' && !excludedAttributes.includes(i));
+
+    return [...new Set(cleanList)].sort();
+  }
+
+  // 1. Populate all Dropdowns & Ingredient Autocomplete from TAXONOMY
+  function initFormTaxonomy() {
+    if (typeof TAXONOMY === 'undefined') return;
+
+    populateSelect('recipe-style', TAXONOMY.STYLES || TAXONOMY.DRINK_STYLES);
+    populateSelect('recipe-temp', TAXONOMY.TEMPERATURES);
+    populateSelect('recipe-taste', TAXONOMY.PRIMARY_TASTES || TAXONOMY.TASTES);
+    populateSelect('recipe-season', TAXONOMY.SEASONS);
+    populateSelect('recipe-preptime', TAXONOMY.PREP_TIMES);
+
+    // Multi-select Color Pills
+    const colorBox = document.getElementById('recipe-color-checkboxes');
+    if (colorBox && TAXONOMY.COLORS) {
+      colorBox.innerHTML = TAXONOMY.COLORS.map(c => {
+        const val = typeof c === 'object' ? c.value : c;
+        const label = typeof c === 'object' ? c.label : c;
+        return `
+          <label class="cursor-pointer select-none">
+            <input type="checkbox" name="recipe-color" value="${val}" class="sr-only peer" />
+            <span class="inline-block text-xs font-semibold px-3 py-1.5 rounded-full border border-cozy-border bg-cozy-bg text-cozy-text peer-checked:bg-cozy-olivegreen peer-checked:text-white peer-checked:border-cozy-olivegreen hover:border-cozy-olivegreen/60 transition-all duration-150 shadow-sm">
+              ${label}
+            </span>
+          </label>
+        `;
+      }).join('');
+    }
+
+    // Populate Datalist for Ingredient Autocomplete
+    const datalist = document.getElementById('pantry-ingredients-list');
+    if (datalist) {
+      const allIngredients = getTaxonomyIngredients();
+      datalist.innerHTML = allIngredients.map(ing => `<option value="${ing}">`).join('');
+    }
+  }
 
     function populateSelect(elementId, items) {
       const select = document.getElementById(elementId);
