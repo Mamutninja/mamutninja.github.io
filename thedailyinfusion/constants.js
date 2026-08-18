@@ -144,7 +144,9 @@ const TAXONOMY = {
         "Blue Spirulina", 
         "Collagen Powder", 
         "Protein Powder", 
-        "Maca Powder"
+        "Maca Powder",
+        "White Chocolate",
+        "Dark Chocolate"
       ]
     },
     {
