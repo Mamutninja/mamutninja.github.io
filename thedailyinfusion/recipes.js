@@ -856,6 +856,286 @@ const ALL_RECIPES = [
       "Put vanilla syrup and ice cubes in a mug.",
       "Pour in the milk."
     ]
+  },
+  {
+    "id": "pink-stawberry-milk-tea",
+    "name": "Pink Stawberry Milk Tea",
+    "style": "Spiced Latte",
+    "description": "A sweet, velvety layered beverage combining robust black tea with strawberry syrup and creamy sweetened condensed milk.",
+    "temperature": "Cold",
+    "color": [
+      "Pink"
+    ],
+    "primaryTaste": "Sweet & Fruity",
+    "season": "All-Year",
+    "prepTime": "Steep / Cook",
+    "prepMinutes": "7 mins",
+    "ingredients": [
+      {
+        "name": "Whole Milk",
+        "amount": 240,
+        "unit": "grams"
+      },
+      {
+        "name": "Water",
+        "amount": 120,
+        "unit": "grams"
+      },
+      {
+        "name": "Black Tea",
+        "amount": 3,
+        "unit": "grams"
+      },
+      {
+        "name": "Strawberry Syrup",
+        "amount": 20,
+        "unit": "grams"
+      },
+      {
+        "name": "Sweetened Condensed Milk",
+        "amount": 20,
+        "unit": "grams"
+      },
+      {
+        "name": "Vanilla Extract",
+        "amount": 2,
+        "unit": "grams"
+      },
+      {
+        "name": "Ice",
+        "amount": 3,
+        "unit": "cubes"
+      }
+    ],
+    "instructions": [
+      "Steep black tea in 120g of hot water for 5–7 minutes. Let cool completely.",
+      "In a glass, mix milk, strawberry syrup, sweetened condensed milk, and vanilla extract.",
+      "Fill a serving glass with ice and pour in the strawberry milk mixture.",
+      "Slowly add the cooled black tea over the back of a spoon to layer."
+    ]
+  },
+  {
+    "id": "brazilian-cherry-limeade",
+    "name": "Brazilian Cherry Limeade",
+    "style": "Lemonade / Limeade",
+    "description": "A frothy, sweet-and-sour Brazilian-style limonada blended with whole fresh limes, sweet cherries, and rich condensed milk.",
+    "temperature": "Cold",
+    "color": [
+      "Red",
+      "Pink"
+    ],
+    "primaryTaste": "Citrusy & Tart",
+    "season": "Summer",
+    "prepTime": "Quick",
+    "prepMinutes": "5 mins",
+    "ingredients": [
+      {
+        "name": "Lime Juice",
+        "amount": 200,
+        "unit": "grams"
+      },
+      {
+        "name": "Water",
+        "amount": 1000,
+        "unit": "grams"
+      },
+      {
+        "name": "Cherries",
+        "amount": 150,
+        "unit": "grams"
+      },
+      {
+        "name": "Sweetened Condensed Milk",
+        "amount": 300,
+        "unit": "grams"
+      },
+      {
+        "name": "Ice",
+        "amount": 5,
+        "unit": "cubes"
+      }
+    ],
+    "instructions": [
+      "Add quartered limes and 960g cold water to a blender. Blend for MAX 30 seconds.",
+      "Strain completely through a fine-mesh strainer into a pitcher, discarding the lime peels.",
+      "Pour the strained lime liquid back into the blender.",
+      "Add pitted cherries, sweetened condensed milk, and ice. Blend until smooth and frothy.",
+      "Pour over extra ice and serve immediately!"
+    ]
+  },
+  {
+    "id": "instant-mood-boosting-golden-cacao",
+    "name": "Instant Mood Boosting Golden Cacao",
+    "style": "Cocoa / Hot Chocolate",
+    "description": "A cozy, mood-elevating warm tonic blending rich raw cacao, anti-inflammatory turmeric, and sweet cinnamon with creamy plant milk.",
+    "temperature": "Warm",
+    "color": [
+      "Yellow",
+      "Brown"
+    ],
+    "primaryTaste": "Spiced & Earthy",
+    "season": "Winter",
+    "prepTime": "Quick",
+    "prepMinutes": "5 mins",
+    "ingredients": [
+      {
+        "name": "Oat Milk",
+        "amount": 240,
+        "unit": "grams"
+      },
+      {
+        "name": "Cocoa Powder",
+        "amount": 10,
+        "unit": "grams"
+      },
+      {
+        "name": "Ground Turmeric",
+        "amount": 3,
+        "unit": "grams"
+      },
+      {
+        "name": "Ground Cinnamon",
+        "amount": 2,
+        "unit": "grams"
+      },
+      {
+        "name": "Maple Syrup",
+        "amount": 7,
+        "unit": "grams"
+      }
+    ],
+    "instructions": [
+      "Heat 240g of plant milk in a saucepan or mug until steaming.",
+      "Add cacao powder, ground turmeric, ground cinnamon, and maple syrup.",
+      "Whisk vigorously or froth with a handheld frother until smooth and creamy.",
+      "Pour into a mug and enjoy warm."
+    ]
+  },
+  {
+    "id": "purple-glow-smoothie",
+    "name": "Purple Glow Smoothie",
+    "style": "Fruit Smoothie",
+    "description": "A nutrient-packed, antioxidant-rich smoothie crafted to hydrate your body, support gut health, and give your skin a natural glow.",
+    "temperature": "Cold",
+    "color": [
+      "Purple"
+    ],
+    "primaryTaste": "Creamy & Indulgent",
+    "season": "Summer",
+    "prepTime": "Quick",
+    "prepMinutes": "5 mins",
+    "ingredients": [
+      {
+        "name": "Blueberries",
+        "amount": 150,
+        "unit": "grams"
+      },
+      {
+        "name": "Frozen Bananas",
+        "amount": 120,
+        "unit": "grams"
+      },
+      {
+        "name": "Almond Milk",
+        "amount": 240,
+        "unit": "grams"
+      },
+      {
+        "name": "Chia Seeds",
+        "amount": 12,
+        "unit": "grams"
+      }
+    ],
+    "instructions": [
+      "Add the blueberries, ripe banana, almond milk, and chia seeds to a high-speed blender.",
+      "Blend on high for 1 to 2 minutes until smooth and creamy.",
+      "Pour into a glass and serve immediately."
+    ]
+  },
+  {
+    "id": "nightly-citrus-reset-elixir",
+    "name": "Nightly Citrus Reset Elixir",
+    "style": "Mocktail / Zero-Proof",
+    "description": "A soothing, hydrating nighttime reset drink designed to balance electrolytes, support digestion, reduce bloating, and promote restful sleep.",
+    "temperature": "Cold",
+    "color": [
+      "Custom"
+    ],
+    "primaryTaste": "Citrusy & Tart",
+    "season": "All-Year",
+    "prepTime": "Quick",
+    "prepMinutes": "3 mins",
+    "ingredients": [
+      {
+        "name": "Orange Juice",
+        "amount": 120,
+        "unit": "grams"
+      },
+      {
+        "name": "Coconut Water",
+        "amount": 120,
+        "unit": "grams"
+      },
+      {
+        "name": "Coconut Milk",
+        "amount": 30,
+        "unit": "grams"
+      },
+      {
+        "name": "Lime Juice",
+        "amount": 15,
+        "unit": "grams"
+      },
+      {
+        "name": "Sea Salt",
+        "amount": 1,
+        "unit": "gram"
+      }
+    ],
+    "instructions": [
+      "In a glass, combine orange juice, coconut water, coconut milk, lime juice, and sea salt.",
+      "Stir thoroughly until completely mixed."
+    ]
+  },
+  {
+    "id": "pineapple-hibiscus-tea",
+    "name": "Pineapple Hibiscus Tea",
+    "style": "Herbal Tea",
+    "description": "A refreshing, tart, and tropical iced tea blend combining vibrant hibiscus tea with sweet pineapple juice and crisp lemon.",
+    "temperature": "Cold",
+    "color": [
+      "Red"
+    ],
+    "primaryTaste": "Citrusy & Tart",
+    "season": "Summer",
+    "prepTime": "Quick",
+    "prepMinutes": "5 mins",
+    "ingredients": [
+      {
+        "name": "Pineapple Juice",
+        "amount": 240,
+        "unit": "grams"
+      },
+      {
+        "name": "Hibiscus Flowers",
+        "amount": 4,
+        "unit": "grams"
+      },
+      {
+        "name": "Water",
+        "amount": 60,
+        "unit": "grams"
+      },
+      {
+        "name": "Lemon Juice",
+        "amount": 30,
+        "unit": "grams"
+      }
+    ],
+    "instructions": [
+      "Pour the pineapple juice, brewed hibiscus tea, and fresh lemon juice into a glass.",
+      "Stir well until thoroughly combined."
+    ]
   }
 ];
 
