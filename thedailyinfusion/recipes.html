@@ -34,9 +34,6 @@
         <h1 class="font-serif-heading text-3xl md:text-4xl font-bold text-cozy-text mb-2">All Drink Recipes</h1>
         <p class="text-cozy-muted text-base">Filter and discover non-alcoholic, still beverages tailored to your tastes.</p>
       </div>
-      <button onclick="resetAllFilters()" class="text-xs font-semibold text-cozy-olivegreen bg-cozy-olivegreen/10 px-4 py-2 rounded-full hover:bg-cozy-olivegreen hover:text-white transition">
-        ↺ Reset All Filters
-      </button>
       <div class="flex items-center gap-2">
         <button onclick="exportRecipesJS()" class="text-xs font-semibold text-cozy-text bg-white border border-cozy-border px-4 py-2 rounded-full hover:border-cozy-olivegreen transition flex items-center gap-1.5 shadow-sm">
           <span>💾</span> Download Updated recipes.js
@@ -65,7 +62,6 @@
                 id="search-input" 
                 placeholder="Mint, turmeric, lime..." 
                 class="w-full pl-9 pr-3 py-2 bg-cozy-bg rounded-xl border border-cozy-border text-cozy-text text-sm focus:outline-none focus:border-cozy-olivegreen transition" 
-                oninput="filterRecipes()"
               />
             </div>
           </div>
@@ -134,7 +130,7 @@
   <!-- RECIPE DATABASE & LOGIC -->
   <script src="recipes.js"></script>
   <script>
-    // State management for filters (Dietary & Wellness removed)
+    // State management for filters
     const filterState = {
       query: '',
       styles: [],
@@ -168,7 +164,7 @@
       const uniqueMap = new Map();
       [...builtin, ...custom].forEach(r => {
         if (!r) return;
-        const key = (r.id || r.name || '').trim().toLowerCase();
+        const key = (r.id || r.title || r.name || '').trim().toLowerCase();
         if (key && !uniqueMap.has(key)) {
           uniqueMap.set(key, r);
         }
@@ -184,8 +180,7 @@
 
       let html = '';
 
-      // Helper: Renders accordion group with responsive pill tags
-      const renderGroup = (title, categoryKey, items, defaultOpen = true) => {
+      const renderGroup = (title, categoryKey, items) => {
         if (!items || items.length === 0) return '';
         
         const pills = items.map(item => {
@@ -209,7 +204,7 @@
         }).join('');
 
         return `
-          <details class="group border-b border-cozy-border/60 pb-3" ${defaultOpen ? 'open' : ''}>
+          <details class="group border-b border-cozy-border/60 pb-3" open>
             <summary class="flex items-center justify-between cursor-pointer list-none text-xs font-bold uppercase tracking-wider text-cozy-muted py-1 hover:text-cozy-olivegreen transition">
               <span>${title}</span>
               <span class="text-cozy-muted group-open:rotate-180 transition-transform duration-200 text-xs">▼</span>
@@ -222,19 +217,19 @@
       };
 
       if (TAXONOMY.STYLES || TAXONOMY.DRINK_STYLES) {
-        html += renderGroup('Drink Style', 'styles', TAXONOMY.STYLES || TAXONOMY.DRINK_STYLES, true);
+        html += renderGroup('Drink Style', 'styles', TAXONOMY.STYLES || TAXONOMY.DRINK_STYLES);
       }
       if (TAXONOMY.TEMPERATURES) {
-        html += renderGroup('Temperature', 'temperatures', TAXONOMY.TEMPERATURES, true);
+        html += renderGroup('Temperature', 'temperatures', TAXONOMY.TEMPERATURES);
       }
       if (TAXONOMY.COLORS) {
-        html += renderGroup('Color', 'colors', TAXONOMY.COLORS, false);
+        html += renderGroup('Color', 'colors', TAXONOMY.COLORS);
       }
       if (TAXONOMY.PRIMARY_TASTES) {
-        html += renderGroup('Taste Profile', 'primaryTastes', TAXONOMY.PRIMARY_TASTES, false);
+        html += renderGroup('Taste Profile', 'primaryTastes', TAXONOMY.PRIMARY_TASTES);
       }
       if (TAXONOMY.SEASONS) {
-        html += renderGroup('Season', 'seasons', TAXONOMY.SEASONS, false);
+        html += renderGroup('Season', 'seasons', TAXONOMY.SEASONS);
       }
 
       container.innerHTML = html;
@@ -275,9 +270,11 @@
       const allRecipes = getCombinedRecipes();
 
       const filtered = allRecipes.filter(r => {
+        const recipeTitle = r.title || r.name || '';
+
         // Keyword Search
         if (filterState.query) {
-          const nameMatch = r.name && r.name.toLowerCase().includes(filterState.query);
+          const nameMatch = recipeTitle.toLowerCase().includes(filterState.query);
           const styleMatch = r.style && r.style.toLowerCase().includes(filterState.query);
           const ingMatch = r.ingredients && r.ingredients.some(i => i.name.toLowerCase().includes(filterState.query));
           if (!nameMatch && !styleMatch && !ingMatch) return false;
@@ -289,7 +286,8 @@
         }
 
         // Temperature Filter
-        if (filterState.temperatures.length > 0 && (!r.temperature || !filterState.temperatures.includes(r.temperature))) {
+        const tempVal = r.servingTemperature || r.temperature;
+        if (filterState.temperatures.length > 0 && (!tempVal || !filterState.temperatures.includes(tempVal))) {
           return false;
         }
 
@@ -306,8 +304,11 @@
         }
 
         // Season Filter
-        if (filterState.seasons.length > 0 && (!r.season || !filterState.seasons.includes(r.season))) {
-          return false;
+        if (filterState.seasons.length > 0) {
+          if (!r.season) return false;
+          const rSeasons = Array.isArray(r.season) ? r.season : [r.season];
+          const hasSeason = rSeasons.some(s => filterState.seasons.includes(s));
+          if (!hasSeason) return false;
         }
 
         return true;
@@ -368,9 +369,10 @@
       if (emptyState) emptyState.classList.add('hidden');
 
       container.innerHTML = recipes.map(r => {
-        const recipeId = r.id || r.name;
+        const recipeId = r.id || r.title || r.name;
+        const title = r.title || r.name || 'Untitled Recipe';
         const colors = Array.isArray(r.color) ? r.color.join(', ') : (r.color || 'Drink');
-        const time = r.prepMinutes || r.prepTime || '5 mins';
+        const time = r.prepTimeMinutes ? `${r.prepTimeMinutes} mins` : (r.prepMinutes || r.prepTime || '5 mins');
 
         return `
           <a href="recipe.html?id=${encodeURIComponent(recipeId)}" 
@@ -383,7 +385,7 @@
             </div>
             
             <h3 class="font-serif-heading font-bold text-lg text-cozy-text mb-2 group-hover:text-cozy-olivegreen transition">
-              ${r.name}
+              ${title}
             </h3>
             
             <p class="text-xs text-cozy-muted line-clamp-2 mb-4 leading-relaxed">
